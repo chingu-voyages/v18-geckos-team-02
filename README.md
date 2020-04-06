@@ -1,4 +1,4 @@
-# (App-name) :rocket:
+# (App-name) :rocket::rocket::rocket:
 A file-sorting app that takes dates from metadata to automatically produce a visual timeline.
 
 ## Overview
