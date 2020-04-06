@@ -1,25 +1,33 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import styled from 'styled-components';
+import GlobalStyle from './theme/globalStyles';
+
+
+const Demo = styled.div`
+  width: 30rem;
+  height: 30rem;;
+  margin: 5rem auto;
+  background: #1ecbe1;
+  color: #f6f6f6;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const AppTitle = styled.h1`
+  font-size: 4rem;
+`;
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <GlobalStyle />
+      <Demo>
+        <AppTitle>Timeline app</AppTitle>
+      </Demo>
+    </>
   );
 }
 
