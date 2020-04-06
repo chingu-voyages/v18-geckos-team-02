@@ -16,12 +16,11 @@ A file-sorting app that takes dates from metadata to automatically produce a vis
 
 To run the app locally, clone the repo install the app using: 
 
-````
+```
   $ git clone https://github.com/chingu-voyages/v18-geckos-team-02
   $ cd v18-geckos-team-02
   $ npm install 
   $ npm start
-
 ```
 
 ## Contributors :sparkler:
