@@ -7,7 +7,7 @@ const Demo = styled.div`
   width: 30rem;
   height: 30rem;;
   margin: 5rem auto;
-  background: #1ecbe1;
+  background: #00bfff;
   color: #f6f6f6;
   border-radius: 50%;
   display: flex;
