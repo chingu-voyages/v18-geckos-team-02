@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.js": "/v18-geckos-team-02/static/js/main.adff7997.chunk.js",
+    "main.js.map": "/v18-geckos-team-02/static/js/main.adff7997.chunk.js.map",
+    "runtime-main.js": "/v18-geckos-team-02/static/js/runtime-main.f11fd062.js",
+    "runtime-main.js.map": "/v18-geckos-team-02/static/js/runtime-main.f11fd062.js.map",
+    "static/js/2.e908b219.chunk.js": "/v18-geckos-team-02/static/js/2.e908b219.chunk.js",
+    "static/js/2.e908b219.chunk.js.map": "/v18-geckos-team-02/static/js/2.e908b219.chunk.js.map",
+    "index.html": "/v18-geckos-team-02/index.html",
+    "precache-manifest.2ea8a1cbff8f2e2780058671fb8c7d96.js": "/v18-geckos-team-02/precache-manifest.2ea8a1cbff8f2e2780058671fb8c7d96.js",
+    "service-worker.js": "/v18-geckos-team-02/service-worker.js",
+    "static/js/2.e908b219.chunk.js.LICENSE.txt": "/v18-geckos-team-02/static/js/2.e908b219.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.f11fd062.js",
+    "static/js/2.e908b219.chunk.js",
+    "static/js/main.adff7997.chunk.js"
+  ]
+}
