@@ -26,7 +26,6 @@ To run the app locally, clone the repo and install the app using:
 ## Contributors :sparkler:
 This project is designed and developed by the [Chingu](https://www.chingu.io/) Voyage-18 geckos team - [Lily](https://github.com/lily-law), [JonHill](https://github.com/jondhill333) and [krebeDev](https://github.com/krebeDev)
 
-
 ## Contributing 
 Thanks for your interest in contributing! There are many ways to contribute to this project. Get [started here](CONTRIBUTING.md).
 
