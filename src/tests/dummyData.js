@@ -1,24 +1,24 @@
-import { formatDate } from '../dataController';
-const currentDateTime = formatDate(1586427391156);
-export default {
-    1: {
-        file: '/tests/dummyFiles/testfile1.txt',
+const someDateTime = 'October 13, 2014 11:13:00';
+const someFile = new File(['not much here'], 'file1');
+export default [
+    {
+        file: someFile,
         timeStamps: {
-            created: currentDateTime,
-            modified: currentDateTime,
-            user: currentDateTime
+            created: someDateTime,
+            modified: someDateTime,
+            user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['test1']
+        tags: ['fileTest1']
     },
-    2: {
-        file: '/tests/dummyFiles/testfile1.txt',
+    {
+        file: 'A note of sorts',
         timeStamps: {
-            created: currentDateTime,
-            modified: currentDateTime,
-            user: currentDateTime
+            created: someDateTime,
+            modified: someDateTime,
+            user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['test1']
+        tags: ['noteTest1']
     }
-}
+]
