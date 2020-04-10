@@ -8,13 +8,14 @@ import AddNoteModal from './components/AddNoteModal';
 function App() {
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [timelineOpen, setTimelineOpen] = useState(false);
   return (
     <>
       {uploadModalOpen && !noteModalOpen && <UploadModal close={() => setNoteModalOpen(false)} />}
       {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} />}
       <Main />
-      <Timeline />
-      <NavBar openModal={() => setNoteModalOpen(true)} openNote={() => setUploadModalOpen(true)} />
+      {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} />}
+      <NavBar openModal={() => setNoteModalOpen(true)} openNote={() => setUploadModalOpen(true)} openTimeline={() => setTimelineOpen(true)} />
     </>
   );
 }
