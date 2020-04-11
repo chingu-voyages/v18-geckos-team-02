@@ -71,9 +71,9 @@ function NavBar({ openTimeline, openModal, openNote }) {
   return (
     <NavBarContainer>
         <ButtonContainer>
-          <FileUploadInput type="file" id="file"/> 
+          <FileUploadInput onClick={openNote} type="file" id="file"/> 
           <FileUploadLabel htmlFor="file">UPLOAD FILES</FileUploadLabel>
-          <AddNoteButton>ADD NOTE</AddNoteButton>
+          <AddNoteButton onClick={openModal}>ADD NOTE</AddNoteButton>
           <OpenTimelineButton onClick={openTimeline}/>
         </ButtonContainer>
     </NavBarContainer>
