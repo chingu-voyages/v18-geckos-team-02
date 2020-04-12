@@ -1,9 +1,33 @@
 import FileObj from './FileObj';
 const dates = {};
+const nodeDetailLookup = {
+    'year': 0,
+    'month': 4,
+    'date': 6,
+    'hour': 8,
+    'min': 10,
+    'sec': 12
+}
 
-function listNodes(from = '0', to = '0') {
+function listNodes(fromNode = '0', maxNodes = 7, nodeDetail = 'date') {
     const getPath = dateTime => [dateTime.substr(0,4), ...dateTime.substr(4).match(/.{2}/g)];
-    const files = getFiles(from, to);
+    const dateKeys = Object.keys(dates).sort();
+    const startKey = dateKeys.find(key => key.substr(0, fromNode.length) >= fromNode);
+    let nodesToFind = maxNodes;
+    let lastSegmentFound = '0';
+    let endKey = dateKeys[dateKeys.length-1];
+    for (let key of dateKeys) {
+        const keySegment = key.substr(nodeDetailLookup[nodeDetail], nodeDetail === 'year' ? 4 : 2);
+        if (nodesToFind === 1) {
+            endKey = key;
+            break;
+        }
+        else if (keySegment !== lastSegmentFound) {
+            lastSegmentFound = keySegment;
+            nodesToFind--;
+        }
+    }
+    const files = getFiles(startKey, endKey);
     const nodes = {};
     for (let file of files) {
         const path = getPath(file.key.substr(0, 8));
@@ -25,7 +49,7 @@ function listNodes(from = '0', to = '0') {
 }
 
 function getFiles(from = '0', to = '0') {
-    const keys = Object.keys(dates);
+    const keys = Object.keys(dates).sort();
     const files = [];
     for (let key of keys) {
         if (key.substr(0, from.length) >= from && key.substr(0, to.length) <= to) {
