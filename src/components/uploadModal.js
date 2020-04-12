@@ -1,78 +1,96 @@
 import React from 'react';
 import styled from 'styled-components';
+import DateAndTagsEditor from './DateAndTagsEditor';
 
-const ModalBg = styled.div`
-  background: rgba(0, 0, 0, 0.5);
+const ModalBox = styled.div`
   max-width: 414px;
   margin: auto;
-  height: 100%;
-  padding: 4rem;
+  padding: 1rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  position: relative;
+  
+`;
+const AddedFiles = styled.div`
+  min-height: 50vh;
+  border: 2px solid ${props => props.theme.blue};
+  padding: 1rem;
+  margin-bottom: 1rem;
 `;
 
-const UploadForm = styled.form``;
+const ModalTitle = styled.h2`
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+  text-align: center;
 
-const FormGroup = styled.div`
-  display: flex;
-  margin: auto;
-  align-items: center;
-  justify-content: space-around;
 `;
 
-const Btn = styled.button`
-  border: none;
-  outline: none;
-  color: #F6F6F6;
-  background: ${props => props.primary ?
-    props.theme.lightBlue : props.theme.red};
-  padding: 0.6rem;
-  width: 7rem;
-  margin: 0.5rem;
-  cursor: pointer;
-`;
-
-const CloseBtnWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding-right: 1rem;
-`;
-
-const CloseBtn = styled(Btn)`
-  margin: 0;
-  font-size: 4rem;
-  width: auto;
+const FileList = styled.ul`
+  list-style-type: none;
   padding: 0;
-  background: none;
-  color: ${props => props.theme.red};
 `;
 
-const UploadModal = () => {
-  return ( 
-    <ModalBg>
-      <CloseBtnWrapper>
-        <CloseBtn
-          aria-label="close upload modal"
-          type="button">
-          &times;
-        </CloseBtn> 
-      </CloseBtnWrapper>
-      <UploadForm>
-        <FormGroup>
-          <Btn primary
-            type="button">
-            Upload Files
-          </Btn>
-          <Btn type="button">
-            Add Notes
-          </Btn>
-        </FormGroup>
-      </UploadForm>
-    </ModalBg>
-   );
+const FileItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  aligb-items: center;
+  border-bottom: 1px solid ${props => props.theme.lightGrey};
+  padding: 0.5rem;
+
+`;
+
+const FileName = styled.p`
+  flex-basis: 50%;
+`;
+
+const DeleteButton = styled.button`
+  color: ${props => props.theme.grey};
+  background: none;
+  outline: none;
+  border: 1px solid ${props => props.theme.lightGrey};
+  font-size: 2rem;
+  padding: 0.1rem 0.5rem;
+
+  &:hover {
+    color: ${props => props.theme.offWhite};
+    background: ${props => props.theme.red};
+  }
+`;
+
+const UploadButton = styled.button`
+  padding: 0.8rem;
+  margin: 1rem auto;
+  border: none;
+  width: 80%;
+  color: ${props => props.theme.offWhite};
+  background: ${props => props.theme.blue}
+`;
+
+const UploadModal = ({ files, onUpload, onDelete, datesAndTags }) => {
+  return (
+    <ModalBox>
+      <AddedFiles>
+        <ModalTitle>Files ready to upload!</ModalTitle>
+        <FileList>
+          {files.map(file =>
+            <FileItem key={file.name}>
+            <FileName>{file.name}</FileName>
+              <DateAndTagsEditor datesTags={ datesAndTags }/>
+              <DeleteButton
+                onClick={ () => onDelete(file.name) }
+                aria-label="Delete file">
+                &times;
+            </DeleteButton>
+          </FileItem>)}
+        </FileList>
+      </AddedFiles>
+      {files.length > 1 && <DateAndTagsEditor />}
+      <UploadButton
+        onClick={ onUpload }>
+        Upload
+      </UploadButton>
+    </ModalBox>
+    );
 }
  
 export default UploadModal;
