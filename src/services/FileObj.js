@@ -1,9 +1,3 @@
-if (!URL) { // polyfill for running test
-    var URL = {
-        createObjectURL: file => JSON.stringify(file)
-    }
-}
-
 export default function FileObj(file, tags, activeTimeStamp, timeStamps) {
     const fileObj = {
         fileType: this.detectFileType(file),
