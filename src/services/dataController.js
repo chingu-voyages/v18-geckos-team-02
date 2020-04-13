@@ -90,7 +90,20 @@ function removeFile(fileObj) {
     return `Error: no such file under key: ${key}`
 }
 
-export {listNodes, getFiles, addFiles, updateFile, removeFile}
+function findKey(nearestTo) {
+    const dateKeys = Object.keys(dates).sort();
+    if (nearestTo === 'start') {
+        return dateKeys[0];
+    }
+    else if (nearestTo === 'end') {
+        return dateKeys[dateKeys.length-1];
+    }
+    else {
+        return dateKeys.find(key => key.substr(0, nearestTo.length) >= nearestTo);
+    }
+}
+
+export {listNodes, getFiles, addFiles, updateFile, removeFile, findKey}
 
 function setFile(fileObj, nDuplicate = 0) {
     let key = `${fileObj.timeStamps[fileObj.activeTimeStamp]}${nDuplicate ? `(${nDuplicate})` : ''}`;
