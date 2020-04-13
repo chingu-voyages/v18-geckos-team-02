@@ -66,25 +66,25 @@ const UploadButton = styled.button`
   background: ${props => props.theme.blue}
 `;
 
-const UploadModal = ({ files, onUpload, onDelete, datesAndTags }) => {
+const UploadModal = ({ files, onUpload, deleteUpload, datesAndTags }) => {
   return (
     <ModalBox>
       <AddedFiles>
         <ModalTitle>Files ready to upload!</ModalTitle>
         <FileList>
           {files.map(file =>
-            <FileItem key={file.name}>
+            <FileItem key={file.uid}>
             <FileName>{file.name}</FileName>
-              <DateAndTagsEditor datesTags={ datesAndTags }/>
+              <DateAndTagsEditor datesTags={ datesAndTags } updateUploads={[file.uid]} />
               <DeleteButton
-                onClick={ () => onDelete(file.name) }
+                onClick={ () => deleteUpload(file.uid) }
                 aria-label="Delete file">
                 &times;
             </DeleteButton>
           </FileItem>)}
         </FileList>
       </AddedFiles>
-      {files.length > 1 && <DateAndTagsEditor />}
+      {files.length > 1 && <DateAndTagsEditor updateUploads={files.map(file => file.uid)} />}
       <UploadButton
         onClick={ onUpload }>
         Upload

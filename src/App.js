@@ -6,7 +6,9 @@ import UploadModal from './components/UploadModal';
 import AddNoteModal from './components/AddNoteModal';
 import styled from 'styled-components';
 import GlobalStyle from './theme/globalStyles';
-
+import dummyData from './tests/dummyData';
+import { addFiles, findKey } from './services/dataController';
+addFiles([...dummyData]);
 
 const Demo = styled.div`
   width: 30rem;
@@ -24,25 +26,35 @@ const AppTitle = styled.h1`
   font-size: 4rem;
 `;
 
-
-import dummyData from './tests/dummyData';
-import { addFiles, findKey } from './services/dataController';
-addFiles([...dummyData]);
-
 function App() {
-  
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [timelineOpen, setTimelineOpen] = useState(true); // true for testing MAKE False when NavBar is done
+  const [timelineOpen, setTimelineOpen] = useState(false);
   const [activeNode, setActiveNode] = useState(findKey('start'));
+  const [files, setFiles] = useState([]);
+
+  function addFilesToList(uploads) {
+    const uploadsArr = Object.values(uploads);
+    const dateNow = Date.now();
+    uploadsArr.forEach((upload, i) => uploadsArr[i].uid = dateNow+`${i}`);
+    setFiles([...files, ...uploadsArr]);
+    setUploadModalOpen(true);
+  }
+  function deleteUpload(uid) {
+    const appendedFiles = files.filter(file => file.uid !== uid);
+    setFiles(appendedFiles);
+  }
+  function updateUploads(uidArr) {
+    // TODO update date and tags and selected timeStamp: timeStamps -> modified + user, activeTimeStamp
+  }
 
   return (
     <>
-      {uploadModalOpen && !noteModalOpen && <UploadModal close={() => setNoteModalOpen(false)} />}
+      {uploadModalOpen && !noteModalOpen && <UploadModal close={() => setNoteModalOpen(false)} {...{files, deleteUpload, updateUploads}} />}
       {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} />}
       <Main {...{activeNode, setActiveNode}} />
       {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{activeNode, setActiveNode}} />}
-      <NavBar openModal={() => setNoteModalOpen(true)} openNote={() => setUploadModalOpen(true)} openTimeline={() => setTimelineOpen(true)} />
+      <NavBar openModal={() => setNoteModalOpen(true)} openNote={() => setUploadModalOpen(true)} openTimeline={() => setTimelineOpen(true)} {...{addFilesToList}} />
     </>
   );
 }
