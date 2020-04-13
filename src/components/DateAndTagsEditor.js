@@ -33,16 +33,19 @@ const Input = styled.input`
   `}
 `;
 
-function DateAndTagsEditor() {
+function DateAndTagsEditor({ file, updateUploads }) {
   const now = new Date().toISOString();
   const currentDate = now.substr(0, 10);
   const currentTime = now.substring(11, 16);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState(currentDate);
-  const [time, setTime] = useState(currentTime);
-  const [tags, setTags] = useState("");
- 
+  const [values, setValues] = useState({ customDate: currentDate, customTime: currentTime, tags: "" });
+  
+  const handleCustomValueChange = e => {
+    const {name, value} = e.target
+    setValues({ ...values, [name]: value });
+    updateUploads(file, values);
+  }
 
   return (
     <EditorBox>
@@ -55,8 +58,8 @@ function DateAndTagsEditor() {
             <Input
               type="date"
               name="customDate"
-              value={ date }
-              onChange={ e => setDate(e.target.value) }
+              value={ values.customDate }
+              onChange={ handleCustomValueChange }
             /> 
           </Label> 
           <LineBreak />
@@ -64,8 +67,8 @@ function DateAndTagsEditor() {
             <Input
               type="time"
               name="customTime"
-              value={ time }
-              onChange={ e => setTime(e.target.value) }
+              value={ values.customTime }
+              onChange={ handleCustomValueChange }
             />
           </Label> 
           <LineBreak />
@@ -73,9 +76,9 @@ function DateAndTagsEditor() {
             <Input
               type="text"
               name="tags"
-              value={ tags }
+              value={ values.tags }
               placeholder="Enter tags..."
-              onChange={ e => setTags(e.target.value) }
+              onChange={ handleCustomValueChange }
             />
           </Label> 
           <LineBreak />
