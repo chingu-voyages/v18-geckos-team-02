@@ -86,7 +86,7 @@ flex-flow: nowrap;
 justify-content: space-between;
 `;
 
-function Timeline() {
+function Timeline({close, activeNode, setActiveNode}) {
   const [maxNodes, setMaxNodes] = useState(7); // 7 and 'date' === 7 different days
   const [start, setStart] = useState('0'); // dateTime YYYYMMDDHHMMSS -> 0 === year 0
   const nodes = listNodes(start, maxNodes, 'date');
@@ -112,7 +112,7 @@ function Timeline() {
                         <Gap></Gap>
                       </DateItem>
                     }
-                    <DateItem>
+                    <DateItem onClick={() => setActiveNode(year+month+date)}>
                       <h3>{nodeDate.substr(0,3)+' '+nodeDate.substr(8,2)}</h3>
                       <Node files={nodes[year][month][date]} />
                     </DateItem>
