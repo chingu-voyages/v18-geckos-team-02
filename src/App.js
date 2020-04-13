@@ -33,6 +33,7 @@ function App() {
   const [activeNode, setActiveNode] = useState(findKey('start'));
   const [files, setFiles] = useState([]);
 
+
   function addFilesToList(uploads) {
     const uploadsArr = Object.values(uploads);
     const dateNow = Date.now();
@@ -40,12 +41,26 @@ function App() {
     setFiles([...files, ...uploadsArr]);
     setUploadModalOpen(true);
   }
+
   function deleteUpload(uid) {
     const appendedFiles = files.filter(file => file.uid !== uid);
     setFiles(appendedFiles);
   }
-  function updateUploads(uidArr) {
+
+  function updateUploads(file, customValues = {}) {
     // TODO update date and tags and selected timeStamp: timeStamps -> modified + user, activeTimeStamp
+    const { lastModified, name: fileName, uid } = file;
+    const { tags, customDate } = customValues;
+    return {
+      file: fileName,
+      timeStamps: {
+        created: lastModified, // 'Created date' appears to be missing in File object's properties
+        modified: lastModified, 
+        user: customDate
+      },
+      activeTimeStamp: uid.substr(0, 13),
+      tags: tags
+    };
   }
 
   return (
