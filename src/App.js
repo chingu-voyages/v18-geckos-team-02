@@ -4,8 +4,8 @@ import Timeline from './components/Timeline';
 import NavBar from './components/NavBar';
 import UploadModal from './components/UploadModal';
 import AddNoteModal from './components/AddNoteModal';
-import styled from 'styled-components';
-import GlobalStyle from './theme/globalStyles';
+import styled, {ThemeProvider} from 'styled-components';
+import GlobalStyle, {theme} from './theme/globalStyles';
 import dummyData from './tests/dummyData';
 import { addFiles, findKey } from './services/dataController';
 addFiles([...dummyData]);
@@ -32,6 +32,7 @@ function App() {
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [activeNode, setActiveNode] = useState(findKey('start'));
   const [files, setFiles] = useState([]);
+  const [appTheme, setTheme] = useState(theme);
 
   function addFilesToList(uploads) {
     const uploadsArr = Object.values(uploads);
@@ -50,11 +51,14 @@ function App() {
 
   return (
     <>
-      {uploadModalOpen && !noteModalOpen && <UploadModal close={() => setNoteModalOpen(false)} {...{files, deleteUpload, updateUploads}} />}
-      {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} />}
-      <Main {...{activeNode, setActiveNode}} />
-      {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{activeNode, setActiveNode}} />}
-      <NavBar openModal={() => setNoteModalOpen(true)} openNote={() => setUploadModalOpen(true)} openTimeline={() => setTimelineOpen(true)} {...{addFilesToList}} />
+      <GlobalStyle />
+      <ThemeProvider theme={appTheme}>
+        {uploadModalOpen && !noteModalOpen && <UploadModal close={() => setNoteModalOpen(false)} {...{files, deleteUpload, updateUploads}} />}
+        {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} />}
+        <Main {...{activeNode, setActiveNode}} />
+        {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{activeNode, setActiveNode}} />}
+        <NavBar openModal={() => setNoteModalOpen(true)} openNote={() => setUploadModalOpen(true)} openTimeline={() => setTimelineOpen(true)} {...{addFilesToList}} />
+      </ThemeProvider>
     </>
   );
 }
