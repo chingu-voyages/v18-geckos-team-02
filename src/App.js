@@ -47,25 +47,37 @@ function App() {
     setFiles(appendedFiles);
   }
 
-  function updateUploads(file, customValues = {}) {
-    // TODO update date and tags and selected timeStamp: timeStamps -> modified + user, activeTimeStamp
-    const { lastModified, name: fileName, uid } = file;
+  function updateUpload(file, customValues) {
+    const { lastModified, uid } = file;
     const { tags, customDate } = customValues;
-    return {
-      file: fileName,
-      timeStamps: {
-        created: lastModified, // 'Created date' appears to be missing in File object's properties
-        modified: lastModified, 
-        user: customDate
-      },
-      activeTimeStamp: uid.substr(0, 13),
-      tags: tags
+    const dateCreated = uid.substr(0, 13);
+    
+    file.timeStamps = {
+      created: lastModified, // 'Created date' appears to be missing in File object's properties
+      modified: lastModified,
+      user: customDate !== dateCreated ? customDate : ""
     };
+
+    file.activeTimeStamp = dateCreated;
+    file.tags = tags;
   }
+
+  function updateUploads(uidArr) {
+    // TODO update date and tags and selected timeStamp: timeStamps -> modified + user, activeTimeStamp
+    const updatedUploadsArr = [];
+    uidArr.forEach(fileItem => {
+      if (!fileItem.activeTimeStamp) {
+        updateUpload(fileItem, { tags: "", customDate: "" });
+      }
+      updatedUploadsArr.push(fileItem);
+      setFiles(updatedUploadsArr);
+    });
+    }
+  
 
   return (
     <>
-      {uploadModalOpen && !noteModalOpen && <UploadModal close={() => setNoteModalOpen(false)} {...{files, deleteUpload, updateUploads}} />}
+      {uploadModalOpen && !noteModalOpen && <UploadModal close={() => setNoteModalOpen(false)} {...{files, deleteUpload, updateUpload, updateUploads}} />}
       {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} />}
       <Main {...{activeNode, setActiveNode}} />
       {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{activeNode, setActiveNode}} />}
