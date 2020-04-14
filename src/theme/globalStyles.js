@@ -22,9 +22,11 @@ export default GlobalStyle;
 
 export const theme = {
   red: "#FC5F6B",
-  blue: "#5887F9",
-  veryDarkBlue: "#4C5264",
-  lightBlue: "#60C3FF",
+  blue: "#12A7EA",
+  darkBlue: "#1B71D5",
+  veryDarkBlue: "#1B71D5",
+  greyBlue: "#AEC1D5",
+  lightBlue: "#D6F3FF",
   blueGradient: "#5574f7-#60C3FF",
   grey: "#BCC5D3",
   lightGrey: "#E2E8ED",
