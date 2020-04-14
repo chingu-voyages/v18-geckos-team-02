@@ -33,7 +33,7 @@ const Input = styled.input`
   `}
 `;
 
-function DateAndTagsEditor({ file, updateUploads }) {
+function DateAndTagsEditor({ file, updateUpload }) {
   const now = new Date().toISOString();
   const currentDate = now.substr(0, 10);
   const currentTime = now.substring(11, 16);
@@ -44,7 +44,7 @@ function DateAndTagsEditor({ file, updateUploads }) {
   const handleCustomValueChange = e => {
     const {name, value} = e.target
     setValues({ ...values, [name]: value });
-    updateUploads(file, values);
+    updateUpload(file, values);
   }
 
   return (
