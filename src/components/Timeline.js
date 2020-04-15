@@ -38,20 +38,22 @@ width: 100%;
 text-align: center;
 display: flex;
 flex-flow: row nowrap;
+color: ${props => props.theme.darkGrey};
+font-size: 11px;
 &::before,
 &::after {
   display: inline-block;
   content: '';
-  border-top: 1px solid ${props => props.theme.grey};
+  border-top: 1px solid ${props => props.theme.darkGrey};
   width: 50%;
   margin: 0 12px;
   transform: translateY(50%);
 }
 &::before {
-  border-left: 1px solid ${props => props.theme.grey};
+  border-left: 1px solid ${props => props.theme.darkGrey};
 }
 &::after {
-  border-right: 1px solid ${props => props.theme.grey};
+  border-right: 1px solid ${props => props.theme.darkGrey};
 }
 `;
 const Year = styled.div`
