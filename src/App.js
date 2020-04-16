@@ -32,14 +32,15 @@ function App() {
   const [timelineOpen, setTimelineOpen] = useState(false);
   const [activeNode, setActiveNode] = useState(findKey('start'));
   const [files, setFiles] = useState([]);
-
+  
 
   function addFilesToList(uploads) {
-    const uploadsArr = Object.values(uploads);
+    const uploadsArr = uploads[0] instanceof File ? Object.values(uploads) : uploads;
     const dateNow = Date.now();
     uploadsArr.forEach((upload, i) => uploadsArr[i].uid = dateNow+`${i}`);
     setFiles([...files, ...uploadsArr]);
     setUploadModalOpen(true);
+    setNoteModalOpen(false);
   }
 
   function deleteUpload(uid) {
@@ -47,19 +48,19 @@ function App() {
     setFiles(appendedFiles);
   }
 
-  function updateUpload(file, customValues) {
-    const { lastModified, uid } = file;
-    const { tags, customDate } = customValues;
-    const dateCreated = uid.substr(0, 13);
-    
-    file.timeStamps = {
-      created: lastModified, // 'Created date' appears to be missing in File object's properties
-      modified: lastModified,
-      user: customDate !== dateCreated ? customDate : ""
-    };
-
-    file.activeTimeStamp = dateCreated;
-    file.tags = tags;
+  function updateUpload(upload, customValues) {
+    const { tags, user, modified, activeTimeStamp } = customValues;  
+    if (upload instanceof Array) {
+      upload.forEach(file => {
+        if (file.tags) {
+          file.tags += ` ${customValues.tags}`; 
+        }
+      })
+    } else {
+      upload.timeStamps = {created: modified, modified, user};
+      upload.activeTimeStamp = activeTimeStamp;
+      upload.tags = tags;
+    }
   }
 
   function updateUploads(uidArr) {
@@ -67,21 +68,22 @@ function App() {
     const updatedUploadsArr = [];
     uidArr.forEach(fileItem => {
       if (!fileItem.activeTimeStamp) {
-        updateUpload(fileItem, { tags: "", customDate: "" });
+        updateUpload(fileItem, {tags: "", user: fileItem.uid.substr(0,13), modified: fileItem.lastModified, activeTimeStamp: "modified"});
       }
       updatedUploadsArr.push(fileItem);
-      setFiles(updatedUploadsArr);
     });
-    }
-  
+    setFiles(updatedUploadsArr);
+    // addFiles(updatedUploadsArr);
+  }  
 
   return (
     <>
-      {uploadModalOpen && !noteModalOpen && <UploadModal close={() => setNoteModalOpen(false)} {...{files, deleteUpload, updateUpload, updateUploads}} />}
-      {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} />}
-      <Main {...{activeNode, setActiveNode}} />
-      {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{activeNode, setActiveNode}} />}
-      <NavBar openModal={() => setNoteModalOpen(true)} openNote={() => setUploadModalOpen(true)} openTimeline={() => setTimelineOpen(true)} {...{addFilesToList}} />
+        {uploadModalOpen && !noteModalOpen &&
+          <UploadModal close={() => setNoteModalOpen(false)} {...{ files, deleteUpload, updateUpload, updateUploads }} />}
+        {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addFilesToList }} />}
+        <Main {...{activeNode, setActiveNode}} />
+        {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{activeNode, setActiveNode}} />}
+        <NavBar openModal={() => setNoteModalOpen(true)} openNote={() => setUploadModalOpen(true)} openTimeline={() => setTimelineOpen(true)} {...{addFilesToList}} />
     </>
   );
 }
