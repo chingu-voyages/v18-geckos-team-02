@@ -15,7 +15,7 @@ const Wrapper = styled.main`
   & section>.note {
     min-width: 300px;
   }
-  color: ${props => props.theme.darkGrey}
+  color: ${props => props.theme.darkGrey};
 `;
 const Header = styled.header`
   width: 100%;

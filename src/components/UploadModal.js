@@ -62,33 +62,31 @@ const UploadButton = styled.button`
   width: 90%;
   color: ${props => props.theme.offWhite};
   background: ${props => props.theme.blue};
-  cursor: ${props => props.disabled ? "not-allowed": "pointer"}
+  cursor: ${props => props.disabled ? "not-allowed": "pointer"};
 `;
 
-
-const UploadModal = ({ files, deleteUpload, updateUpload, updateUploads }) => {
-  console.log(files)
+const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }) => {
   return (
     <ModalBox>
       <AddedFiles>
         <ModalTitle>Files ready to upload!</ModalTitle>
         <FileList>
-          {files.map(file =>
-            <FileItem key={file.uid}>
-            <FileName>{file.name}</FileName>
-              <DateAndTagsEditor {...{file, updateUpload}} lastModified={new Date(file.lastModified).toISOString().substr(0, 10)}/>
+          {uploads.map(upload =>
+            <FileItem key={upload.uid}>
+            <FileName>{upload.file.name}</FileName>
+              <DateAndTagsEditor {...{ uploads: [upload], updateDatesOrTags }}/>
               <DeleteButton
-                onClick={ () => deleteUpload(file.uid) }
-                aria-label="Delete file">
+                onClick={ () => deleteUpload(upload.uid) }
+                aria-label="Delete upload">
                 &times;
             </DeleteButton>
           </FileItem>)}
         </FileList>
       </AddedFiles>
-      {files.length > 1 && <DateAndTagsEditor {...{files, updateUpload}} lastModified />}
-      {files.length < 1
+      {uploads.length > 1 && <DateAndTagsEditor {...{ uploads, updateDatesOrTags }} />}
+      {uploads.length < 1
         ? <UploadButton disabled>Upload</UploadButton>
-        : <UploadButton onClick={() => updateUploads(files)}>Upload</UploadButton>}  
+        : <UploadButton onClick={sumbitUploads}>Upload</UploadButton>}  
     </ModalBox>
     );
 }

@@ -41,24 +41,24 @@ ${baseCss};
   `}
 `;
 
-function DateAndTagsEditor({ file, files, lastModified, updateUpload }) {
+function DateAndTagsEditor({ uploads, updateDatesOrTags }) {
   const now = new Date().toISOString();
   const currentDate = now.substr(0, 10);
   const currentTime = now.substring(11, 16);
+  const uids = uploads.map(upload => upload.uid);
 
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
-    user: currentDate,
-    modified: lastModified,
-    customTime: currentTime,
+    user: uploads[0].timeStamps.user || currentDate,
+    modified: uploads[0].timeStamps.modified,
     tags: "",
-    activeTimeStamp: "modified"
+    activeTimeStamp: "modified",
   });
   
   const handleCustomValueChange = e => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
-    updateUpload(file || files, values);
+    updateDatesOrTags(uids, {[name]: value});
   }
 
   return (
@@ -68,7 +68,7 @@ function DateAndTagsEditor({ file, files, lastModified, updateUpload }) {
       /> 
       {isOpen && 
         <EditorForm>
-          <Select name="activeTimeStamp" ariaLabel="Select date to use" onChange={handleCustomValueChange}>
+          <Select name="activeTimeStamp" ariaLabel="Select date to use" onChange={handleCustomValueChange} value={values.activeTimeStamp}>
             <Option value="modified">Date Modified</Option>
             <Option value="user">Custom Date</Option>
           </Select>
@@ -76,8 +76,8 @@ function DateAndTagsEditor({ file, files, lastModified, updateUpload }) {
             <LineBreak />
             <Input
                 type="date"
-                name="user"
-                value={ values.activeTimeStamp === "modified" ? values.modified : values.user }
+                name={values.activeTimeStamp}
+                value={formatForyyyyMMdd(values[values.activeTimeStamp])}
                 onChange={handleCustomValueChange}
                 disabled={values.activeTimeStamp === "user" ? false : true}
             /> 
@@ -86,10 +86,10 @@ function DateAndTagsEditor({ file, files, lastModified, updateUpload }) {
               <Label>Time: 
                 <Input
                   type="time"
-                  name="customTime"
-                  value={ values.customTime }
+                  name={values.activeTimeStamp}
+                  value={formatForHHMM(values[values.activeTimeStamp])}
                   onChange={handleCustomValueChange}
-                  disabled
+                  disabled={values.activeTimeStamp === "user" ? false : true}
                 />
               </Label> 
               <LineBreak />
@@ -110,3 +110,20 @@ function DateAndTagsEditor({ file, files, lastModified, updateUpload }) {
 }
 
 export default DateAndTagsEditor;
+
+const makeMinTwoDigits = n => {
+  const str = n+'';
+  return str.length === 1 ? '0'+str : str
+};
+function formatForyyyyMMdd(date) {
+  const d = new Date(date);
+  return d.getFullYear() + '-' +
+      makeMinTwoDigits(d.getMonth()+1) + '-' +
+      makeMinTwoDigits(d.getDate());
+}
+
+function formatForHHMM(date) {
+  const d = new Date(date);
+  return makeMinTwoDigits(d.getHours()) + ':' +
+  makeMinTwoDigits(d.getMinutes());
+}

@@ -38,11 +38,11 @@ export default function Node({ files, timeWanted = false }) {
         }
         return (
             <>
-                {timeWanted && showTime && <time datetime={time}>{time}</time>}
-                {fileObj.fileType.includes('image') ? 
-                    <Img src={fileObj.file} alt="" /> : 
-                    fileObj.fileType === 'Note' ? <Note className="note">{fileObj.file}</Note> :
-                    <FileIcon {...charsToColour(fileObj.fileType)}>{fileObj.fileType}</FileIcon>
+                {timeWanted && showTime && <time dateTime={time}>{time}</time>}
+                {fileObj.file.type.includes('image') ? 
+                    <Img src={URL.createObjectURL(fileObj.file)} alt="" /> : 
+                    fileObj.file.type === 'note' ? <Note className="note"><h1>{fileObj.file.name}</h1><p>{fileObj.file.text}</p></Note> :
+                    <FileIcon {...charsToColour(fileObj.file.type)}>{fileObj.file.type}</FileIcon>
                 }
             </>
         )

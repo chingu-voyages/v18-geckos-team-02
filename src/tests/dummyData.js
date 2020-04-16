@@ -12,7 +12,7 @@ export default [
         tags: ['fileTest1']
     },
     {
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: someDateTime,
             modified: someDateTime,
@@ -22,7 +22,7 @@ export default [
         tags: ['noteTest1']
     },
     {
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 14, 2014 11:13:00',
             modified: someDateTime,
@@ -32,7 +32,7 @@ export default [
         tags: ['noteTest1']
     },
     {
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 18, 2014 11:13:00',
             modified: someDateTime,
@@ -42,7 +42,7 @@ export default [
         tags: ['noteTest1']
     },
     {
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 3, 2014 11:13:00',
             modified: someDateTime,
@@ -51,7 +51,7 @@ export default [
         activeTimeStamp: 'created',
         tags: ['noteTest1']
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 27, 2014 11:13:00',
             modified: someDateTime,
@@ -60,7 +60,7 @@ export default [
         activeTimeStamp: 'created',
         tags: ['noteTest1']
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 27, 2014 11:13:00',
             modified: someDateTime,
@@ -69,7 +69,7 @@ export default [
         activeTimeStamp: 'created',
         tags: ['noteTest1']
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 27, 2014 11:13:00',
             modified: someDateTime,
@@ -78,7 +78,7 @@ export default [
         activeTimeStamp: 'created',
         tags: ['noteTest1']
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'December 14, 2014 11:13:00',
             modified: someDateTime,
@@ -88,7 +88,7 @@ export default [
         tags: ['noteTest1']
     },
     {
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'December 18, 2014 11:13:00',
             modified: someDateTime,
@@ -97,7 +97,7 @@ export default [
         activeTimeStamp: 'created',
         tags: ['noteTest1']
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'December 19, 2014 11:13:00',
             modified: someDateTime,
@@ -106,7 +106,7 @@ export default [
         activeTimeStamp: 'created',
         tags: ['noteTest1']
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'December 3, 2014 11:13:00',
             modified: someDateTime,

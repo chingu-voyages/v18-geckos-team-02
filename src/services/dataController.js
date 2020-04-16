@@ -63,13 +63,14 @@ function getFiles(from = '0', to = '0') {
 }
 
 function addFiles(uploadsArr) {
-    for (let {file, tags, activeTimeStamp, timeStamps} of uploadsArr) {
-        const fileObj = new FileObj(file, tags, activeTimeStamp, timeStamps);
+    let fileObj;
+    for (let upload of uploadsArr) {
+        fileObj = new FileObj(upload);
         if (!setFile(fileObj)) {
-            return `Error: unable to set file ${JSON.stringify(file)}`
+            return `Error: unable to set file ${JSON.stringify(upload)}`
         }
     }
-    return true
+    return fileObj
 }
 
 function updateFile(fileObj) {

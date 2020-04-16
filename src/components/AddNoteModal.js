@@ -20,7 +20,7 @@ const formControlBase = css`
   width: 100%;
 `;
 const Input = styled.input`
-  ${formControlBase}
+  ${formControlBase};
 `;
 
 const Button = styled.button`
@@ -31,12 +31,12 @@ const Button = styled.button`
   color: ${props => props.theme.offWhite};
   width: 45%;
   outline: none;
-  cursor: ${props => props.disabled ? "not-allowed": "pointer"}
+  cursor: ${props => props.disabled ? "not-allowed": "pointer"};
 `;
 
 const NotesArea = styled.textarea`
   height: 30vh;
-  ${formControlBase}
+  ${formControlBase};
 `;
 
 const ButtonGroup = styled.div`
@@ -45,18 +45,18 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
 `;
 
-const AddNoteModal = ({ addFilesToList, onCancel }) => {
+const AddNoteModal = ({ addUploadsToList, onCancel }) => {
   const [notesTitle, setNotesTitle] = useState("");
   const [notesBody, setNotesBody] = useState("");
   
   const handleSubmit = e => {
     e.preventDefault();
-    const notes = [{
-      lastModified: new Date().toISOString().substr(0, 10),
-      name: [notesTitle, notesBody],
-      type: "string",
-    }];
-    addFilesToList(notes);
+    const note = {
+      name: notesTitle,
+      text: notesBody,
+      type: 'note'
+    };
+    addUploadsToList([note]);
   }
 
   return (
