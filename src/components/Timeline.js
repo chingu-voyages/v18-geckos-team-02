@@ -101,9 +101,11 @@ width: 10vw;
   word-break: break-all;
   display: inline-block;
   max-height: 100%;
+  width: 100%;
   overflow-y: auto;
   background: ${props => props.theme.blue};
   border-radius: 8px;
+  padding: 0.2vw;
   &::-webkit-scrollbar {
   width: 4px;
   }
@@ -121,7 +123,10 @@ width: 10vw;
     font-size: 0.8vw;
     height: 5vw;
     overflow: hidden;
-    padding: 8px;
+    padding: 0.2vw;
+    &>div {
+      max-height: 100%;
+    }
   }
 }
 &.active section {
