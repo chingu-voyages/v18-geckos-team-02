@@ -5,6 +5,11 @@ import { ReactComponent as EditorIcon } from './../assets/editor-icon.svg';
 const EditorBox = styled.div`
   position: relative;
 `;
+const baseCss = css`
+  border: none;
+  padding: 0.5rem;
+  margin: 0.5rem;
+`;
 
 const EditorForm = styled.form`
   width: 310px;
@@ -18,31 +23,43 @@ const EditorForm = styled.form`
   z-index: 999;
 `;
 
-const Label = styled.label`
-`;
-
+const Label = styled.label``;
 const LineBreak = styled.br``;
 
-const Input = styled.input`
-  border: none;
-  padding: 0.5rem;
-  margin: 0.5rem;
+const Select = styled.select`
+${baseCss};
+`;
 
+const Option = styled.option`
+${baseCss};
+`;
+
+const Input = styled.input`
+${baseCss};
   ${props => props.type === "text" && css`
     padding: 0.6rem;
   `}
 `;
 
-function DateAndTagsEditor() {
+function DateAndTagsEditor({ file, files, lastModified, updateUpload }) {
   const now = new Date().toISOString();
   const currentDate = now.substr(0, 10);
   const currentTime = now.substring(11, 16);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [date, setDate] = useState(currentDate);
-  const [time, setTime] = useState(currentTime);
-  const [tags, setTags] = useState("");
- 
+  const [values, setValues] = useState({
+    user: currentDate,
+    modified: lastModified,
+    customTime: currentTime,
+    tags: "",
+    activeTimeStamp: "modified"
+  });
+  
+  const handleCustomValueChange = e => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+    updateUpload(file || files, values);
+  }
 
   return (
     <EditorBox>
@@ -51,34 +68,41 @@ function DateAndTagsEditor() {
       /> 
       {isOpen && 
         <EditorForm>
-          <Label>Custom Date:  
+          <Select name="activeTimeStamp" ariaLabel="Select date to use" onChange={handleCustomValueChange}>
+            <Option value="modified">Date Modified</Option>
+            <Option value="user">Custom Date</Option>
+          </Select>
+      
+            <LineBreak />
             <Input
-              type="date"
-              name="customDate"
-              value={ date }
-              onChange={ e => setDate(e.target.value) }
+                type="date"
+                name="user"
+                value={ values.activeTimeStamp === "modified" ? values.modified : values.user }
+                onChange={handleCustomValueChange}
+                disabled={values.activeTimeStamp === "user" ? false : true}
             /> 
-          </Label> 
-          <LineBreak />
-          <Label>Time: 
-            <Input
-              type="time"
-              name="customTime"
-              value={ time }
-              onChange={ e => setTime(e.target.value) }
-            />
-          </Label> 
-          <LineBreak />
-          <Label>Tags:  
-            <Input
-              type="text"
-              name="tags"
-              value={ tags }
-              placeholder="Enter tags..."
-              onChange={ e => setTags(e.target.value) }
-            />
-          </Label> 
-          <LineBreak />
+
+              <LineBreak />
+              <Label>Time: 
+                <Input
+                  type="time"
+                  name="customTime"
+                  value={ values.customTime }
+                  onChange={handleCustomValueChange}
+                  disabled
+                />
+              </Label> 
+              <LineBreak />
+              <Label>Tags:  
+                <Input
+                  type="text"
+                  name="tags"
+                  value={ values.tags }
+                  placeholder="Enter tags..."
+                  onChange={ handleCustomValueChange }
+                />
+              </Label> 
+              <LineBreak />
         </EditorForm>
       }
     </EditorBox>
