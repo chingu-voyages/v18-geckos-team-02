@@ -31,6 +31,7 @@ const Button = styled.button`
   color: ${props => props.theme.offWhite};
   width: 45%;
   outline: none;
+  cursor: ${props => props.disabled ? "not-allowed": "pointer"}
 `;
 
 const NotesArea = styled.textarea`
@@ -44,18 +45,27 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
 `;
 
-const AddNoteModal = ({ onSubmit, onCancel }) => {
-
+const AddNoteModal = ({ addFilesToList, onCancel }) => {
   const [notesTitle, setNotesTitle] = useState("");
   const [notesBody, setNotesBody] = useState("");
+  
+  const handleSubmit = e => {
+    e.preventDefault();
+    const notes = [{
+      lastModified: new Date().toISOString().substr(0, 10),
+      name: [notesTitle, notesBody],
+      type: "string",
+    }];
+    addFilesToList(notes);
+  }
 
   return (
-    <NotesForm onSubmit={ onSubmit }>
+    <NotesForm onSubmit={handleSubmit}>
       <Input type="text"
         name="title"
         id="title" 
         placeholder="Title"
-        aria-label="Title"
+        ariaLabel="Title"
         value={ notesTitle }
         onChange={ e => setNotesTitle(e.target.value) }
       />
@@ -63,12 +73,12 @@ const AddNoteModal = ({ onSubmit, onCancel }) => {
         name="notes"
         id="notes"
         placeholder="Enter your notes here"
-        aria-label="Notes area"
+        ariaLabel="Notes area"
         value={ notesBody }
         onChange={ e => setNotesBody(e.target.value) }
       />
       <ButtonGroup>
-        <Button
+        <Button disabled={notesTitle === "" || notesBody === "" ? true : false }
           type="submit"
           value="Submit"
           primary>Submit</Button>

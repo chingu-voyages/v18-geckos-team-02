@@ -22,7 +22,6 @@ const ModalTitle = styled.h2`
   text-transform: uppercase;
   margin-bottom: 1.5rem;
   text-align: center;
-
 `;
 
 const FileList = styled.ul`
@@ -36,7 +35,6 @@ const FileItem = styled.li`
   aligb-items: center;
   border-bottom: 1px solid ${props => props.theme.lightGrey};
   padding: 0.5rem;
-
 `;
 
 const FileName = styled.p`
@@ -61,12 +59,15 @@ const UploadButton = styled.button`
   padding: 0.8rem;
   margin: 1rem auto;
   border: none;
-  width: 80%;
+  width: 90%;
   color: ${props => props.theme.offWhite};
-  background: ${props => props.theme.blue}
+  background: ${props => props.theme.blue};
+  cursor: ${props => props.disabled ? "not-allowed": "pointer"}
 `;
 
-const UploadModal = ({ files, onUpload, deleteUpload, datesAndTags }) => {
+
+const UploadModal = ({ files, deleteUpload, updateUpload, updateUploads }) => {
+  console.log(files)
   return (
     <ModalBox>
       <AddedFiles>
@@ -75,7 +76,7 @@ const UploadModal = ({ files, onUpload, deleteUpload, datesAndTags }) => {
           {files.map(file =>
             <FileItem key={file.uid}>
             <FileName>{file.name}</FileName>
-              <DateAndTagsEditor datesTags={ datesAndTags } updateUploads={[file.uid]} />
+              <DateAndTagsEditor {...{file, updateUpload}} lastModified={new Date(file.lastModified).toISOString().substr(0, 10)}/>
               <DeleteButton
                 onClick={ () => deleteUpload(file.uid) }
                 aria-label="Delete file">
@@ -84,11 +85,10 @@ const UploadModal = ({ files, onUpload, deleteUpload, datesAndTags }) => {
           </FileItem>)}
         </FileList>
       </AddedFiles>
-      {files.length > 1 && <DateAndTagsEditor updateUploads={files.map(file => file.uid)} />}
-      <UploadButton
-        onClick={ onUpload }>
-        Upload
-      </UploadButton>
+      {files.length > 1 && <DateAndTagsEditor {...{files, updateUpload}} lastModified />}
+      {files.length < 1
+        ? <UploadButton disabled>Upload</UploadButton>
+        : <UploadButton onClick={() => updateUploads(files)}>Upload</UploadButton>}  
     </ModalBox>
     );
 }
