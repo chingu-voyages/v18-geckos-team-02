@@ -111,7 +111,7 @@ function App() {
       <GlobalStyle />
       <ThemeProvider theme={appTheme}>
        {uploadModalOpen && !noteModalOpen &&
-          <UploadModal close={() => setNoteModalOpen(false)} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
+          <UploadModal close={() => setUploadModalOpen(false)} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
         <Main {...{activeNode, setActiveNode}} />
         {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{ activeNode, setActiveNode }} />}
