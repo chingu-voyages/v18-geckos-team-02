@@ -1,6 +1,6 @@
 import React from 'react';
 import Node from './Node';
-import { getFiles } from '../services/dataController';
+import { getRefs } from '../services/dataController';
 import styled from 'styled-components';
 
 const Wrapper = styled.main`
@@ -24,14 +24,14 @@ const Header = styled.header`
 `;
 
 function Main({activeNode}) {
-  const files = getFiles(activeNode, activeNode.substr(0,8)+'2359');
+  const fileRefs = getRefs(activeNode, activeNode.substr(0,8)+'2359');
   const nodeDate = new Date(`${activeNode.substr(0,4)}-${activeNode.substr(4,2)}-${activeNode.substr(6,2)}`).toDateString();
   return (
     <Wrapper>
       <Header>
         <time dateTime={nodeDate}>{nodeDate}</time>
       </Header>
-      <Node files={files} timeWanted />
+      <Node fileRefs={fileRefs} timeWanted />
     </Wrapper>
   );
 }

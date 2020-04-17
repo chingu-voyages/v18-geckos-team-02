@@ -162,13 +162,10 @@ z-index: 100;
 }
 `;
 
-function Timeline({close, activeNode, setActiveNode}) {
-  const [maxNodes, setMaxNodes] = useState(11); // 7 and 'date' === 7 different days
-  const [start, setStart] = useState('0'); // dateTime YYYYMMDDHHMMSS -> 0 === year 0
+function Timeline({activeNode, setActiveNode}) {
   const [showNodes, setShowNodes] = useState(false);
-  const nodes = listNodes(start, maxNodes, 'date');
+  const nodes = listNodes();
   let lastDate = null;
-
   const scrollTo = ref =>
     ref.current.scrollIntoView({
     behavior: 'smooth',
@@ -216,7 +213,7 @@ function Timeline({close, activeNode, setActiveNode}) {
                         {showBar && <Bar className={showNodes && 'expanded'}></Bar>}
                         <DateItem ref={ref} className={(isActive ? 'active ' : '')+(showNodes && 'expanded')} onLoad={handleLoad} onClick={handleClick}>
                           <header>{nodeDate.substr(0,3)+' '+nodeDate.substr(8,2)}</header>
-                          {showNodes && <Node files={nodes[year][month][date]} />}
+                          {showNodes && <Node fileRefs={nodes[year][month][date]} />}
                         </DateItem>
                         {atEnd && <Gap></Gap>}
                       </Fragment>) 
