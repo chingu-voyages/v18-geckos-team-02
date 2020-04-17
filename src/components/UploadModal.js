@@ -32,7 +32,7 @@ const FileList = styled.ul`
 const FileItem = styled.li`
   display: flex;
   justify-content: space-between;
-  aligb-items: center;
+  align-items: center;
   border-bottom: 1px solid ${props => props.theme.lightGrey};
   padding: 0.5rem;
 `;
@@ -55,17 +55,22 @@ const DeleteButton = styled.button`
   }
 `;
 
-const UploadButton = styled.button`
+const Button = styled.button`
   padding: 0.8rem;
-  margin: 1rem auto;
-  border: none;
-  width: 90%;
+  border: none; 
+  width: ${props => props.name === "cancel" ? "30%" : "63%"};
   color: ${props => props.theme.offWhite};
-  background: ${props => props.theme.blue};
-  cursor: ${props => props.disabled ? "not-allowed": "pointer"};
+  background: ${props => props.name === "cancel" ? props.theme.red : props.theme.blue};
+  cursor: ${props => props.disabled === true ? "not-allowed": "pointer"};
 `;
 
-const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }) => {
+const ButtonGroup = styled.div`
+  width: 95%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, close }) => {
   return (
     <ModalBox>
       <AddedFiles>
@@ -84,9 +89,10 @@ const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }
         </FileList>
       </AddedFiles>
       {uploads.length > 1 && <DateAndTagsEditor {...{ uploads, updateDatesOrTags }} />}
-      {uploads.length < 1
-        ? <UploadButton disabled>Upload</UploadButton>
-        : <UploadButton onClick={sumbitUploads}>Upload</UploadButton>}  
+      <ButtonGroup>
+        <Button disabled={uploads.length < 1 ? true : false } onClick={sumbitUploads}>Save</Button>
+        <Button onClick={ close } name="cancel">Cancel</Button>
+      </ButtonGroup>
     </ModalBox>
     );
 }
