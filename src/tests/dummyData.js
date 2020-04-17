@@ -9,7 +9,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['fileTest1']
+        tags: ['fileTest1'],
+        uid: '123'
     },
     {
         file: {name: "a note", text: "A note of sorts", type: "note"},
@@ -19,7 +20,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '123'
     },
     {
         file: {name: "a note", text: "A note of sorts", type: "note"},
@@ -29,7 +31,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '1'
     },
     {
         file: {name: "a note", text: "A note of sorts", type: "note"},
@@ -39,7 +42,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '2'
     },
     {
         file: {name: "a note", text: "A note of sorts", type: "note"},
@@ -49,7 +53,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '3'
     },{
         file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
@@ -58,7 +63,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '4'
     },{
         file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
@@ -67,7 +73,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '5'
     },{
         file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
@@ -76,7 +83,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '6'
     },{
         file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
@@ -85,7 +93,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '7'
     },
     {
         file: {name: "a note", text: "A note of sorts", type: "note"},
@@ -95,7 +104,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '8'
     },{
         file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
@@ -104,7 +114,8 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '9'
     },{
         file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
@@ -113,6 +124,7 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '10'
     },
 ]
