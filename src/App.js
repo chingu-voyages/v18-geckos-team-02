@@ -96,13 +96,18 @@ function App() {
     setUploadModalOpen(false);
     setActiveNode(lastStoredFile.timeStamps[lastStoredFile.activeTimeStamp]);
   }
+
+  function handleCancel() {
+    setUploads([]);
+    setUploadModalOpen(false);
+  }
  
   return (
     <>
       <GlobalStyle />
       <ThemeProvider theme={appTheme}>
        {uploadModalOpen && !noteModalOpen &&
-          <UploadModal close={() => setUploadModalOpen(false)} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
+          <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
         <Main {...{activeNode, setActiveNode}} />
         {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{ activeNode, setActiveNode }} />}
