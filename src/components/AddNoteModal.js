@@ -57,6 +57,7 @@ const AddNoteModal = ({ addUploadsToList, onCancel }) => {
       type: 'note'
     };
     addUploadsToList([note]);
+
   }
 
   return (
