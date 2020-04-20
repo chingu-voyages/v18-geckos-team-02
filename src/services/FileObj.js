@@ -8,6 +8,7 @@ export default function FileObj({uid, file, activeTimeStamp, timeStamps, tags}) 
         formatDate: this.formatDate
     }
     Object.keys(timeStamps).forEach(key => fileObj.timeStamps[key] = this.formatDate(timeStamps[key]));
+    fileObj.type = this.checkType(fileObj.file.type, fileObj.file.name);
     return fileObj
 }
 FileObj.prototype.formatDate = function(dateTime) {
@@ -22,4 +23,16 @@ FileObj.prototype.formatDate = function(dateTime) {
         makeMinTwoDigits(d.getHours()) +
         makeMinTwoDigits(d.getMinutes()) +
         makeMinTwoDigits(d.getSeconds());
+}
+FileObj.prototype.checkType = function(type, name) {
+    if (!type) {
+        const segs = name.split('.');
+        if (segs.length > 1) {
+            return segs[segs.length-1];
+        }
+        else {
+            return "unknown"
+        }
+    }
+    return type
 }
