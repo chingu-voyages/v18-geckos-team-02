@@ -13,41 +13,9 @@ addFiles([...dummyData]);
 function App() {
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [timelineOpen, setTimelineOpen] = useState(false);
   const [activeNode, setActiveNode] = useState(findKey('start'));
   const [uploads, setUploads] = useState([]);
   const [appTheme, setTheme] = useState(theme);
-
-   /* 
-    upload from a file -> {name: String, lastModified: Interger, 
-                          lastModifiedDate: DateTime, size: Interger, 
-                          type: String}
-    upload from note -> {name: String, text: String, type: "note"}
-
-    --^ formated ^--
-    file -> { 
-      uid: String,
-      file: {name: String, lastModified: Interger, 
-            lastModifiedDate: DateTime, 
-            size: Interger, type: String},
-      timeStamps: {
-        modified: DateTime,
-        user: DateTime
-      },
-      activeTimeStamp: String,
-      tags: Array
-    }
-    note -> {
-      uid: String,
-      file: {name: String, text: String, type: "note"},
-      timeStamps: {
-        modified: DateTime,
-        user: DateTime
-      },
-      activeTimeStamp: String,
-      tags: Array
-    }
-  */
 
   function addUploadsToList(newUploads) {
     const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
@@ -118,8 +86,10 @@ function App() {
           <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
         <Main {...{activeNode, setActiveNode}} />
-        {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{ activeNode, setActiveNode }} />}
-        <NavBar openNote={() => setNoteModalOpen(true)} openTimeline={() => setTimelineOpen(true)} {...{ addUploadsToList }} />
+        <nav>
+          <Timeline {...{ activeNode, setActiveNode }} />
+          <NavBar openNote={() => setNoteModalOpen(true)} {...{ addUploadsToList }} />
+        </nav>
       </ThemeProvider>
     </>
   );
