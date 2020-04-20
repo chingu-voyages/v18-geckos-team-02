@@ -68,7 +68,7 @@ function App() {
     for (let uid of uids) {
       const index = uploads.findIndex(upload => upload.uid === uid);
       if (tags) {
-        uploads[index].tags = [...uploads[uid].tags, ...tags];
+        uploads[index].tags = uploads[index].tags.concat(tags);
       }
       if (user) {
         uploads[index].timeStamps.user = user;
@@ -105,13 +105,17 @@ function App() {
     console.log(uploads, "uploads on submit");
   }
 
+  function handleCancel() {
+    setUploads([]);
+    setUploadModalOpen(false);
+  }
  
   return (
     <>
       <GlobalStyle />
       <ThemeProvider theme={appTheme}>
-       {uploadModalOpen && !noteModalOpen &&
-          <UploadModal close={() => setUploadModalOpen(false)} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
+        {uploadModalOpen && !noteModalOpen &&
+          <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
         <Main {...{activeNode, setActiveNode}} />
         {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{ activeNode, setActiveNode }} />}

@@ -51,7 +51,7 @@ function DateAndTagsEditor({ uploads, updateDatesOrTags }) {
   const [values, setValues] = useState({
     user: uploads[0].timeStamps.user || currentDate,
     modified: uploads[0].timeStamps.modified,
-    tags: "",
+    tags: [],
     activeTimeStamp: "modified",
   });
   

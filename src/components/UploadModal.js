@@ -2,17 +2,26 @@ import React from 'react';
 import styled from 'styled-components';
 import DateAndTagsEditor from './DateAndTagsEditor';
 
-const ModalBox = styled.div`
+const ModalWindow = styled.section`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
+const UploadModalWrapper = styled.div`
   max-width: 414px;
   margin: auto;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  
+  background: ${props => props.theme.white};
 `;
 const AddedFiles = styled.div`
   min-height: 50vh;
+  width: 100%;
   border: 2px solid ${props => props.theme.blue};
   padding: 1rem;
   margin-bottom: 1rem;
@@ -65,35 +74,38 @@ const Button = styled.button`
 `;
 
 const ButtonGroup = styled.div`
-  width: 95%;
+  margin: 1rem auto;
+  width: 100%;
   display: flex;
   justify-content: space-between;
 `;
 
 const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, close }) => {
   return (
-    <ModalBox>
-      <AddedFiles>
-        <ModalTitle>Files ready to upload!</ModalTitle>
-        <FileList>
-          {uploads.map(upload =>
-            <FileItem key={upload.uid}>
-            <FileName>{upload.file.name}</FileName>
-              <DateAndTagsEditor {...{ uploads: [upload], updateDatesOrTags }}/>
-              <DeleteButton
-                onClick={ () => deleteUpload(upload.uid) }
-                aria-label="Delete upload">
-                &times;
-            </DeleteButton>
-          </FileItem>)}
-        </FileList>
-      </AddedFiles>
-      {uploads.length > 1 && <DateAndTagsEditor {...{ uploads, updateDatesOrTags }} />}
-      <ButtonGroup>
-        <Button disabled={uploads.length < 1 ? true : false } onClick={sumbitUploads}>Save</Button>
-        <Button onClick={ close } name="cancel">Cancel</Button>
-      </ButtonGroup>
-    </ModalBox>
+    <ModalWindow>
+      <UploadModalWrapper>
+        <AddedFiles>
+          <ModalTitle>{uploads.length < 1 ? "Upload some file(s)" : "Files ready to upload!"}</ModalTitle>
+          <FileList>
+            {uploads.map(upload =>
+              <FileItem key={upload.uid}>
+              <FileName>{upload.file.name}</FileName>
+                <DateAndTagsEditor {...{ uploads: [upload], updateDatesOrTags }}/>
+                <DeleteButton
+                  onClick={ () => deleteUpload(upload.uid) }
+                  aria-label="Delete upload">
+                  &times;
+              </DeleteButton>
+            </FileItem>)}
+          </FileList>
+        </AddedFiles>
+        {uploads.length > 1 && <DateAndTagsEditor {...{ uploads, updateDatesOrTags }} />}
+        <ButtonGroup>
+          <Button disabled={uploads.length < 1 ? true : false } onClick={sumbitUploads}>Save</Button>
+          <Button onClick={ close } name="cancel">Cancel</Button>
+        </ButtonGroup>
+      </UploadModalWrapper>
+    </ModalWindow>
     );
 }
  

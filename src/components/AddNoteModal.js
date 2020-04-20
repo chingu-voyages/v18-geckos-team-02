@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 // import DateAndTagsEditor from './DateAndTagsEditor';
 
+const ModalWindow = styled.section`
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
 const NotesForm = styled.form`
   max-width: 414px;
   margin: auto;
@@ -61,35 +69,38 @@ const AddNoteModal = ({ addUploadsToList, onCancel }) => {
   }
 
   return (
-    <NotesForm onSubmit={handleSubmit}>
-      <Input type="text"
-        name="title"
-        id="title" 
-        placeholder="Title"
-        ariaLabel="Title"
-        value={ notesTitle }
-        onChange={ e => setNotesTitle(e.target.value) }
-      />
-      <NotesArea type="text-area"
-        name="notes"
-        id="notes"
-        placeholder="Enter your notes here"
-        ariaLabel="Notes area"
-        value={ notesBody }
-        onChange={ e => setNotesBody(e.target.value) }
-      />
-      <ButtonGroup>
-        <Button disabled={notesTitle === "" || notesBody === "" ? true : false }
-          type="submit"
-          value="Submit"
-          primary>Submit</Button>
-        <Button
-          onClick={ onCancel }
-          type="button"> 
-          Back
-        </Button>
-      </ButtonGroup>
-      </NotesForm>
+    <ModalWindow>
+      <NotesForm onSubmit={handleSubmit}>
+        <Input type="text"
+          name="title"
+          id="title" 
+          placeholder="Title"
+          ariaLabel="Title"
+          value={ notesTitle }
+          onChange={ e => setNotesTitle(e.target.value) }
+        />
+        <NotesArea type="text-area"
+          name="notes"
+          id="notes"
+          placeholder="Enter your notes here"
+          ariaLabel="Notes area"
+          value={ notesBody }
+          onChange={ e => setNotesBody(e.target.value) }
+        />
+        <ButtonGroup>
+          <Button disabled={notesTitle === "" || notesBody === "" ? true : false }
+            type="submit"
+            value="Submit"
+            primary>Submit</Button>
+          <Button
+            onClick={ onCancel }
+            type="button"> 
+            Back
+          </Button>
+        </ButtonGroup>
+        </NotesForm>
+
+    </ModalWindow>
     );
 }
  
