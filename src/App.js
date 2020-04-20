@@ -68,7 +68,7 @@ function App() {
     for (let uid of uids) {
       const index = uploads.findIndex(upload => upload.uid === uid);
       if (tags) {
-        uploads[index].tags = [...uploads[uid].tags, ...tags];
+        uploads[index].tags = uploads[index].tags.concat(tags);
       }
       if (user) {
         uploads[index].timeStamps.user = user;
@@ -114,7 +114,7 @@ function App() {
     <>
       <GlobalStyle />
       <ThemeProvider theme={appTheme}>
-       {uploadModalOpen && !noteModalOpen &&
+        {uploadModalOpen && !noteModalOpen &&
           <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
         <Main {...{activeNode, setActiveNode}} />
