@@ -8,6 +8,7 @@ const ModalWindow = styled.section`
   position: absolute;
   top: 0;
   left: 0;
+  background: ${props => props.theme.greyBlueTransp};
 `;
 
 const NotesForm = styled.form`
@@ -19,6 +20,8 @@ const NotesForm = styled.form`
   justify-content: center;
   align-items: center;
   padding: 0.5rem 2rem 2rem;
+  position: relative;
+  z-index: 60;
 `;
 
 const formControlBase = css`

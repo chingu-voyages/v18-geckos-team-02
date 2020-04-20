@@ -8,6 +8,7 @@ const ModalWindow = styled.section`
   position: absolute;
   top: 0;
   left: 0;
+  background: ${props => props.theme.greyBlueTransp};
 `;
 
 const UploadModalWrapper = styled.div`
@@ -17,7 +18,9 @@ const UploadModalWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: ${props => props.theme.white};
+  background: ${props => props.theme.lightGrey};
+  position: relative;
+  z-index: 60;
 `;
 const AddedFiles = styled.div`
   min-height: 50vh;
@@ -51,10 +54,10 @@ const FileName = styled.p`
 `;
 
 const DeleteButton = styled.button`
-  color: ${props => props.theme.grey};
+  color: ${props => props.theme.darkGrey};
   background: none;
   outline: none;
-  border: 1px solid ${props => props.theme.lightGrey};
+  border: 1px solid ${props => props.theme.greyBlue};
   font-size: 2rem;
   padding: 0.1rem 0.5rem;
 

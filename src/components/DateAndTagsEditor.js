@@ -15,7 +15,7 @@ const EditorForm = styled.form`
   width: 310px;
   margin: auto;
   padding: 1rem;
-  background: ${props => props.theme.lightGrey};
+  background: ${props => props.theme.grey};
   text-align: right;
   position: absolute;
   top: 2.2rem;
