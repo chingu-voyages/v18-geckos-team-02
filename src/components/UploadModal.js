@@ -54,7 +54,6 @@ const FileName = styled.p`
 `;
 
 const DeleteButton = styled.button`
-  color: ${props => props.theme.darkGrey};
   background: none;
   outline: none;
   border: 1px solid ${props => props.theme.greyBlue};

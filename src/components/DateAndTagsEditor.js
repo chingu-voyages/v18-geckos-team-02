@@ -9,10 +9,11 @@ const baseCss = css`
   border: none;
   padding: 0.5rem;
   margin: 0.5rem;
+  background: ${props => props.theme.lightGrey};
 `;
 
 const EditorForm = styled.form`
-  width: 310px;
+  width: 250px;
   margin: auto;
   padding: 1rem;
   background: ${props => props.theme.grey};
