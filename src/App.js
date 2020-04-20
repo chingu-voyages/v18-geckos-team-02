@@ -19,13 +19,17 @@ function App() {
   const [appTheme, setTheme] = useState(theme);
 
    /* 
-    upload from a file -> {name: String, lastModified: Interger, lastModifiedDate: DateTime, size: Interger, type: String}
+    upload from a file -> {name: String, lastModified: Interger, 
+                          lastModifiedDate: DateTime, size: Interger, 
+                          type: String}
     upload from note -> {name: String, text: String, type: "note"}
 
     --^ formated ^--
     file -> { 
       uid: String,
-      file: {name: String, lastModified: Interger, lastModifiedDate: DateTime, size: Interger, type: String},
+      file: {name: String, lastModified: Interger, 
+            lastModifiedDate: DateTime, 
+            size: Interger, type: String},
       timeStamps: {
         modified: DateTime,
         user: DateTime
@@ -48,6 +52,9 @@ function App() {
   function addUploadsToList(newUploads) {
     const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
     setUploads([...uploads, ...newUploadsArr]);
+
+    console.log(newUploadsArr, "uploads when added to upload modal");
+
     setUploadModalOpen(true);
     setNoteModalOpen(false);
   }
@@ -82,7 +89,7 @@ function App() {
       uid: dateNow+`${++newUploadCount}`,
       file: upload,
       timeStamps: {
-        modified: upload.lastModifiedDate,
+        modified: !upload.lastModifiedDate ? dateNow : upload.lastModifiedDate,
         user: dateNow
       },
       activeTimeStamp: 'modified',
@@ -95,6 +102,7 @@ function App() {
     setUploads([]);
     setUploadModalOpen(false);
     setActiveNode(lastStoredFile.timeStamps[lastStoredFile.activeTimeStamp]);
+    console.log(uploads, "uploads on submit");
   }
 
   function handleCancel() {
