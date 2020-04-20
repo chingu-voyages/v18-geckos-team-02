@@ -20,9 +20,6 @@ function App() {
   function addUploadsToList(newUploads) {
     const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
     setUploads([...uploads, ...newUploadsArr]);
-
-    console.log(newUploadsArr, "uploads when added to upload modal");
-
     setUploadModalOpen(true);
     setNoteModalOpen(false);
   }
@@ -32,21 +29,10 @@ function App() {
     setUploads(appendedUploads);
   }
 
-  function updateDatesOrTags(uids, { tags, user, modified, activeTimeStamp }) {
+  function updateDatesOrTags(uids, values) {
     for (let uid of uids) {
       const index = uploads.findIndex(upload => upload.uid === uid);
-      if (tags) {
-        uploads[index].tags = uploads[index].tags.concat(tags);
-      }
-      if (user) {
-        uploads[index].timeStamps.user = user;
-      }
-      if (modified) {
-        uploads[index].timeStamps.modified = modified;
-      }
-      if (activeTimeStamp) {
-        uploads[index].activeTimeStamp = activeTimeStamp;
-      }
+      Object.assign(uploads[index], values);
     }
   }
 
@@ -70,7 +56,6 @@ function App() {
     setUploads([]);
     setUploadModalOpen(false);
     setActiveNode(lastStoredFile.timeStamps[lastStoredFile.activeTimeStamp]);
-    console.log(uploads, "uploads on submit");
   }
 
   function handleCancel() {
