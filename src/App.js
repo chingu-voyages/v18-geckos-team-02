@@ -4,57 +4,78 @@ import Timeline from './components/Timeline';
 import NavBar from './components/NavBar';
 import UploadModal from './components/UploadModal';
 import AddNoteModal from './components/AddNoteModal';
-import styled from 'styled-components';
-import GlobalStyle from './theme/globalStyles';
+import styled, {ThemeProvider} from 'styled-components';
+import GlobalStyle, {theme} from './theme/globalStyles';
 import dummyData from './tests/dummyData';
 import { addFiles, findKey } from './services/dataController';
 addFiles([...dummyData]);
 
-const Demo = styled.div`
-  width: 30rem;
-  height: 30rem;;
-  margin: 5rem auto;
-  background: #00bfff;
-  color: #f6f6f6;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const AppTitle = styled.h1`
-  font-size: 4rem;
-`;
-
 function App() {
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [timelineOpen, setTimelineOpen] = useState(false);
   const [activeNode, setActiveNode] = useState(findKey('start'));
-  const [files, setFiles] = useState([]);
+  const [uploads, setUploads] = useState([]);
+  const [appTheme, setTheme] = useState(theme);
 
-  function addFilesToList(uploads) {
-    const uploadsArr = Object.values(uploads);
-    const dateNow = Date.now();
-    uploadsArr.forEach((upload, i) => uploadsArr[i].uid = dateNow+`${i}`);
-    setFiles([...files, ...uploadsArr]);
+  function addUploadsToList(newUploads) {
+    const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
+    setUploads([...uploads, ...newUploadsArr]);
     setUploadModalOpen(true);
-  }
-  function deleteUpload(uid) {
-    const appendedFiles = files.filter(file => file.uid !== uid);
-    setFiles(appendedFiles);
-  }
-  function updateUploads(uidArr) {
-    // TODO update date and tags and selected timeStamp: timeStamps -> modified + user, activeTimeStamp
+    setNoteModalOpen(false);
   }
 
+  function deleteUpload(uid) {
+    const appendedUploads = uploads.filter(upload => upload.uid !== uid);
+    setUploads(appendedUploads);
+  }
+
+  function updateDatesOrTags(uids, values) {
+    for (let uid of uids) {
+      const index = uploads.findIndex(upload => upload.uid === uid);
+      Object.assign(uploads[index], values);
+    }
+  }
+
+  let newUploadCount = 0;
+  function formatNewUpload(upload) {
+    const dateNow = Date.now();
+    return ({
+      uid: dateNow+`${++newUploadCount}`,
+      file: upload,
+      timeStamps: {
+        modified: !upload.lastModifiedDate ? dateNow : upload.lastModifiedDate,
+        user: dateNow
+      },
+      activeTimeStamp: 'modified',
+      tags: []
+    })
+  }
+
+  function sumbitUploads() {
+    const lastStoredFile = addFiles(uploads);
+    setUploads([]);
+    setUploadModalOpen(false);
+    setActiveNode(lastStoredFile.timeStamps[lastStoredFile.activeTimeStamp]);
+  }
+
+  function handleCancel() {
+    setUploads([]);
+    setUploadModalOpen(false);
+  }
+ 
   return (
     <>
-      {uploadModalOpen && !noteModalOpen && <UploadModal close={() => setNoteModalOpen(false)} {...{files, deleteUpload, updateUploads}} />}
-      {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} />}
-      <Main {...{activeNode, setActiveNode}} />
-      {!uploadModalOpen && !noteModalOpen && timelineOpen && <Timeline close={() => setTimelineOpen(false)} {...{activeNode, setActiveNode}} />}
-      <NavBar openModal={() => setNoteModalOpen(true)} openNote={() => setUploadModalOpen(true)} openTimeline={() => setTimelineOpen(true)} {...{addFilesToList}} />
+      <GlobalStyle />
+      <ThemeProvider theme={appTheme}>
+        {uploadModalOpen && !noteModalOpen &&
+          <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
+        {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
+        <Main {...{activeNode, setActiveNode}} />
+        <nav>
+          <Timeline {...{ activeNode, setActiveNode }} />
+          <NavBar openNote={() => setNoteModalOpen(true)} {...{ addUploadsToList }} />
+        </nav>
+      </ThemeProvider>
     </>
   );
 }

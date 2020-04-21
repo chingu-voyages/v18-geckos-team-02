@@ -1,6 +1,5 @@
 import React from 'react';
 import styled  from 'styled-components';
-import {ReactComponent as OpenTimelineButton} from '../assets/openTimelineButton.svg';
 
 export const NavBarContainer = styled.div`
     display: flex;
@@ -66,14 +65,13 @@ export const FileUploadLabel = styled.label`
   font-size: 15px;
 `;
 
-function NavBar({ openTimeline, openModal, openNote, addFilesToList }) {
+function NavBar({ openTimeline, openNote, addUploadsToList }) {
   return (
     <NavBarContainer>
         <ButtonContainer>
-          <FileUploadInput type="file" id="file" onChange={e => addFilesToList(e.target.files)} multiple/> 
+          <FileUploadInput type="file" id="file" onChange={e => addUploadsToList(e.target.files)} multiple/> 
           <FileUploadLabel htmlFor="file">UPLOAD FILES</FileUploadLabel>
-          <AddNoteButton onClick={openModal}>ADD NOTE</AddNoteButton>
-          <OpenTimelineButton onClick={openTimeline}/>
+          <AddNoteButton onClick={openNote}>ADD NOTE</AddNoteButton>
         </ButtonContainer>
     </NavBarContainer>
   );
