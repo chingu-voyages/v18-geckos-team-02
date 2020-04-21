@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { ReactComponent as EditorIcon } from './../assets/editor-icon.svg';
 
@@ -43,24 +43,34 @@ ${baseCss};
 `;
 
 function DateAndTagsEditor({ uploads, updateDatesOrTags }) {
-  const now = new Date().toISOString();
-  const currentDate = now.substr(0, 10);
-  const currentTime = now.substring(11, 16);
+  const currentDate = new Date();
   const uids = uploads.map(upload => upload.uid);
-
+  const tagsSet = new Set();
+  uploads.forEach(upload => upload.tags.forEach(tag => tagsSet.add(tag)));
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
     user: uploads[0].timeStamps.user || currentDate,
     modified: uploads[0].timeStamps.modified,
-    tags: [],
+    tags: Array.from(tagsSet.values).join(', '),
     activeTimeStamp: "modified",
   });
   
   const handleCustomValueChange = e => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
-    updateDatesOrTags(uids, {[name]: value});
   }
+
+  useEffect(() => {
+    if (!isOpen) {
+      const {user, modified, tags, activeTimeStamp} = values;
+      updateDatesOrTags(uids, {
+        user,
+        modified,
+        tags: tags.replace(', ', ',').replace(' ,', ',').split(','),
+        activeTimeStamp
+      });
+    }
+  }, [isOpen]);
 
   return (
     <EditorBox>
@@ -100,7 +110,7 @@ function DateAndTagsEditor({ uploads, updateDatesOrTags }) {
                   name="tags"
                   value={ values.tags }
                   placeholder="Enter tags..."
-                  onChange={ handleCustomValueChange }
+                  onChange={handleCustomValueChange}
                 />
               </Label> 
               <LineBreak />

@@ -228,7 +228,7 @@ function Timeline({activeNode, setActiveNode}) {
     })} 
   </Line>;
   return (<Wrapper className={!showNodes && 'contracted'}>
-     <ExpandButton className={showNodes && 'close'} onClick={() => setShowNodes(!showNodes)}><img showNodes src={openTimelineIcon} alt="close timeline" /></ExpandButton>
+     <ExpandButton className={showNodes && 'close'} onClick={() => setShowNodes(!showNodes)}><img src={openTimelineIcon} alt="close timeline" /></ExpandButton>
      {TimeLine}
   </Wrapper>);
 }
