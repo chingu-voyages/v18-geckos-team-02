@@ -15,7 +15,10 @@ const Note = styled(Wrapper)`
     min-height: 100%;
     padding: 10%;
 `;
-const FileIcon = styled(Wrapper)`
+const FileIcon = styled.a`
+    max-width: 100%;
+    display: grid;
+    place-items: center center;
     background: ${props => props.background};
     color: ${props => props.color};
     width: 300px;
@@ -34,10 +37,10 @@ export default function File({fileRef, timeWanted, lastTime, updateLastTime}) {
         return (
             <>
                 {timeWanted && showTime && <time dateTime={time}>{time}</time>}
-                {fileObj.file.type.includes('image') ? 
+                {fileObj.type.includes('image') ? 
                     <Img src={URL.createObjectURL(fileObj.file)} alt="" /> : 
-                    fileObj.file.type === 'note' ? <Note className="note"><h1>{fileObj.file.name}</h1><p>{fileObj.file.text}</p></Note> :
-                    <FileIcon {...charsToColour(fileObj.file.type)}>{fileObj.file.type}</FileIcon>
+                    fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.file.name}</h1><p>{fileObj.file.text}</p></Note> :
+                    <FileIcon href={URL.createObjectURL(fileObj.file)} download={fileObj.file.name} {...charsToColour(fileObj.type)}>{fileObj.file.name}</FileIcon>
                 }
             </>
         )
