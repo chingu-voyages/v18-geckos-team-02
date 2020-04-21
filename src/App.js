@@ -1,32 +1,81 @@
-import React from 'react';
-import styled from 'styled-components';
-import GlobalStyle from './theme/globalStyles';
-
-
-const Demo = styled.div`
-  width: 30rem;
-  height: 30rem;;
-  margin: 5rem auto;
-  background: #00bfff;
-  color: #f6f6f6;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const AppTitle = styled.h1`
-  font-size: 4rem;
-`;
-
+import React, {useState} from 'react';
+import Main from './components/Main';
+import Timeline from './components/Timeline';
+import NavBar from './components/NavBar';
+import UploadModal from './components/UploadModal';
+import AddNoteModal from './components/AddNoteModal';
+import styled, {ThemeProvider} from 'styled-components';
+import GlobalStyle, {theme} from './theme/globalStyles';
+import dummyData from './tests/dummyData';
+import { addFiles, findKey } from './services/dataController';
+addFiles([...dummyData]);
 
 function App() {
+  const [noteModalOpen, setNoteModalOpen] = useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
+  const [activeNode, setActiveNode] = useState(findKey('start'));
+  const [uploads, setUploads] = useState([]);
+  const [appTheme, setTheme] = useState(theme);
+
+  function addUploadsToList(newUploads) {
+    const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
+    setUploads([...uploads, ...newUploadsArr]);
+    setUploadModalOpen(true);
+    setNoteModalOpen(false);
+  }
+
+  function deleteUpload(uid) {
+    const appendedUploads = uploads.filter(upload => upload.uid !== uid);
+    setUploads(appendedUploads);
+  }
+
+  function updateDatesOrTags(uids, values) {
+    for (let uid of uids) {
+      const index = uploads.findIndex(upload => upload.uid === uid);
+      Object.assign(uploads[index], values);
+    }
+  }
+
+  let newUploadCount = 0;
+  function formatNewUpload(upload) {
+    const dateNow = Date.now();
+    return ({
+      uid: dateNow+`${++newUploadCount}`,
+      file: upload,
+      timeStamps: {
+        modified: !upload.lastModifiedDate ? dateNow : upload.lastModifiedDate,
+        user: dateNow
+      },
+      activeTimeStamp: 'modified',
+      tags: []
+    })
+  }
+
+  function sumbitUploads() {
+    const lastStoredFile = addFiles(uploads);
+    setUploads([]);
+    setUploadModalOpen(false);
+    setActiveNode(lastStoredFile.timeStamps[lastStoredFile.activeTimeStamp]);
+  }
+
+  function handleCancel() {
+    setUploads([]);
+    setUploadModalOpen(false);
+  }
+ 
   return (
     <>
       <GlobalStyle />
-      <Demo>
-        <AppTitle>Timeline app</AppTitle>
-      </Demo>
+      <ThemeProvider theme={appTheme}>
+        {uploadModalOpen && !noteModalOpen &&
+          <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
+        {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
+        <Main {...{activeNode, setActiveNode}} />
+        <nav>
+          <Timeline {...{ activeNode, setActiveNode }} />
+          <NavBar openNote={() => setNoteModalOpen(true)} {...{ addUploadsToList }} />
+        </nav>
+      </ThemeProvider>
     </>
   );
 }
