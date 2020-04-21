@@ -1,75 +1,69 @@
 import FileObj from './FileObj';
 const dates = {};
-const nodeDetailLookup = {
-    'year': 0,
-    'month': 4,
-    'date': 6,
-    'hour': 8,
-    'min': 10,
-    'sec': 12
-}
 
-function listNodes(fromNode = '0', maxNodes = 7, nodeDetail = 'date') {
-    const getPath = dateTime => [dateTime.substr(0,4), ...dateTime.substr(4).match(/.{2}/g)];
-    const dateKeys = Object.keys(dates).sort();
-    const startKey = dateKeys.find(key => key.substr(0, fromNode.length) >= fromNode);
-    let nodesToFind = maxNodes;
-    let lastSegmentFound = '0';
-    let endKey = dateKeys[dateKeys.length-1];
-    for (let key of dateKeys) {
-        const keySegment = key.substr(nodeDetailLookup[nodeDetail], nodeDetail === 'year' ? 4 : 2);
-        if (nodesToFind === 1) {
-            endKey = key;
-            break;
-        }
-        else if (keySegment !== lastSegmentFound) {
-            lastSegmentFound = keySegment;
-            nodesToFind--;
-        }
-    }
-    const files = getFiles(startKey, endKey);
-    const nodes = {};
-    for (let file of files) {
-        const path = getPath(file.key.substr(0, 8));
-        let head = nodes;
-        for (let key of path) {
-            if (!head.hasOwnProperty(key)) {
-                if (key !== path[path.length-1]) {
-                    head[key] = {};
+function listNodes() {
+    /* TODO sync stored list in local DB and Drive and check for newest + make updateList function to add remove efficiently */
+    // if (storedList) { return storedList }
+    // else {
+        const getPath = dateTime => [dateTime.substr(0,4), ...dateTime.substr(4).match(/.{2}/g)]; 
+        const fileRefs = Object.keys(dates).sort();
+        const nodes = {};
+        for (let fileRef of fileRefs) {
+            const path = getPath(fileRef.substr(0, 8));
+            let head = nodes;
+            for (let key of path) {
+                if (!head.hasOwnProperty(key)) {
+                    if (key !== path[path.length-1]) {
+                        head[key] = {};
+                    }
+                    else {
+                        head[key] = [];
+                    }
                 }
-                else {
-                    head[key] = [];
-                }
+                head = head[key];
             }
-            head = head[key];
+            head.push(fileRef);
         }
-        head.push(file);
-    }
-    return nodes
+        return nodes
+    // }
 }
 
-function getFiles(from = '0', to = '0') {
+function getRefs(from = '0', to = '0') {
     const keys = Object.keys(dates).sort();
-    const files = [];
+    const fileRefs = [];
     for (let key of keys) {
         if (key.substr(0, from.length) >= from && key.substr(0, to.length) <= to) {
-            files.push({...dates[key], key})
+            fileRefs.push(key)
         }
         else if (key.substr(0, to.length) > to) {
             break;
         }
     }
-    return files
+    return fileRefs
+}
+
+function getFile(fileRef) {
+    return new Promise((resolve, reject) => {
+        if (dates.hasOwnProperty(fileRef)) {
+            resolve(dates[fileRef]);
+        }
+        else {
+                // get from local db
+                // else get from cloud/Google drive
+                // else reject
+        }
+    });
 }
 
 function addFiles(uploadsArr) {
-    for (let {file, tags, activeTimeStamp, timeStamps} of uploadsArr) {
-        const fileObj = new FileObj(file, tags, activeTimeStamp, timeStamps);
+    let fileObj;
+    for (let upload of uploadsArr) {
+        fileObj = new FileObj(upload);
         if (!setFile(fileObj)) {
-            return `Error: unable to set file ${JSON.stringify(file)}`
+            return `Error: unable to set file ${JSON.stringify(upload)}`
         }
     }
-    return true
+    return fileObj
 }
 
 function updateFile(fileObj) {
@@ -103,7 +97,7 @@ function findKey(nearestTo) {
     }
 }
 
-export {listNodes, getFiles, addFiles, updateFile, removeFile, findKey}
+export {listNodes, getRefs, getFile, addFiles, updateFile, removeFile, findKey}
 
 function setFile(fileObj, nDuplicate = 0) {
     let key = `${fileObj.timeStamps[fileObj.activeTimeStamp]}${nDuplicate ? `(${nDuplicate})` : ''}`;

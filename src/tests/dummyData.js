@@ -9,110 +9,122 @@ export default [
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['fileTest1']
+        tags: ['fileTest1'],
+        uid: '123'
     },
     {
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: someDateTime,
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '123'
     },
     {
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 14, 2014 11:13:00',
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '1'
     },
     {
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 18, 2014 11:13:00',
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '2'
     },
     {
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 3, 2014 11:13:00',
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '3'
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 27, 2014 11:13:00',
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '4'
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 27, 2014 11:13:00',
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '5'
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'October 27, 2014 11:13:00',
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '6'
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'December 14, 2014 11:13:00',
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '7'
     },
     {
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'December 18, 2014 11:13:00',
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '8'
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'December 19, 2014 11:13:00',
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '9'
     },{
-        file: 'A note of sorts',
+        file: {name: "a note", text: "A note of sorts", type: "note"},
         timeStamps: {
             created: 'December 3, 2014 11:13:00',
             modified: someDateTime,
             user: someDateTime
         },
         activeTimeStamp: 'created',
-        tags: ['noteTest1']
+        tags: ['noteTest1'],
+        uid: '10'
     },
 ]

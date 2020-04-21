@@ -1,31 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
+import File from './File';
 
 const Wrapper = styled.section`
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-self: center;
-    `;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-content: center;
+`;
 
-export default function Node({ files, timeWanted = false }) {
+export default function Node({ fileRefs, timeWanted = false }) {
     let lastTime = '';
-    const File = fileObj => {
-        if (timeWanted) {
-            var time = fileObj.timeStamps[fileObj.activeTimeStamp].substr(8).match(/.{2}/g).join(':');
-            var showTime = time !== lastTime;
-            lastTime = time;
-        }
-        return (
-            <div>
-                {timeWanted && showTime && <h1>{time}</h1>}
-                {fileObj.file}
-            </div>
-        )
+    function updateLastTime(time) {
+        lastTime = time;
     }
     return (
         <Wrapper>
-           {files.map(fileObj => <File key={fileObj.key} {...fileObj} />)}
+           {fileRefs.map(fileRef => <File key={fileRef} {...{fileRef, timeWanted, lastTime, updateLastTime}} />)}
         </Wrapper>
     )
 }

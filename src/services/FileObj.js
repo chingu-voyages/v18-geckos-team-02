@@ -1,14 +1,14 @@
-export default function FileObj(file, tags, activeTimeStamp, timeStamps) {
+export default function FileObj({uid, file, activeTimeStamp, timeStamps, tags}) {
     const fileObj = {
-        fileType: this.detectFileType(file),
+        uid,
+        file,
         timeStamps: {},
         activeTimeStamp,
         tags,
-        formatDate: this.formatDate,
-        detectFileType: this.detectFileType
+        formatDate: this.formatDate
     }
-    fileObj.file = fileObj.fileType === 'Note' || fileObj.fileType === 'unknown' ? file : URL.createObjectURL(file);
     Object.keys(timeStamps).forEach(key => fileObj.timeStamps[key] = this.formatDate(timeStamps[key]));
+    fileObj.type = this.checkType(fileObj.file.type, fileObj.file.name);
     return fileObj
 }
 FileObj.prototype.formatDate = function(dateTime) {
@@ -24,21 +24,15 @@ FileObj.prototype.formatDate = function(dateTime) {
         makeMinTwoDigits(d.getMinutes()) +
         makeMinTwoDigits(d.getSeconds());
 }
-FileObj.prototype.detectFileType = function(file) {
-    if (file instanceof File) {
-        if (file.hasOwnProperty('type')) {
-            return file.type
+FileObj.prototype.checkType = function(type, name) {
+    if (!type) {
+        const segs = name.split('.');
+        if (segs.length > 1) {
+            return segs[segs.length-1];
         }
         else {
-            return 'File'
+            return "unknown"
         }
     }
-    else {
-        if (typeof file === 'string') {
-            return 'Note'
-        }
-        else {
-            return 'unknown'
-        }
-    }
+    return type
 }
