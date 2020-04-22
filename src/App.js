@@ -61,7 +61,6 @@ function App() {
   function handleCancel() {
     setUploads([]);
     setUploadModalOpen(false);
-    console.log(uploads);
   }
 
  
