@@ -27,9 +27,10 @@ function App() {
   }
 
   function removeDuplicate(fileIds, upload) {
-    if (fileIds.some(id => id === upload.fileId))
-      alert(`${upload.file.name} already added to list`);
-    return !fileIds.includes(upload.fileId)
+    const isDuplicate = fileIds.some(id => id === upload.fileId);
+    if (isDuplicate)
+      alert(`"${upload.file.name}" already added to list`);
+    return !isDuplicate;
   }
 
   function deleteUpload(uid) {
