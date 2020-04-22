@@ -19,9 +19,18 @@ function App() {
 
   function addUploadsToList(newUploads) {
     const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
-    setUploads([...uploads, ...newUploadsArr]);
+    const fileIds = uploads.map(upload => upload.fileId);
+    const noDuplicateIdsArr = newUploadsArr.filter(upload => removeDuplicate(fileIds, upload));
+    setUploads([...uploads, ...noDuplicateIdsArr]);
     setUploadModalOpen(true);
     setNoteModalOpen(false);
+  }
+
+  function removeDuplicate(fileIds, upload) {
+    const isDuplicate = fileIds.some(id => id === upload.fileId);
+    if (isDuplicate)
+      alert(`"${upload.file.name}" already added to list`);
+    return !isDuplicate;
   }
 
   function deleteUpload(uid) {
@@ -39,15 +48,17 @@ function App() {
   let newUploadCount = 0;
   function formatNewUpload(upload) {
     const dateNow = Date.now();
+    const { name, lastModified, size } = upload;
     return ({
       uid: dateNow+`${++newUploadCount}`,
       file: upload,
       timeStamps: {
-        modified: !upload.lastModifiedDate ? dateNow : upload.lastModifiedDate,
+        modified: !lastModified ? dateNow : lastModified,
         user: dateNow
       },
       activeTimeStamp: 'modified',
-      tags: []
+      tags: [],
+      fileId: !lastModified ? name.replace(/ /g,'') + dateNow : name.replace(/ /g,'') + size + lastModified
     })
   }
 
@@ -62,8 +73,7 @@ function App() {
     setUploads([]);
     setUploadModalOpen(false);
   }
-
- 
+    
   return (
     <>
       <GlobalStyle />
