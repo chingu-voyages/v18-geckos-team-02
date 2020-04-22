@@ -22,14 +22,11 @@ function App() {
     setUploads([...uploads, ...newUploadsArr]);
     setUploadModalOpen(true);
     setNoteModalOpen(false);
-    // e.target.value = null
   }
 
   function deleteUpload(uid) {
     const appendedUploads = uploads.filter(upload => upload.uid !== uid);
     setUploads(appendedUploads);
-    console.log(appendedUploads);
-    
   }
 
   function updateDatesOrTags(uids, values) {
