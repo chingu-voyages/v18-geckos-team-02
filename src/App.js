@@ -73,7 +73,7 @@ function App() {
     setUploads([]);
     setUploadModalOpen(false);
   }
- 
+    
   return (
     <>
       <GlobalStyle />
