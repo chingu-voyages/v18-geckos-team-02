@@ -23,15 +23,22 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main({activeNode}) {
-  const fileRefs = getRefs(activeNode, activeNode.substr(0,8)+'2359');
-  const nodeDate = new Date(`${activeNode.substr(0,4)}-${activeNode.substr(4,2)}-${activeNode.substr(6,2)}`).toDateString();
+function Main({activeNode, getRefs, getFile}) {
+  let output = 'tutorial Gifs';
+  if (activeNode) {
+    const fileRefs = getRefs(activeNode, activeNode.substr(0,8)+'2359');
+    const nodeDate = new Date(`${activeNode.substr(0,4)}-${activeNode.substr(4,2)}-${activeNode.substr(6,2)}`).toDateString();
+    output = <>
+    <Header>
+      <time dateTime={nodeDate}>{nodeDate}</time>
+    </Header>
+    <Node fileRefs={fileRefs} timeWanted />
+    </>;
+  }
+  
   return (
     <Wrapper>
-      <Header>
-        <time dateTime={nodeDate}>{nodeDate}</time>
-      </Header>
-      <Node fileRefs={fileRefs} timeWanted />
+      {output}
     </Wrapper>
   );
 }
