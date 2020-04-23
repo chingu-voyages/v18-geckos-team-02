@@ -1,26 +1,35 @@
+import AppData from './AppData';
 import FileObj from './FileObj';
-const dates = {};
 
-export default function DataController(subcriber) {
-    this.subcriber = subcriber;
+export default function DataController() {
+    this.appData = new AppData();
     this.addFiles = this.addFiles.bind(this);
+    this.listNodes = this.listNodes.bind(this);
+    this.getFileObjs = this.getFileObjs.bind(this);
+    this.getRefs = this.getRefs.bind(this);
+    this.getFile = this.getFile.bind(this);
+    this.findKey = this.findKey.bind(this);
 }
 DataController.prototype.addFiles = function(uploadsArr) {
     let fileObj;
     for (let upload of uploadsArr) {
         fileObj = new FileObj(upload);
-        if (!setFile(fileObj)) {
+        if (!this.setFile(fileObj)) {
             return `Error: unable to set file ${JSON.stringify(upload)}`
         }
     }
     return fileObj
+}
+DataController.prototype.setFile = function(fileObj) {
+    this.appData.fileObjs[fileObj.getActiveDate()] = fileObj;
+    return true
 }
 DataController.prototype.listNodes = function() {
     /* TODO sync stored list in local DB and Drive and check for newest + make updateList function to add remove efficiently */
     // if (storedList) { return storedList }
     // else {
         const getPath = dateTime => [dateTime.substr(0,4), ...dateTime.substr(4).match(/.{2}/g)]; 
-        const fileRefs = Object.keys(dates).sort();
+        const fileRefs = Object.keys(this.appData.fileObjs).sort();
         const nodes = {};
         for (let fileRef of fileRefs) {
             const path = getPath(fileRef.substr(0, 8));
@@ -46,7 +55,7 @@ DataController.prototype.getFileObjs = function(from = '0', to = '0') {
 }
 
 DataController.prototype.getRefs = function(from = '0', to = '0') {
-    const keys = Object.keys(dates).sort();
+    const keys = Object.keys(this.appData.fileObjs).sort();
     const fileRefs = [];
     for (let key of keys) {
         if (key.substr(0, from.length) >= from && key.substr(0, to.length) <= to) {
@@ -61,8 +70,8 @@ DataController.prototype.getRefs = function(from = '0', to = '0') {
 
 DataController.prototype.getFile = async function(fileRef) {
     return new Promise((resolve, reject) => {
-        if (dates.hasOwnProperty(fileRef)) {
-            resolve(dates[fileRef]);
+        if (this.appData.fileObjs.hasOwnProperty(fileRef)) {
+            resolve(this.appData.fileObjs[fileRef]);
         }
         else {
                 // get from local db
@@ -72,7 +81,7 @@ DataController.prototype.getFile = async function(fileRef) {
     });
 }
 DataController.prototype.findKey = function(nearestTo) {
-    const dateKeys = Object.keys(dates).sort();
+    const dateKeys = Object.keys(this.appData.fileObjs).sort();
     if (nearestTo === 'start') {
         return dateKeys[0];
     }
@@ -87,8 +96,8 @@ DataController.prototype.findKey = function(nearestTo) {
 
 function updateFile(fileObj) {
     let key = fileObj.key;
-    if (dates[key]) {
-        Object.assign(dates[key], fileObj);
+    if (this.appData.fileObjs[key]) {
+        Object.assign(this.appData.fileObjs[key], fileObj);
         return true
     }
     return `Error: no such file under key: ${key}`
@@ -96,20 +105,9 @@ function updateFile(fileObj) {
 
 function removeFile(fileObj) {
     let key = fileObj.key;
-    if (dates[key]) {
-        delete dates[key];
+    if (this.appData.fileObjs[key]) {
+        delete this.appData.fileObjs[key];
         return true
     }
     return `Error: no such file under key: ${key}`
-}
-
-function setFile(fileObj, nDuplicate = 0) {
-    let key = `${fileObj.timeStamps[fileObj.activeTimeStamp]}${nDuplicate ? `(${nDuplicate})` : ''}`;
-    if (dates.hasOwnProperty(key)) {
-        return setFile(fileObj, nDuplicate + 1);
-    }
-    else {
-        dates[key] = fileObj;
-        return true
-    }
 }
