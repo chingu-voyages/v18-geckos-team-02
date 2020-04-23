@@ -1,8 +1,10 @@
 import AppData from './AppData';
 import FileObj from './FileObj';
-
-export default function DataController() {
+export default function DataController(statusSubcriber, nodeListSubcriber, setActiveNode) {
     this.appData = new AppData();
+    this.statusSubcriber = statusSubcriber;
+    this.nodeListSubcriber = nodeListSubcriber;
+    this.setActiveNode = setActiveNode;
     this.addFiles = this.addFiles.bind(this);
     this.listNodes = this.listNodes.bind(this);
     this.getFileObjs = this.getFileObjs.bind(this);
