@@ -161,11 +161,10 @@ z-index: 100;
 }
 `;
 
-function Timeline({activeNode, setActiveNode, listNodes, getFile}) {
+function Timeline({activeNode, setActiveNode, nodesList, getFile}) {
   const [showNodes, setShowNodes] = useState(false);
-  const nodes = listNodes();
   let output = '';
-  if (nodes) {
+  if (nodesList) {
     let lastDate = null;
     const scrollTo = ref =>
       ref.current.scrollIntoView({
@@ -173,7 +172,7 @@ function Timeline({activeNode, setActiveNode, listNodes, getFile}) {
       inline: 'center'
     });
     const TimeLine = <Line>
-      {Object.keys(nodes).sort().map((year, i, arr) => {
+      {Object.keys(nodesList).sort().map((year, i, arr) => {
         const yearEnd = i === arr.length-1;
         const yearStart = i === 0;
         const ref = React.createRef();
@@ -181,7 +180,7 @@ function Timeline({activeNode, setActiveNode, listNodes, getFile}) {
           <Year ref={ref} key={year}>
             <Title onClick={() => scrollTo(ref)}>{year}</Title>
             <Months>
-              {Object.keys(nodes[year]).sort().map((month, i, arr) => {
+              {Object.keys(nodesList[year]).sort().map((month, i, arr) => {
                 const monthEnd = i === arr.length-1;
                 const monthStart = i === 0;
                 const ref = React.createRef();
@@ -190,7 +189,7 @@ function Timeline({activeNode, setActiveNode, listNodes, getFile}) {
                   <Month ref={ref} key={year+month}>
                     <Title onClick={() => scrollTo(ref)}>{monthStr}</Title>
                     <Dates>
-                      {Object.keys(nodes[year][month]).sort().map((date, i, arr) => {
+                      {Object.keys(nodesList[year][month]).sort().map((date, i, arr) => {
                         const dateEnd = i === arr.length-1;
                         const dateStart = i === 0;
                         const atStart = dateStart && monthStart && yearStart;
@@ -214,7 +213,7 @@ function Timeline({activeNode, setActiveNode, listNodes, getFile}) {
                           {showBar && <Bar className={showNodes && 'expanded'}></Bar>}
                           <DateItem ref={ref} className={(isActive ? 'active ' : '')+(showNodes && 'expanded')} onLoad={handleLoad} onClick={handleClick}>
                             <header>{nodeDate.substr(0,3)+' '+nodeDate.substr(8,2)}</header>
-                            {showNodes && <Node fileRefs={nodes[year][month][date]} {...{getFile}} />}
+                            {showNodes && <Node fileObj={nodesList[year][month][date]} {...{getFile}} />}
                           </DateItem>
                           {atEnd && <Gap></Gap>}
                         </Fragment>) 

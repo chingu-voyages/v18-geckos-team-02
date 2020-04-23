@@ -24,22 +24,26 @@ const FileIcon = styled.a`
     height: 150px;
 `;
 
-export default function File({fileRef, timeWanted, lastTime, updateLastTime, getFile}) {
-    const [fileObj, setFileObj] = useState(false);
-    getFile(fileRef).then(file => { setFileObj(file) }, err => console.error(err));
+export default function File({fileObj, showTime, time, getFile}) {
+    const [file, setFile] = useState('');
+    useState(() => {
+        getFile(fileObj.fileRef).then(blob => {
+            let url = "TODO import file not found image here";
+            if (blob) {
+                url = URL.createObjectURL(blob);
+            }
+            setFile(url);
+        });
+    }, []);
+   
     if (fileObj) {
-        if (timeWanted) {
-            var time = fileObj.timeStamps[fileObj.activeTimeStamp].substr(8).match(/.{2}/g).join(':');
-            var showTime = time !== lastTime;
-            updateLastTime(time);
-        }
         return (
             <>
-                {timeWanted && showTime && <time dateTime={time}>{time}</time>}
+                {showTime && <time dateTime={time}>{time}</time>}
                 {fileObj.type.includes('image') ? 
-                    <Img src={URL.createObjectURL(fileObj.file)} alt="" /> : 
+                    <Img src={file} alt="" /> : 
                     fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.file.name}</h1><p>{fileObj.file.text}</p></Note> :
-                    <FileIcon href={URL.createObjectURL(fileObj.file)} download={fileObj.file.name} {...charsToColour(fileObj.type)}>{fileObj.file.name}</FileIcon>
+                    <FileIcon href={file} download={fileObj.file.name} {...charsToColour(fileObj.type)}>{fileObj.file.name}</FileIcon>
                 }
             </>
         )

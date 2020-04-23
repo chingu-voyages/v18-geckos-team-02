@@ -22,16 +22,14 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main({activeNode, getRefs, getFile}) {
+function Main({activeNodeDate, fileObjs, getFile}) {
   let output = 'tutorial Gifs';
-  if (activeNode) {
-    const fileRefs = getRefs(activeNode, activeNode.substr(0,8)+'2359');
-    const nodeDate = new Date(`${activeNode.substr(0,4)}-${activeNode.substr(4,2)}-${activeNode.substr(6,2)}`).toDateString();
+  if (activeNodeDate) {
     output = <>
     <Header>
-      <time dateTime={nodeDate}>{nodeDate}</time>
+      <time dateTime={activeNodeDate}>{activeNodeDate}</time>
     </Header>
-    <Node {...{fileRefs, getFile}} timeWanted />
+    <Node {...{fileObjs, getFile}} timeWanted />
     </>;
   }
   
