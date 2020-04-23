@@ -1,5 +1,4 @@
 import React, { useState, Fragment } from 'react';
-import { listNodes } from '../services/dataController';
 import styled from 'styled-components';
 import Node from './Node';
 import openTimelineIcon from '../assets/openTimelineButton.svg';
@@ -162,7 +161,7 @@ z-index: 100;
 }
 `;
 
-function Timeline({activeNode, setActiveNode}) {
+function Timeline({activeNode, setActiveNode, listNodes, getFile}) {
   const [showNodes, setShowNodes] = useState(false);
   const nodes = listNodes();
   let output = '';
@@ -215,7 +214,7 @@ function Timeline({activeNode, setActiveNode}) {
                           {showBar && <Bar className={showNodes && 'expanded'}></Bar>}
                           <DateItem ref={ref} className={(isActive ? 'active ' : '')+(showNodes && 'expanded')} onLoad={handleLoad} onClick={handleClick}>
                             <header>{nodeDate.substr(0,3)+' '+nodeDate.substr(8,2)}</header>
-                            {showNodes && <Node fileRefs={nodes[year][month][date]} />}
+                            {showNodes && <Node fileRefs={nodes[year][month][date]} {...{getFile}} />}
                           </DateItem>
                           {atEnd && <Gap></Gap>}
                         </Fragment>) 

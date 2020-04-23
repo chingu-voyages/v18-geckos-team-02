@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { getFile } from '../services/dataController';
 
 const Wrapper = styled.div`
     max-width: 100%;
@@ -25,7 +24,7 @@ const FileIcon = styled.a`
     height: 150px;
 `;
 
-export default function File({fileRef, timeWanted, lastTime, updateLastTime}) {
+export default function File({fileRef, timeWanted, lastTime, updateLastTime, getFile}) {
     const [fileObj, setFileObj] = useState(false);
     getFile(fileRef).then(file => { setFileObj(file) }, err => console.error(err));
     if (fileObj) {

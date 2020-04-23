@@ -10,14 +10,14 @@ const Wrapper = styled.section`
     justify-content: center;
 `;
 
-export default function Node({ fileRefs, timeWanted = false }) {
+export default function Node({ fileRefs, timeWanted = false, getFile }) {
     let lastTime = '';
     function updateLastTime(time) {
         lastTime = time;
     }
     return (
         <Wrapper>
-           {fileRefs.map(fileRef => <File key={fileRef} {...{fileRef, timeWanted, lastTime, updateLastTime}} />)}
+           {fileRefs.map(fileRef => <File key={fileRef} {...{fileRef, timeWanted, lastTime, updateLastTime, getFile}} />)}
         </Wrapper>
     )
 }
