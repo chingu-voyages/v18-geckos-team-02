@@ -23,7 +23,7 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main({activeNode, getRefs, getFile}) {
+function Main({activeNode}) {
   let output = 'tutorial Gifs';
   if (activeNode) {
     const fileRefs = getRefs(activeNode, activeNode.substr(0,8)+'2359');
