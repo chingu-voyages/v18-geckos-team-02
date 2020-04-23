@@ -39,7 +39,7 @@ FileObj.prototype.makeFileRef = function(file) {
 FileObj.prototype.getActiveDate = function() {
     return this.timeStamps[this.activeTimeStamp];
 }
-FileObj.prototype.setActiveTimeStamp = function(name, dateTime) {
+FileObj.prototype.setActiveDate = function(name, dateTime) {
     this.activeTimeStamp = name;
     this.timeStamps[name] = this.formatDate(dateTime);
 }
