@@ -1,5 +1,7 @@
 import AppData from './AppData';
 import FileObj from './FileObj';
+import errorHandler from './errorHandler';
+import { writeFile, readFile } from './storage';
 export default function DataController(statusSubcriber, nodeListSubcriber, setActiveNode) {
     this.appData = new AppData();
     this.statusSubcriber = statusSubcriber;
@@ -12,29 +14,33 @@ export default function DataController(statusSubcriber, nodeListSubcriber, setAc
     this.getFile = this.getFile.bind(this);
     this.findKey = this.findKey.bind(this);
 }
-DataController.prototype.addFiles = function(uploadsArr) {
+DataController.prototype.updateList = function() {
+    this.nodeListSubcriber(this.listNodes());
+}
+DataController.prototype.setStatus = function(message) {
+    this.statusSubcriber(message);
+}
+DataController.prototype.addFiles = async function(uploadsArr) {
+    this.setStatus('Uploading files');
     let fileObj;
     for (let upload of uploadsArr) {
         fileObj = new FileObj(upload);
-        if (!this.setFile(fileObj)) {
-            return `Error: unable to set file ${JSON.stringify(upload)}`
-        }
+        this.appData.fileObjs[fileObj.uid] = fileObj;
+        this.setStatus('Uploading '+upload.file.name);
+        await writeFile(fileObj.fileRef, upload.file);
     }
-    return fileObj
-}
-DataController.prototype.setFile = function(fileObj) {
-    this.appData.fileObjs[fileObj.getActiveDate()] = fileObj;
+    this.setStatus('Uploading done');
+    this.updateList();
+    this.setActiveNode(fileObj.getActiveDate().substr(0,8));
+    this.setStatus('');
     return true
 }
 DataController.prototype.listNodes = function() {
-    /* TODO sync stored list in local DB and Drive and check for newest + make updateList function to add remove efficiently */
-    // if (storedList) { return storedList }
-    // else {
         const getPath = dateTime => [dateTime.substr(0,4), ...dateTime.substr(4).match(/.{2}/g)]; 
-        const fileRefs = Object.keys(this.appData.fileObjs).sort();
+        const fileObjs = Object.values(this.appData.fileObjs);
         const nodes = {};
-        for (let fileRef of fileRefs) {
-            const path = getPath(fileRef.substr(0, 8));
+        for (let fileObj of fileObjs) {
+            const path = getPath(fileObj.getActiveDate().substr(0, 8));
             let head = nodes;
             for (let key of path) {
                 if (!head.hasOwnProperty(key)) {
@@ -47,17 +53,22 @@ DataController.prototype.listNodes = function() {
                 }
                 head = head[key];
             }
-            head.push(fileRef);
+            head.push(fileObj);
         }
         return nodes
-    // }
 }
 DataController.prototype.getFileObjs = function(from = '0', to = '0') {
-
+    return Object.values(this.appData.fileObjs).filter(fileObj => {
+            const key = fileObj.getActiveDate();
+            return (key.substr(0, from.length) >= from && key.substr(0, to.length) <= to)
+        }).sort((a, b) => a.getActiveDate() - b.getActiveDate());
 }
 
 DataController.prototype.getRefs = function(from = '0', to = '0') {
-    const keys = Object.keys(this.appData.fileObjs).sort();
+    const keys = Object.values(this.appData.fileObjs).filter(fileObj => {
+        const key = fileObj.getActiveDate();
+        return (key.substr(0, from.length) >= from && key.substr(0, to.length) <= to)
+    }).sort((a, b) => a.getActiveDate() - b.getActiveDate());
     const fileRefs = [];
     for (let key of keys) {
         if (key.substr(0, from.length) >= from && key.substr(0, to.length) <= to) {
@@ -71,16 +82,19 @@ DataController.prototype.getRefs = function(from = '0', to = '0') {
 }
 
 DataController.prototype.getFile = async function(fileRef) {
-    return new Promise((resolve, reject) => {
-        if (this.appData.fileObjs.hasOwnProperty(fileRef)) {
-            resolve(this.appData.fileObjs[fileRef]);
+    try {
+        let file = await readFile(fileRef);
+        if (!file) {
+            // file = await - get from cloud/Google drive
         }
-        else {
-                // get from local db
-                // else get from cloud/Google drive
-                // else reject
+        if (!file) {
+            throw `File with ref: ${fileRef} not found!`
         }
-    });
+        return file
+    }
+    catch (e) {
+        errorHandler(e);
+    }
 }
 DataController.prototype.findKey = function(nearestTo) {
     const dateKeys = Object.keys(this.appData.fileObjs).sort();
