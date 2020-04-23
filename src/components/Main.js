@@ -1,6 +1,5 @@
 import React from 'react';
 import Node from './Node';
-import { getRefs } from '../services/dataController';
 import styled from 'styled-components';
 
 const Wrapper = styled.main`
@@ -23,7 +22,7 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main({activeNode}) {
+function Main({activeNode, getRefs, getFile}) {
   let output = 'tutorial Gifs';
   if (activeNode) {
     const fileRefs = getRefs(activeNode, activeNode.substr(0,8)+'2359');
@@ -32,7 +31,7 @@ function Main({activeNode}) {
     <Header>
       <time dateTime={nodeDate}>{nodeDate}</time>
     </Header>
-    <Node fileRefs={fileRefs} timeWanted />
+    <Node {...{fileRefs, getFile}} timeWanted />
     </>;
   }
   

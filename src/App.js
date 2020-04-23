@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Main from './components/Main';
 import Timeline from './components/Timeline';
 import NavBar from './components/NavBar';
@@ -6,14 +6,22 @@ import UploadModal from './components/UploadModal';
 import AddNoteModal from './components/AddNoteModal';
 import styled, {ThemeProvider} from 'styled-components';
 import GlobalStyle, {theme} from './theme/globalStyles';
-import { addFiles, findKey } from './services/dataController';
+import DataController from './services/DataController';
 
 function App() {
+  const [status, setStatus] = useState('');
+  const dataController = new DataController(setStatus);
+  const {addFiles, getRefs, listNodes, getFile, findKey} = dataController;
+
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [activeNode, setActiveNode] = useState(findKey('start'));
   const [uploads, setUploads] = useState([]);
   const [appTheme, setTheme] = useState(theme);
+
+  useEffect(() => {
+    // addFiles([...dummyData]);
+  }, [])
 
   function addUploadsToList(newUploads) {
     const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
@@ -79,9 +87,9 @@ function App() {
         {uploadModalOpen && !noteModalOpen &&
           <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
-        <Main {...{activeNode, setActiveNode}} />
+        <Main {...{activeNode, setActiveNode, getRefs, getFile}} />
         <nav>
-          <Timeline {...{ activeNode, setActiveNode }} />
+          <Timeline {...{ activeNode, setActiveNode, listNodes, getFile }} />
           <NavBar openNote={() => setNoteModalOpen(true)} {...{ addUploadsToList }} />
         </nav>
       </ThemeProvider>
