@@ -1,15 +1,12 @@
 export default function FileObj({uid, file, activeTimeStamp, timeStamps, tags}) {
-    const fileObj = {
-        uid,
-        file,
-        timeStamps: {},
-        activeTimeStamp,
-        tags,
-        formatDate: this.formatDate
-    }
-    Object.keys(timeStamps).forEach(key => fileObj.timeStamps[key] = this.formatDate(timeStamps[key]));
-    fileObj.type = this.checkType(fileObj.file.type, fileObj.file.name);
-    return fileObj
+    this.uid = uid;
+    this.file = file;
+    this.fileRef = this.makeFileRef(file);
+    this.timeStamps = {};
+    this.activeTimeStamp = activeTimeStamp;
+    this.tags = tags;
+    Object.keys(timeStamps).forEach(key => this.timeStamps[key] = this.formatDate(timeStamps[key]));
+    this.type = this.checkType(file.type, file.name);
 }
 FileObj.prototype.formatDate = function(dateTime) {
     const makeMinTwoDigits = n => {
@@ -35,4 +32,14 @@ FileObj.prototype.checkType = function(type, name) {
         }
     }
     return type
+}
+FileObj.prototype.makeFileRef = function(file) {
+    return file.name+file.size+file.lastModified
+}
+FileObj.prototype.getActiveDate = function() {
+    return this.timeStamps[this.activeTimeStamp];
+}
+FileObj.prototype.setActiveTimeStamp = function(name, dateTime) {
+    this.activeTimeStamp = name;
+    this.timeStamps[name] = this.formatDate(dateTime);
 }
