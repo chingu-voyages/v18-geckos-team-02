@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import Main from './components/Main';
 import Timeline from './components/Timeline';
 import NavBar from './components/NavBar';
@@ -10,18 +10,25 @@ import DataController from './services/DataController';
 
 function App() {
   const [status, setStatus] = useState('');
-  const dataController = new DataController(setStatus);
-  const {addFiles, getRefs, listNodes, getFile, findKey} = dataController;
+  const [nodesList, setNodesList] = useState([]);
+  const [activeNode, setActiveNode] = useState('');
+  const dataController = useRef(new DataController(setStatus, setNodesList, setActiveNode));
+  const {addFiles, getFileObjs, listNodes, getFile, findKey} = dataController.current;
 
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [activeNode, setActiveNode] = useState(findKey('start'));
   const [uploads, setUploads] = useState([]);
   const [appTheme, setTheme] = useState(theme);
 
+  const [fileObjs, setFileObjs] = useState([]);
+  const [activeNodeDate, setActiveNodeDate] = useState('');
   useEffect(() => {
-    // addFiles([...dummyData]);
-  }, [])
+    if (activeNode) {
+      setActiveNodeDate(new Date(`${activeNode.substr(0,4)}-${activeNode.substr(4,2)}-${activeNode.substr(6,2)}`).toDateString());
+      const objs = getFileObjs(activeNode, activeNode.substr(0,8)+'2359');
+      setFileObjs(objs);
+    }
+  }, [activeNode]);
 
   function addUploadsToList(newUploads) {
     const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
@@ -69,10 +76,9 @@ function App() {
   }
 
   function sumbitUploads() {
-    const lastStoredFile = addFiles(uploads);
+    addFiles(uploads);
     setUploads([]);
     setUploadModalOpen(false);
-    setActiveNode(lastStoredFile.timeStamps[lastStoredFile.activeTimeStamp]);
   }
 
   function handleCancel() {
@@ -87,9 +93,9 @@ function App() {
         {uploadModalOpen && !noteModalOpen &&
           <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
-        <Main {...{activeNode, setActiveNode, getRefs, getFile}} />
+        <Main {...{activeNodeDate, fileObjs, getFile}} />
         <nav>
-          <Timeline {...{ activeNode, setActiveNode, listNodes, getFile }} />
+          <Timeline {...{ activeNode, setActiveNode, nodesList, getFile }} />
           <NavBar openNote={() => setNoteModalOpen(true)} {...{ addUploadsToList }} />
         </nav>
       </ThemeProvider>
