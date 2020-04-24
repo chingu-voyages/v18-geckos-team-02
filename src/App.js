@@ -13,7 +13,8 @@ function App() {
   const [nodesList, setNodesList] = useState([]);
   const [activeNode, setActiveNode] = useState('');
   const dataController = useRef(new DataController(setStatus, setNodesList, setActiveNode));
-  const {addFiles, getFileObjs, listNodes, getFile, findKey} = dataController.current;
+  const {addFiles, getFileObjs, getFile, start} = dataController.current;
+  useEffect(() => start(), []);
 
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -24,9 +25,11 @@ function App() {
   const [activeNodeDate, setActiveNodeDate] = useState('');
   useEffect(() => {
     if (activeNode) {
-      setActiveNodeDate(new Date(`${activeNode.substr(0,4)}-${activeNode.substr(4,2)}-${activeNode.substr(6,2)}`).toDateString());
       const objs = getFileObjs(activeNode, activeNode.substr(0,8)+'2359');
-      setFileObjs(objs);
+      if (objs && objs.length > 0) {
+        setActiveNodeDate(new Date(objs[0].unFormatDate(objs[0].getActiveDate()).substr(0, 10)).toDateString());
+        setFileObjs(objs);
+      }
     }
   }, [activeNode]);
 
