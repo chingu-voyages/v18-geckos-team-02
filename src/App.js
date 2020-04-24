@@ -6,9 +6,7 @@ import UploadModal from './components/UploadModal';
 import AddNoteModal from './components/AddNoteModal';
 import styled, {ThemeProvider} from 'styled-components';
 import GlobalStyle, {theme} from './theme/globalStyles';
-import dummyData from './tests/dummyData';
 import { addFiles, findKey } from './services/dataController';
-addFiles([...dummyData]);
 
 function App() {
   const [noteModalOpen, setNoteModalOpen] = useState(false);

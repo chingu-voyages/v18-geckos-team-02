@@ -165,72 +165,76 @@ z-index: 100;
 function Timeline({activeNode, setActiveNode}) {
   const [showNodes, setShowNodes] = useState(false);
   const nodes = listNodes();
-  let lastDate = null;
-  const scrollTo = ref =>
-    ref.current.scrollIntoView({
-    behavior: 'smooth',
-    inline: 'center'
-  });
-  const TimeLine = <Line>
-    {Object.keys(nodes).sort().map((year, i, arr) => {
-      const yearEnd = i === arr.length-1;
-      const yearStart = i === 0;
-      const ref = React.createRef();
-      return (
-        <Year ref={ref} key={year}>
-          <Title onClick={() => scrollTo(ref)}>{year}</Title>
-          <Months>
-            {Object.keys(nodes[year]).sort().map((month, i, arr) => {
-              const monthEnd = i === arr.length-1;
-              const monthStart = i === 0;
-              const ref = React.createRef();
-              const monthStr = new Date(`${year}-${month}-01`).toDateString().substr(4,3);
-              return (
-                <Month ref={ref} key={year+month}>
-                  <Title onClick={() => scrollTo(ref)}>{monthStr}</Title>
-                  <Dates>
-                    {Object.keys(nodes[year][month]).sort().map((date, i, arr) => {
-                      const dateEnd = i === arr.length-1;
-                      const dateStart = i === 0;
-                      const atStart = dateStart && monthStart && yearStart;
-                      const atEnd = dateEnd && monthEnd && yearEnd;
-                      const showBar = lastDate && (date > parseInt(lastDate.date)+1 || month > parseInt(lastDate.month)+1 || year > parseInt(lastDate.year)+1);
-                      lastDate = {year,month,date};
-                      const nodeDate = new Date(`${year}-${month}-${date}`).toDateString();
-                      const ref = React.createRef();
-                      const isActive = year+month+date === activeNode;
-                      const handleClick = () => {
-                        setActiveNode(year+month+date);
-                        scrollTo(ref);
-                      }
-                      const handleLoad = () => {
-                        if (isActive) {
+  let output = '';
+  if (nodes) {
+    let lastDate = null;
+    const scrollTo = ref =>
+      ref.current.scrollIntoView({
+      behavior: 'smooth',
+      inline: 'center'
+    });
+    const TimeLine = <Line>
+      {Object.keys(nodes).sort().map((year, i, arr) => {
+        const yearEnd = i === arr.length-1;
+        const yearStart = i === 0;
+        const ref = React.createRef();
+        return (
+          <Year ref={ref} key={year}>
+            <Title onClick={() => scrollTo(ref)}>{year}</Title>
+            <Months>
+              {Object.keys(nodes[year]).sort().map((month, i, arr) => {
+                const monthEnd = i === arr.length-1;
+                const monthStart = i === 0;
+                const ref = React.createRef();
+                const monthStr = new Date(`${year}-${month}-01`).toDateString().substr(4,3);
+                return (
+                  <Month ref={ref} key={year+month}>
+                    <Title onClick={() => scrollTo(ref)}>{monthStr}</Title>
+                    <Dates>
+                      {Object.keys(nodes[year][month]).sort().map((date, i, arr) => {
+                        const dateEnd = i === arr.length-1;
+                        const dateStart = i === 0;
+                        const atStart = dateStart && monthStart && yearStart;
+                        const atEnd = dateEnd && monthEnd && yearEnd;
+                        const showBar = lastDate && (date > parseInt(lastDate.date)+1 || month > parseInt(lastDate.month)+1 || year > parseInt(lastDate.year)+1);
+                        lastDate = {year,month,date};
+                        const nodeDate = new Date(`${year}-${month}-${date}`).toDateString();
+                        const ref = React.createRef();
+                        const isActive = year+month+date === activeNode;
+                        const handleClick = () => {
+                          setActiveNode(year+month+date);
                           scrollTo(ref);
                         }
-                      }
-                      return (<Fragment key={year+month+date+showBar}> 
-                        {atStart && <Gap></Gap>}
-                        {showBar && <Bar className={showNodes && 'expanded'}></Bar>}
-                        <DateItem ref={ref} className={(isActive ? 'active ' : '')+(showNodes && 'expanded')} onLoad={handleLoad} onClick={handleClick}>
-                          <header>{nodeDate.substr(0,3)+' '+nodeDate.substr(8,2)}</header>
-                          {showNodes && <Node fileRefs={nodes[year][month][date]} />}
-                        </DateItem>
-                        {atEnd && <Gap></Gap>}
-                      </Fragment>) 
-                  })}
-                  </Dates>
-                </Month>
-              )
-            })}
-          </Months>
-        </Year>
-      )
-    })} 
-  </Line>;
-  return (<Wrapper className={!showNodes && 'contracted'}>
-     <ExpandButton className={showNodes && 'close'} onClick={() => setShowNodes(!showNodes)}><img src={openTimelineIcon} alt="close timeline" /></ExpandButton>
-     {TimeLine}
-  </Wrapper>);
+                        const handleLoad = () => {
+                          if (isActive) {
+                            scrollTo(ref);
+                          }
+                        }
+                        return (<Fragment key={year+month+date+showBar}> 
+                          {atStart && <Gap></Gap>}
+                          {showBar && <Bar className={showNodes && 'expanded'}></Bar>}
+                          <DateItem ref={ref} className={(isActive ? 'active ' : '')+(showNodes && 'expanded')} onLoad={handleLoad} onClick={handleClick}>
+                            <header>{nodeDate.substr(0,3)+' '+nodeDate.substr(8,2)}</header>
+                            {showNodes && <Node fileRefs={nodes[year][month][date]} />}
+                          </DateItem>
+                          {atEnd && <Gap></Gap>}
+                        </Fragment>) 
+                    })}
+                    </Dates>
+                  </Month>
+                )
+              })}
+            </Months>
+          </Year>
+        )
+      })} 
+    </Line>;
+    output = <Wrapper className={!showNodes && 'contracted'}>
+      <ExpandButton className={showNodes && 'close'} onClick={() => setShowNodes(!showNodes)}><img src={openTimelineIcon} alt="close timeline" /></ExpandButton>
+      {TimeLine}
+    </Wrapper>;
+  }
+  return output;
 }
 
 export default Timeline;
