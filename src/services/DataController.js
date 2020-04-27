@@ -1,10 +1,10 @@
 import AppData from './AppData';
 import FileObj from './FileObj';
 import errorHandler from './errorHandler';
-import { writeFile, readFile } from './storage';
+import { writeFile, readFile, readAppData, writeAppData } from './storage';
 export default function DataController(statusSubcriber, nodeListSubcriber, setActiveNode) {
-    this.appData = new AppData();
-    this.statusSubcriber = statusSubcriber;
+    this.appData = new AppData(statusSubcriber);
+    this.setStatus = statusSubcriber;
     this.nodeListSubcriber = nodeListSubcriber;
     this.setActiveNode = setActiveNode;
     this.addFiles = this.addFiles.bind(this);
@@ -12,13 +12,21 @@ export default function DataController(statusSubcriber, nodeListSubcriber, setAc
     this.getFileObjs = this.getFileObjs.bind(this);
     this.getRefs = this.getRefs.bind(this);
     this.getFile = this.getFile.bind(this);
-    this.findKey = this.findKey.bind(this);
+    this.start = this.start.bind(this);
+}
+DataController.prototype.start = async function() {
+    const data = await readAppData('local');
+    if (data) {
+        this.appData.rebase(data);
+        this.updateList();
+        this.setActiveNode(this.findFirstFileObj().getActiveDate().substr(0,8));
+    }
+}
+DataController.prototype.compareAppData = async function() {
+
 }
 DataController.prototype.updateList = function() {
     this.nodeListSubcriber(this.listNodes());
-}
-DataController.prototype.setStatus = function(message) {
-    this.statusSubcriber(message);
 }
 DataController.prototype.addFiles = async function(uploadsArr) {
     this.setStatus('Uploading files');
@@ -29,9 +37,10 @@ DataController.prototype.addFiles = async function(uploadsArr) {
         this.setStatus('Uploading '+upload.file.name);
         await writeFile(fileObj.fileRef, upload.file);
     }
-    this.setStatus('Uploading done');
     this.updateList();
     this.setActiveNode(fileObj.getActiveDate().substr(0,8));
+    this.setStatus('Storing updates locally');
+    await writeAppData(this.appData);
     this.setStatus('');
     return true
 }
@@ -96,17 +105,9 @@ DataController.prototype.getFile = async function(fileRef) {
         errorHandler(e);
     }
 }
-DataController.prototype.findKey = function(nearestTo) {
-    const dateKeys = Object.keys(this.appData.fileObjs).sort();
-    if (nearestTo === 'start') {
-        return dateKeys[0];
-    }
-    else if (nearestTo === 'end') {
-        return dateKeys[dateKeys.length-1];
-    }
-    else {
-        return dateKeys.find(key => key.substr(0, nearestTo.length) >= nearestTo);
-    }
+DataController.prototype.findFirstFileObj = function() {
+    const fileObjs = Object.values(this.appData.fileObjs).sort((a, b) => a.getActiveDate() - b.getActiveDate());
+    return fileObjs[0];
 }
 
 
