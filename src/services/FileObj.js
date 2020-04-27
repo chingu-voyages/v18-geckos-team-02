@@ -2,6 +2,8 @@ export default function FileObj({uid, file, fileRef, activeTimeStamp, timeStamps
     this.uid = uid;
     this.fileRef = fileRef || this.makeFileRef(file);
     this.timeStamps = {};
+    this.name = file.name;
+    this.text = file.text;
     this.activeTimeStamp = activeTimeStamp;
     this.tags = tags;
     this.type = type || this.checkType(file.type, file.name);
