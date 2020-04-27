@@ -42,10 +42,20 @@ function App() {
     setUploads(appendedUploads);
   }
 
-  function updateDatesOrTags(uids, values) {
+  function updateDatesOrTags(uids, uploadMeta) {
     for (let uid of uids) {
       const index = uploads.findIndex(upload => upload.uid === uid);
-      Object.assign(uploads[index], values);
+      const hasOwnTags = uploads[index].hasOwnProperty("tags") && uploads[index].tags[0] !== "";
+      const privateTags = hasOwnTags && [...uploads[index].tags];
+      Object.assign(uploads[index], uploadMeta);
+      if (hasOwnTags) {
+        if (uploadMeta.tags[0] !== "") {
+          const combinedTags = uploads[index].tags.concat(privateTags);
+          uploads[index].tags = combinedTags;
+        } else {
+          uploads[index].tags = privateTags;
+        }
+      }
     }
   }
 
@@ -55,12 +65,6 @@ function App() {
     return ({
       uid: dateNow+`${++newUploadCount}`,
       file: upload,
-      timeStamps: {
-        modified: !upload.lastModifiedDate ? dateNow : upload.lastModifiedDate,
-        user: dateNow
-      },
-      activeTimeStamp: 'modified',
-      tags: []
     })
   }
 
