@@ -67,12 +67,10 @@ function App() {
     })
   }
 
-  function sumbitUploads( {newUploadsArr}) {
+  function sumbitUploads() {
     addFiles(uploads);
     setUploads([]);
     setUploadModalOpen(false);
-    console.log(uploads);
-    console.log(newUploadsArr);
   }
 
   function handleCancel() {
