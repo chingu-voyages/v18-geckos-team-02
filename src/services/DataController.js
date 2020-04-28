@@ -33,9 +33,15 @@ DataController.prototype.addFiles = async function(uploadsArr) {
     let fileObj;
     for (let upload of uploadsArr) {
         fileObj = new FileObj(upload);
-        this.appData.fileObjs[fileObj.uid] = fileObj;
-        this.setStatus('Uploading '+upload.file.name);
-        await writeFile(fileObj.fileRef, upload.file);
+        const activeDate = fileObj.getActiveDate();
+        const fObjsWithSameFile = Object.values(this.appData.fileObjs).filter(fObj => fObj.fileRef === fileObj.fileRef).map(fObj => fObj.getActiveDate());
+        if (fObjsWithSameFile.filter(date => date === activeDate).length === 0) {
+            this.appData.fileObjs[fileObj.uid] = fileObj;
+        }
+        if (fObjsWithSameFile.length < 1) {
+            this.setStatus('Uploading '+upload.file.name);
+            await writeFile(fileObj.fileRef, upload.file);
+        }
     }
     this.updateList();
     this.setActiveNode(fileObj.getActiveDate().substr(0,8));
