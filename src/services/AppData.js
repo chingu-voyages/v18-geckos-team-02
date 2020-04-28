@@ -1,5 +1,3 @@
-import { writeFile, readFile, readAppData, writeAppData } from './storage';
-
 export default function AppData(statusSubcriber) {
     this.setStatus = statusSubcriber;
     this.lastModified = null;
@@ -7,11 +5,6 @@ export default function AppData(statusSubcriber) {
     this.changeLog = [];
     this.fileObjs = {};
 }
-AppData.prototype.update = function(fileObjsArr, lastModified = Date.now().toString()) {
-    fileObjsArr.forEach(fileObj => this.fileObjs[fileObj.ref] = fileObj);
-    this.lastModified = lastModified;
-}
-
 AppData.prototype.add = function(fileObj, log = true) {
     log && this.changeLog.push({ func: 'add', data: fileObj });
     this.fileObjs[fileObj.uid] = fileObj;
