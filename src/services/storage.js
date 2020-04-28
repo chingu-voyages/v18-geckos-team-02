@@ -8,8 +8,8 @@ localDB.version(1).stores({
     files: 'ref',
 });
 
- //localDB.files.clear();
- //localDB.appData.clear();
+//  localDB.files.clear();
+//  localDB.appData.clear();
 
 async function writeFile(ref, file) {
     try {

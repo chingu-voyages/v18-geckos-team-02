@@ -42,8 +42,8 @@ export default function File({fileObj, showTime, time, getFile}) {
                 {showTime && <time dateTime={time}>{time}</time>}
                 {fileObj.type.includes('image') ? 
                     <Img src={file} alt="" /> : 
-                    fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.file.name}</h1><p>{fileObj.file.text}</p></Note> :
-                    <FileIcon href={file} download={fileObj.file.name} {...charsToColour(fileObj.type)}>{fileObj.file.name}</FileIcon>
+                    fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.name}</h1><p>{fileObj.text}</p></Note> :
+                    <FileIcon href={file} download={fileObj.name} {...charsToColour(fileObj.type)}>{fileObj.name}</FileIcon>
                 }
             </>
         )
