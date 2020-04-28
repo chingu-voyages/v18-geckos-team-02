@@ -14,7 +14,7 @@ function App() {
   const [activeNode, setActiveNode] = useState('');
   const dataController = useRef(new DataController(setStatus, setNodesList, setActiveNode));
   const {addFiles, getFileObjs, getFile, start} = dataController.current;
-  useEffect(() => start(), []);
+  useEffect(() => { start() }, [start]);
 
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
@@ -31,7 +31,7 @@ function App() {
         setFileObjs(objs);
       }
     }
-  }, [activeNode]);
+  }, [activeNode, getFileObjs]);
 
   function addUploadsToList(newUploads) {
     const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));

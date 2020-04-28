@@ -213,7 +213,7 @@ function Timeline({activeNode, setActiveNode, nodesList, getFile}) {
                           {showBar && <Bar className={showNodes && 'expanded'}></Bar>}
                           <DateItem ref={ref} className={(isActive ? 'active ' : '')+(showNodes && 'expanded')} onLoad={handleLoad} onClick={handleClick}>
                             <header>{nodeDate.substr(0,3)+' '+nodeDate.substr(8,2)}</header>
-                            {showNodes && <Node fileObj={nodesList[year][month][date]} {...{getFile}} />}
+                            {showNodes && <Node fileObjs={nodesList[year][month][date]} {...{getFile}} />}
                           </DateItem>
                           {atEnd && <Gap></Gap>}
                         </Fragment>) 

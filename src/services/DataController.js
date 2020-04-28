@@ -103,7 +103,7 @@ DataController.prototype.getFile = async function(fileRef) {
             // file = await - get from cloud/Google drive
         }
         if (!file) {
-            throw `File with ref: ${fileRef} not found!`
+            throw new Error(`File with ref: ${fileRef} not found!`)
         }
         return file
     }

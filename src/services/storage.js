@@ -35,7 +35,7 @@ async function readFile(ref) {
     try {
         let dataObj = await localDB.files.get(ref);
         if (!dataObj) {
-            throw `Could not get data for ref: ${ref} !`
+            throw new Error(`Could not get data for ref: ${ref} !`)
         }
         return new Blob([dataObj.data])
     }
@@ -44,7 +44,7 @@ async function readFile(ref) {
     }
 }
 async function readAppData(source = 'local') {
-    if (source = 'local') {
+    if (source === 'local') {
         try {
             let appData = await localDB.appData.get(0);
             let output = false;
