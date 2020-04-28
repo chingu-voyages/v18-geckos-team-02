@@ -1,12 +1,12 @@
-export default function FileObj({uid, file, fileRef, activeTimeStamp, timeStamps, tags, type}) {
+export default function FileObj({uid, fileRef, activeTimeStamp, timeStamps, tags, type, name, text}) {
     this.uid = uid;
-    this.fileRef = fileRef || this.makeFileRef(file);
     this.timeStamps = {};
-    this.name = file.name;
-    this.text = file.text;
     this.activeTimeStamp = activeTimeStamp;
     this.tags = tags;
-    this.type = type || this.checkType(file.type, file.name);
+    this.fileRef = fileRef;
+    this.name = name;
+    this.text = text;
+    this.type = type;
     Object.keys(timeStamps).forEach(key => this.timeStamps[key] = this.formatDate(timeStamps[key]));
 }
 FileObj.prototype.formatDate = function(dateTime) {
@@ -35,21 +35,6 @@ FileObj.prototype.unFormatDate = function(date) {
 }
 FileObj.prototype.isFormatedDate = function(date) {
     return !(typeof date !== 'string' || date.match(/\D/) || date.length !== 14)
-}
-FileObj.prototype.checkType = function(type, name) {
-    if (!type) {
-        const segs = name.split('.');
-        if (segs.length > 1) {
-            return segs[segs.length-1];
-        }
-        else {
-            return "unknown"
-        }
-    }
-    return type
-}
-FileObj.prototype.makeFileRef = function(file) {
-    return file.name+file.size+file.lastModified
 }
 FileObj.prototype.getActiveDate = function() {
     return this.timeStamps[this.activeTimeStamp];
