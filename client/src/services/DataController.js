@@ -14,11 +14,19 @@ export default function DataController(statusSubcriber, nodeListSubcriber, setAc
     this.start = this.start.bind(this);
 }
 DataController.prototype.start = async function() {
-    const data = await readAppData('local');
-    if (data) {
-        this.appData.rebase(data);
+    const localData = await readAppData('local');
+    if (localData) {
+        this.appData.rebase(localData);
         this.updateList();
         this.setActiveNode(this.findFirstFileObj().getActiveDate().substr(0,8));
+    }
+    const backendTest = await fetch('/backend_test');
+    if (backendTest.ok) {
+       let json = await backendTest.json();
+       console.log(json.data);
+    } 
+    else {
+        errorHandler("HTTP-Error: " + backendTest.status);
     }
 }
 DataController.prototype.syncAppData = async function() {

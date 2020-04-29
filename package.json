@@ -1,0 +1,23 @@
+{
+  "name": "v18-geckos-team-02",
+  "version": "1.0.0",
+  "description": "A file-sorting app that takes dates from metadata to automatically produce a visual timeline",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chingu-voyages/v18-geckos-team-02.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chingu-voyages/v18-geckos-team-02/issues"
+  },
+  "homepage": "https://github.com/chingu-voyages/v18-geckos-team-02#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
