@@ -43,15 +43,14 @@ ${baseCss};
 `;
 
 function DateAndTagsEditor({ uploads, updateDatesOrTags }) {
-  const currentDate = new Date();
+  const currentDate = Date.now();
   const uids = uploads.map(upload => upload.uid);
-  const tagsSet = new Set();
-  uploads.forEach(upload => upload.tags.forEach(tag => tagsSet.add(tag)));
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
-    user: uploads[0].timeStamps.user || currentDate,
-    modified: uploads[0].timeStamps.modified,
-    tags: Array.from(tagsSet.values).join(', '),
+    user: currentDate,
+    modified: !uploads[0].file.lastModified ? currentDate : uploads[0].file.lastModified,
+    tags: "",
+    time:!uploads[0].file.lastModified ? currentDate : uploads[0].file.lastModified,
     activeTimeStamp: "modified",
   });
   
@@ -64,10 +63,12 @@ function DateAndTagsEditor({ uploads, updateDatesOrTags }) {
     if (!isOpen) {
       const {user, modified, tags, activeTimeStamp} = values;
       updateDatesOrTags(uids, {
-        user,
-        modified,
-        tags: tags.replace(', ', ',').replace(' ,', ',').split(','),
-        activeTimeStamp
+        timeStamps: {
+          modified: modified,
+          user: user,
+        },
+        activeTimeStamp: activeTimeStamp,
+        tags: [tags],
       });
     }
   }, [isOpen]);
@@ -97,7 +98,7 @@ function DateAndTagsEditor({ uploads, updateDatesOrTags }) {
               <Label>Time: 
                 <Input
                   type="time"
-                  name={values.activeTimeStamp}
+                  name={values.time}
                   value={formatForHHMM(values[values.activeTimeStamp])}
                   onChange={handleCustomValueChange}
                   disabled={values.activeTimeStamp === "user" ? false : true}
