@@ -66,10 +66,16 @@ export const FileUploadLabel = styled.label`
 `;
 
 function NavBar({ openTimeline, openNote, addUploadsToList }) {
+
+  function handleOnChange(e) {
+    addUploadsToList(e.target.files);
+    e.target.value = null;
+  }
+
   return (
     <NavBarContainer>
         <ButtonContainer>
-          <FileUploadInput type="file" id="file" onChange={e => addUploadsToList(e.target.files)} multiple/> 
+          <FileUploadInput type="file" id="file" onChange={handleOnChange} multiple/> 
           <FileUploadLabel htmlFor="file">UPLOAD FILES</FileUploadLabel>
           <AddNoteButton onClick={openNote}>ADD NOTE</AddNoteButton>
         </ButtonContainer>

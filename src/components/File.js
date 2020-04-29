@@ -5,14 +5,17 @@ const Wrapper = styled.div`
     max-width: 100%;
     display: grid;
     place-items: center center;
+    border: 1px solid red;
 `;
 const Img = styled.img`
     max-width: 100%;
+    border: 1px solid orange;
 `;
 const Note = styled(Wrapper)`
     background: ${props => props.theme.offWhite};
     min-height: 100%;
     padding: 10%;
+    border: 1px solid green;
 `;
 const FileIcon = styled.a`
     max-width: 100%;
@@ -22,9 +25,41 @@ const FileIcon = styled.a`
     color: ${props => props.color};
     width: 300px;
     height: 150px;
+    border: 1px solid blue;
 `;
 
-export default function File({fileObj, showTime, time, getFile}) {
+const Options = styled.button`
+    width: auto;
+    background: red;
+    position: absolute;
+    
+`;
+
+const OptionsContainer = styled.div`
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    justify-content: flex-end;
+    border: solid 1px green;
+`;
+
+const FileContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 50vw;
+    border: solid blue 1px;
+
+    @media (max-width: 1000px){
+        max-width: 70vw;
+    }
+
+    @media (max-width: 500px){
+        max-width: 90vw;
+    }
+`;
+
+export default function File({fileObj, showTime, time, getFile, deleteUpload}) {
     const [file, setFile] = useState('');
     useState(() => {
         getFile(fileObj.fileRef).then(blob => {
@@ -35,16 +70,26 @@ export default function File({fileObj, showTime, time, getFile}) {
             setFile(url);
         });
     }, []);
+
+    function handleClick() {
+
+
+    }
    
     if (fileObj) {
         return (
             <>
+            <FileContainer>
                 {showTime && <time dateTime={time}>{time}</time>}
+                <OptionsContainer> 
+                    <Options onClick={handleClick}>X</Options> 
+                </OptionsContainer> 
                 {fileObj.type.includes('image') ? 
                     <Img src={file} alt="" /> : 
                     fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.name}</h1><p>{fileObj.text}</p></Note> :
                     <FileIcon href={file} download={fileObj.name} {...charsToColour(fileObj.type)}>{fileObj.name}</FileIcon>
                 }
+            </FileContainer>
             </>
         )
     }
