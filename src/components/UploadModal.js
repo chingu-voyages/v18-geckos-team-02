@@ -82,7 +82,7 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
 `;
 
-const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, close }) => {
+const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, close, getTags, deleteTag }) => {
   return (
     <ModalWindow>
       <UploadModalWrapper>
@@ -92,7 +92,7 @@ const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, 
             {uploads.map(upload =>
               <FileItem key={upload.uid}>
               <FileName>{upload.file.name}</FileName>
-                <DateAndTagsEditor {...{ uploads: [upload], updateDatesOrTags }}/>
+                <DateAndTagsEditor {...{ uploads: [upload], updateDatesOrTags, getTags, deleteTag }}/>
                 <DeleteButton
                   onClick={ () => deleteUpload(upload.uid) }
                   aria-label="Delete upload">
@@ -101,7 +101,7 @@ const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, 
             </FileItem>)}
           </FileList>
         </AddedFiles>
-        {uploads.length > 1 && <DateAndTagsEditor {...{ uploads, updateDatesOrTags }} />}
+        {uploads.length > 1 && <DateAndTagsEditor {...{ uploads, updateDatesOrTags, getTags, global }} />}
         <ButtonGroup>
           <Button disabled={uploads.length < 1 ? true : false } onClick={sumbitUploads}>Save</Button>
           <Button onClick={ close } name="cancel">Cancel</Button>
