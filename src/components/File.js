@@ -5,17 +5,14 @@ const Wrapper = styled.div`
     max-width: 100%;
     display: grid;
     place-items: center center;
-    border: 1px solid red;
 `;
 const Img = styled.img`
     max-width: 100%;
-    border: 1px solid orange;
 `;
 const Note = styled(Wrapper)`
     background: ${props => props.theme.offWhite};
     min-height: 100%;
     padding: 10%;
-    border: 1px solid green;
 `;
 const FileIcon = styled.a`
     max-width: 100%;
@@ -25,7 +22,6 @@ const FileIcon = styled.a`
     color: ${props => props.color};
     width: 300px;
     height: 150px;
-    border: 1px solid blue;
 `;
 
 const Options = styled.button`
@@ -40,7 +36,6 @@ const OptionsContainer = styled.div`
     position: relative;
     flex-direction: row;
     justify-content: flex-end;
-    border: solid 1px green;
 `;
 
 const FileContainer = styled.div`
@@ -48,7 +43,6 @@ const FileContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     max-width: 50vw;
-    border: solid blue 1px;
 
     @media (max-width: 1000px){
         max-width: 70vw;

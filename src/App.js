@@ -20,6 +20,7 @@ function App() {
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [uploads, setUploads] = useState([]);
   const [appTheme, setTheme] = useState(theme);
+  const [test, setTest] = useState('');
 
   const [fileObjs, setFileObjs] = useState([]);
   const [activeNodeDate, setActiveNodeDate] = useState('');
@@ -82,7 +83,6 @@ function App() {
 
   function removeFile(fileObj) {
     removeFiles([fileObj]);
-    setActiveNode(activeNode);
   }
  
   return (
@@ -92,7 +92,7 @@ function App() {
         {uploadModalOpen && !noteModalOpen &&
           <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
-        <Main {...{getFile, fileObjs, removeFile, activeNode, getFileObjs, activeNodeDate, fileObjs }} />
+        <Main {...{getFile, fileObjs, removeFile, activeNode, getFileObjs, activeNodeDate, test }} />
         <nav>
           <Timeline {...{ activeNode, setActiveNode, nodesList, getFile, removeFile }} />
           <NavBar openNote={() => setNoteModalOpen(true)} {...{ addUploadsToList }} />

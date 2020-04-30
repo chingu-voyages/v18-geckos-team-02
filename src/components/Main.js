@@ -22,7 +22,7 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main({uploads, getFileObjs, getFile, removeFile, activeNode, setActiveNode, activeNodeDate, fileObjs})  {
+function Main({ test, uploads, getFileObjs, getFile, removeFile, activeNode, setActiveNode, activeNodeDate, fileObjs})  {
 
   let output = 'tutorial Gifs';
   if (activeNodeDate) {
