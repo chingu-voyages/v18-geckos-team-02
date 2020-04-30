@@ -23,33 +23,7 @@ const Header = styled.header`
 `;
 
 function Main({uploads, getFileObjs, getFile, removeFile, activeNode, setActiveNode, activeNodeDate, fileObjs})  {
-  // const [fileObjs, setFileObjs] = useState();
-  // const [activeNodeDate, setActiveNodeDate] = useState();
 
-  // useEffect(() => {
-  //   if (activeNode) {
-  //     const objs = getFileObjs(activeNode, activeNode.substr(0,8)+'2359');
-  //     if (objs && objs.length > 0) {
-  //       setActiveNodeDate(new Date(objs[0].unFormatDate(objs[0].getActiveDate()).substr(0, 10)).toDateString());
-  //       setFileObjs(objs);
-  //       console.log(objs);
-  //     }
-  //   }
-  // }, [activeNode, getFileObjs, uploads]);
-
-  // getFileObjs(activeNode, activeNode.substr(0,8)+'2359').then(fileObjs => {
-  //   setActiveNodeDate(new Date(fileObjs[0].unFormatDate(fileObjs[0].getActiveDate()).substr(0, 10)).toDateString());
-  //   setFileObjs(fileObjs);
-  // });
-
-  // useEffect(() => {
-
-  //   });
-
-
-
-
-  
   let output = 'tutorial Gifs';
   if (activeNodeDate) {
     output = <>
