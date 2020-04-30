@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Node from './Node';
 import styled from 'styled-components';
 
@@ -22,14 +22,24 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main({activeNodeDate, fileObjs, getFile}) {
+function Main({getFileObjs, getFile, removeFile, activeNode})  {
+  const [fileObjs, setFileObjs] = useState();
+  const [activeNodeDate, setActiveNodeDate] = useState();
+
+  getFileObjs(activeNode, activeNode.substr(0,8)+'2359').then(fileObjs => {
+    setActiveNodeDate(new Date(fileObjs[0].unFormatDate(fileObjs[0].getActiveDate()).substr(0, 10)).toDateString());
+    setFileObjs(fileObjs);
+  });
+
+
+  
   let output = 'tutorial Gifs';
   if (activeNodeDate) {
     output = <>
     <Header>
       <time dateTime={activeNodeDate}>{activeNodeDate}</time>
     </Header>
-    <Node {...{fileObjs, getFile}} timeWanted />
+    <Node {...{fileObjs, getFile, removeFile}} timeWanted />
     </>;
   }
   

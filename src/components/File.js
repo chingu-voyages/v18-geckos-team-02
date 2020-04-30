@@ -59,8 +59,9 @@ const FileContainer = styled.div`
     }
 `;
 
-export default function File({fileObj, showTime, time, getFile, deleteUpload}) {
+export default function File({fileObj, showTime, time, getFile, removeFile }) {
     const [file, setFile] = useState('');
+
     useState(() => {
         getFile(fileObj.fileRef).then(blob => {
             let url = "TODO import file not found image here";
@@ -71,9 +72,10 @@ export default function File({fileObj, showTime, time, getFile, deleteUpload}) {
         });
     }, []);
 
-    function handleClick() {
-
-
+    function handleClick(e) {
+        let selectedFile = fileObj;
+        removeFile(selectedFile);
+  
     }
    
     if (fileObj) {
