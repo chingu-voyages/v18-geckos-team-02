@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Node from './Node';
 import styled from 'styled-components';
 
@@ -22,14 +22,31 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main({getFileObjs, getFile, removeFile, activeNode})  {
-  const [fileObjs, setFileObjs] = useState();
-  const [activeNodeDate, setActiveNodeDate] = useState();
+function Main({uploads, getFileObjs, getFile, removeFile, activeNode, setActiveNode, activeNodeDate, fileObjs})  {
+  // const [fileObjs, setFileObjs] = useState();
+  // const [activeNodeDate, setActiveNodeDate] = useState();
 
-  getFileObjs(activeNode, activeNode.substr(0,8)+'2359').then(fileObjs => {
-    setActiveNodeDate(new Date(fileObjs[0].unFormatDate(fileObjs[0].getActiveDate()).substr(0, 10)).toDateString());
-    setFileObjs(fileObjs);
-  });
+  // useEffect(() => {
+  //   if (activeNode) {
+  //     const objs = getFileObjs(activeNode, activeNode.substr(0,8)+'2359');
+  //     if (objs && objs.length > 0) {
+  //       setActiveNodeDate(new Date(objs[0].unFormatDate(objs[0].getActiveDate()).substr(0, 10)).toDateString());
+  //       setFileObjs(objs);
+  //       console.log(objs);
+  //     }
+  //   }
+  // }, [activeNode, getFileObjs, uploads]);
+
+  // getFileObjs(activeNode, activeNode.substr(0,8)+'2359').then(fileObjs => {
+  //   setActiveNodeDate(new Date(fileObjs[0].unFormatDate(fileObjs[0].getActiveDate()).substr(0, 10)).toDateString());
+  //   setFileObjs(fileObjs);
+  // });
+
+  // useEffect(() => {
+
+  //   });
+
+
 
 
   

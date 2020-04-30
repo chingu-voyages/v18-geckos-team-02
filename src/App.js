@@ -21,13 +21,25 @@ function App() {
   const [uploads, setUploads] = useState([]);
   const [appTheme, setTheme] = useState(theme);
 
-  
+  const [fileObjs, setFileObjs] = useState([]);
+  const [activeNodeDate, setActiveNodeDate] = useState('');
+
+  useEffect(() => {
+    if (activeNode) {
+      const objs = getFileObjs(activeNode, activeNode.substr(0,8)+'2359');
+      if (objs && objs.length > 0) {
+        setActiveNodeDate(new Date(objs[0].unFormatDate(objs[0].getActiveDate()).substr(0, 10)).toDateString());
+        setFileObjs(objs);
+        console.log(objs);
+      }
+    }
+  }, [activeNode, getFileObjs, uploads]);
+
   function addUploadsToList(newUploads) {
     const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
     setUploads([...uploads, ...newUploadsArr]);
     setUploadModalOpen(true);
     setNoteModalOpen(false);
-
   }
 
   function deleteUpload(uid) {
@@ -80,7 +92,7 @@ function App() {
         {uploadModalOpen && !noteModalOpen &&
           <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
-        <Main {...{getFile, removeFile, activeNode, getFileObjs }} />
+        <Main {...{getFile, fileObjs, removeFile, activeNode, getFileObjs, activeNodeDate, fileObjs }} />
         <nav>
           <Timeline {...{ activeNode, setActiveNode, nodesList, getFile, removeFile }} />
           <NavBar openNote={() => setNoteModalOpen(true)} {...{ addUploadsToList }} />

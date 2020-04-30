@@ -110,7 +110,6 @@ DataController.prototype.removeFiles = function(fileObjs) {
         delete this.appData.fileObjs[key];
         this.updateList()
         this.setStatus('Deleted');
-        console.log(this.appData.fileObjs);
         return true
     }
     return `Error: no such file under key: ${key}`
