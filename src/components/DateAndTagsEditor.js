@@ -13,7 +13,7 @@ const baseCss = css`
 `;
 
 const EditorForm = styled.form`
-  width: 250px;
+  width: 280px;
   margin: auto;
   padding: 1rem;
   background: ${props => props.theme.grey};
@@ -42,7 +42,33 @@ ${baseCss};
   `}
 `;
 
-function DateAndTagsEditor({ uploads, updateDatesOrTags }) {
+const TagLists = styled.ul`
+  padding: none;
+`;
+
+const Tag = styled.li`
+  color: ${props => props.theme.lightGrey};
+  background: ${props => props.theme.darkGrey};
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 3px;
+  margin: 0.5rem 0.5rem auto auto;
+`;
+
+const DeleteBtn = styled.span`
+  cursor: pointer;
+  color: ${props => props.theme.greyBlue};
+  font-weight: 700;
+  font-size: 1rem;
+  margin-left: 0.3rem;
+  
+  &:hover {
+    color: ${props => props.theme.red};
+  }
+`;
+
+function DateAndTagsEditor({ uploads, updateDatesOrTags, getTags, deleteTag, global }) {
   const currentDate = Date.now();
   const uids = uploads.map(upload => upload.uid);
   const [isOpen, setIsOpen] = useState(false);
@@ -68,10 +94,13 @@ function DateAndTagsEditor({ uploads, updateDatesOrTags }) {
           user: user,
         },
         activeTimeStamp: activeTimeStamp,
-        tags: [tags],
+        tags: tags.split(","),
       });
     }
+    values.tags = "";
   }, [isOpen]);
+
+  const Tags = getTags(uploads[0]);
 
   return (
     <EditorBox>
@@ -115,9 +144,12 @@ function DateAndTagsEditor({ uploads, updateDatesOrTags }) {
                 />
               </Label> 
               <LineBreak />
+          <TagLists>
+            {!global && Tags && Tags.map((tag, index) => <Tag key={tag+index}>{tag}<DeleteBtn ariaLabel="Delete tag" onClick = {() => deleteTag(uploads[0], tag[index])}>&times;</DeleteBtn></Tag>)}
+            </TagLists>
         </EditorForm>
       }
-    </EditorBox>
+      </EditorBox>
   );
 }
 

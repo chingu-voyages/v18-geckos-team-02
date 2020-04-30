@@ -56,7 +56,19 @@ function App() {
           uploads[index].tags = privateTags;
         }
       }
+      setUploads([...uploads]);
     }
+  }
+
+  function getTags(upload) {
+    if (upload.hasOwnProperty("tags") && upload.tags[0] !== "") {
+      return upload.tags;
+    }
+  }
+  function deleteTag(upload, tag) {
+    const newTags = upload.tags.filter((selectedTag, index) => selectedTag[index] !== tag);
+    upload.tags = newTags;
+    setUploads([...uploads]);
   }
 
   let newUploadCount = 0;
@@ -69,6 +81,7 @@ function App() {
   }
 
   function sumbitUploads() {
+    console.log(uploads);
     addFiles(uploads);
     setUploads([]);
     setUploadModalOpen(false);
@@ -84,7 +97,7 @@ function App() {
       <GlobalStyle />
       <ThemeProvider theme={appTheme}>
         {uploadModalOpen && !noteModalOpen &&
-          <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
+          <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, getTags, deleteTag }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
         <Main {...{activeNodeDate, fileObjs, getFile}} />
         <nav>
