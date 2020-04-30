@@ -1,20 +1,20 @@
 import Dexie from 'dexie';
 import errorHandler from './errorHandler';
+import FileObj from './FileObj';
 
-const localDB = new Dexie('user_db');
+const localDB = new Dexie('user_dbac');
 localDB.version(1).stores({
-    fileObjs: 'ref',
+    appData: 'ref',
     files: 'ref',
-    lastModified: 'zero'
 });
 
-localDB.files.clear();
+//  localDB.files.clear();
+//  localDB.appData.clear();
 
 async function writeFile(ref, file) {
     try {
         const data = await fileToArrayBuffer(file);
         await localDB.files.add({ref, data});
-        const arr = await localDB.files.toArray();
         return true
     }
     catch (e) {
@@ -35,13 +35,44 @@ async function readFile(ref) {
     try {
         let dataObj = await localDB.files.get(ref);
         if (!dataObj) {
-            throw `Could not get data for ref: ${ref} !`
+            throw new Error(`Could not get data for ref: ${ref} !`)
         }
         return new Blob([dataObj.data])
     }
     catch (e) {
         errorHandler(e);
     }
+}
+async function readAppData(source = 'local') {
+    if (source === 'local') {
+        try {
+            let appData = await localDB.appData.get(0);
+            let output = false;
+            if (appData) {
+                output = JSON.parse(appData.data);
+                const fileObjs = Object.values(output.fileObjs).map(data => new FileObj({...data}));
+                output.fileObjs = {};
+                fileObjs.forEach(fileObj => output.fileObjs[fileObj.uid] = fileObj);
+            }
+            return output
+        }
+        catch (e) {
+            errorHandler(e);
+        }
+    }
+}
+async function writeAppData(appData) {
+    try {
+        const data = JSON.stringify(appData);
+        await localDB.appData.put({ref: 0, data});
+        return true
+    }
+    catch (e) {
+        errorHandler(e);
+    }
+}
+async function syncToCloud() {
+
 }
 
 function fileToArrayBuffer(file) {
@@ -56,4 +87,4 @@ function fileToArrayBuffer(file) {
     });
 }
 
-export {writeFile, readFile}
+export {writeFile, readFile, readAppData, writeAppData}
