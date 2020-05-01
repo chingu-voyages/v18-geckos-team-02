@@ -82,6 +82,11 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
 `;
 
+const getShortName = fileName =>  fileName.length <= 23 ? fileName : fileName.substr(0, 20) + "...";
+  
+  // fileName.length < 22 ? fileName : fileName.substr(0, 20) + "-" + fileName.substr(20, 18) + "...";
+
+
 const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, close, getTags, deleteTag }) => {
   return (
     <ModalWindow>
@@ -91,7 +96,7 @@ const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, 
           <FileList>
             {uploads.map(upload =>
               <FileItem key={upload.uid}>
-              <FileName>{upload.file.name}</FileName>
+              <FileName>{getShortName(upload.file.name).toLowerCase()}</FileName>
                 <DateAndTagsEditor {...{ uploads: [upload], updateDatesOrTags, getTags, deleteTag }}/>
                 <DeleteButton
                   onClick={ () => deleteUpload(upload.uid) }
