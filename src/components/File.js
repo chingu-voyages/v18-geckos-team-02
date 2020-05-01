@@ -24,8 +24,38 @@ const FileIcon = styled.a`
     height: 150px;
 `;
 
-export default function File({fileObj, showTime, time, getFile}) {
+const Options = styled.button`
+    width: auto;
+    background: red;
+    position: absolute;
+    
+`;
+
+const OptionsContainer = styled.div`
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    justify-content: flex-end;
+`;
+
+const FileContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 50vw;
+
+    @media (max-width: 1000px){
+        max-width: 70vw;
+    }
+
+    @media (max-width: 500px){
+        max-width: 90vw;
+    }
+`;
+
+export default function File({fileObj, showTime, time, getFile, removeFile }) {
     const [file, setFile] = useState('');
+
     useState(() => {
         getFile(fileObj.fileRef).then(blob => {
             let url = "TODO import file not found image here";
@@ -35,16 +65,27 @@ export default function File({fileObj, showTime, time, getFile}) {
             setFile(url);
         });
     }, []);
+
+    function handleClick(e) {
+        let selectedFile = fileObj;
+        removeFile(selectedFile);
+  
+    }
    
     if (fileObj) {
         return (
             <>
+            <FileContainer>
                 {showTime && <time dateTime={time}>{time}</time>}
+                <OptionsContainer> 
+                    <Options onClick={handleClick}>X</Options> 
+                </OptionsContainer> 
                 {fileObj.type.includes('image') ? 
                     <Img src={file} alt="" /> : 
                     fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.name}</h1><p>{fileObj.text}</p></Note> :
                     <FileIcon href={file} download={fileObj.name} {...charsToColour(fileObj.type)}>{fileObj.name}</FileIcon>
                 }
+            </FileContainer>
             </>
         )
     }

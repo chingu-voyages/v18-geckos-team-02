@@ -12,6 +12,7 @@ export default function DataController(statusSubcriber, nodeListSubcriber, setAc
     this.getFileObjs = this.getFileObjs.bind(this);
     this.getFile = this.getFile.bind(this);
     this.start = this.start.bind(this);
+    this.removeFiles = this.removeFiles.bind(this);
 }
 DataController.prototype.start = async function() {
     const data = await readAppData('local');
@@ -102,20 +103,24 @@ DataController.prototype.findFirstFileObj = function() {
     return fileObjs[0];
 }
 
+DataController.prototype.removeFiles = function(fileObjs) {
+    fileObjs.forEach(fileObj => {
+        let key = fileObj.uid;
+        if (this.appData.fileObjs[key]) {
+        delete this.appData.fileObjs[key];
+        this.updateList()
+        this.setStatus('Deleted');
+        return true
+    }
+    return `Error: no such file under key: ${key}`
+
+    })
+}
 
 function updateFile(fileObj) {
     let key = fileObj.key;
     if (this.appData.fileObjs[key]) {
         Object.assign(this.appData.fileObjs[key], fileObj);
-        return true
-    }
-    return `Error: no such file under key: ${key}`
-}
-
-function removeFile(fileObj) {
-    let key = fileObj.key;
-    if (this.appData.fileObjs[key]) {
-        delete this.appData.fileObjs[key];
         return true
     }
     return `Error: no such file under key: ${key}`
