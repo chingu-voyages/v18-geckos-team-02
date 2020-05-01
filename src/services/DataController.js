@@ -116,8 +116,6 @@ DataController.prototype.removeFiles = function(fileObjs) {
 
     })
 }
-    
-
 
 function updateFile(fileObj) {
     let key = fileObj.key;
