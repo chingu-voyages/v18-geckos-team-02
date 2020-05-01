@@ -125,4 +125,56 @@ function checkFileType(type, name) {
     return type
 }
 
-export {addFiles, getFile, removeFiles, subscribeNodesList, subscribeActiveFileObjs, setActiveNode}
+const uploadsListSubcribers = [];
+let uploadsList;
+const uploadFuncs = {
+    subscribe: function subscribeUploadsList(setUploadsList) {
+        uploadsListSubcribers.push(new Subscriber(setUploadsList));
+    },
+    set: function setUploadsList(arr) {
+        uploadsList = arr;
+        uploadsListSubcribers.forEach(sub => sub.update(uploadsList));
+    },
+    submit: function submitUploadsList() {
+        addFiles(uploadsList);
+        uploadFuncs.set([]);
+    },
+    cancel: () => uploadFuncs.set([]),
+    delete: function deleteUpload(uid) {
+        const appendedUploads = uploadsList.filter(upload => upload.uid !== uid);
+        uploadFuncs.set(appendedUploads);
+    },
+    update: function updateDatesOrTags(uids, uploadMeta) {
+        const newUploadsList = uploadsList.slice(0);
+        for (let uid of uids) {
+            const index = newUploadsList.findIndex(upload => upload.uid === uid);
+            const hasOwnTags = newUploadsList[index].hasOwnProperty("tags") && newUploadsList[index].tags[0] !== "";
+            const privateTags = hasOwnTags && [...newUploadsList[index].tags];
+            Object.assign(newUploadsList[index], uploadMeta);
+            if (hasOwnTags) {
+            if (uploadMeta.tags[0] !== "") {
+                const combinedTags = newUploadsList[index].tags.concat(privateTags);
+                newUploadsList[index].tags = combinedTags;
+            } else {
+                newUploadsList[index].tags = privateTags;
+            }
+            }
+            uploadFuncs.set([...newUploadsList]);
+        }
+    },
+    add: function addUploadsToList(newUploads) {
+        const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
+        uploadFuncs.set([...uploadsList, ...newUploadsArr]);
+    }
+}
+
+let newUploadCount = 0;
+function formatNewUpload(upload) {
+    const dateNow = Date.now();
+    return ({
+        uid: dateNow+`${++newUploadCount}`,
+        file: upload,
+    })
+}
+
+export {addFiles, getFile, removeFiles, subscribeNodesList, subscribeActiveFileObjs, setActiveNode, uploadFuncs}
