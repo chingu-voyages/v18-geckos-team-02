@@ -1,3 +1,4 @@
+import { writeAppData } from './storage';
 export default function AppData(statusSubcriber) {
     this.setStatus = statusSubcriber;
     this.lastModified = null;
@@ -16,6 +17,7 @@ AppData.prototype.update = function(fileObj, log = true) {
 AppData.prototype.delete = function(uid, log = true) {
     log && this.changeLog.push({ func: 'delete', data: uid });
     delete this.fileObjs[uid];
+    writeAppData(this);
 }
 AppData.prototype.rebase = function(newAppData) {
     this.basedOn = newAppData.lastModified;
@@ -25,5 +27,3 @@ AppData.prototype.rebase = function(newAppData) {
     }
     this.changeLog = [];
 }
-
-//AppData.prototype.compare

@@ -107,23 +107,13 @@ DataController.prototype.removeFiles = function(fileObjs) {
     fileObjs.forEach(fileObj => {
         let key = fileObj.uid;
         if (this.appData.fileObjs[key]) {
-        delete this.appData.fileObjs[key];
-        this.updateList()
+        this.appData.delete(key);
+        this.updateList();
         this.setStatus('Deleted');
         return true
     }
-    return `Error: no such file under key: ${key}`
-
+    return Error(`no such file under key: ${key}`)
     })
-}
-
-function updateFile(fileObj) {
-    let key = fileObj.key;
-    if (this.appData.fileObjs[key]) {
-        Object.assign(this.appData.fileObjs[key], fileObj);
-        return true
-    }
-    return `Error: no such file under key: ${key}`
 }
 
 function makeFileRef(file) {
