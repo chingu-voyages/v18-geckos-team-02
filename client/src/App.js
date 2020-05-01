@@ -7,6 +7,7 @@ import AddNoteModal from './components/AddNoteModal';
 import styled, {ThemeProvider} from 'styled-components';
 import GlobalStyle, {theme} from './theme/globalStyles';
 import DataController from './services/DataController';
+import GoogleAuth from './components/GoogleAuth';
 
 function App() {
   const [status, setStatus] = useState('');
@@ -81,11 +82,12 @@ function App() {
     setUploads([]);
     setUploadModalOpen(false);
   }
- 
+
   return (
     <>
       <GlobalStyle />
       <ThemeProvider theme={appTheme}>
+        <GoogleAuth />
         {uploadModalOpen && !noteModalOpen &&
           <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}

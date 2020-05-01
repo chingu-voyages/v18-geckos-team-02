@@ -2,6 +2,7 @@ import AppData from './AppData';
 import FileObj from './FileObj';
 import errorHandler from './errorHandler';
 import { writeFile, readFile, readAppData, writeAppData } from './storage';
+import { serverGet } from './api';
 export default function DataController(statusSubcriber, nodeListSubcriber, setActiveNode) {
     this.appData = new AppData(statusSubcriber);
     this.setStatus = statusSubcriber;
@@ -20,16 +21,18 @@ DataController.prototype.start = async function() {
         this.updateList();
         this.setActiveNode(this.findFirstFileObj().getActiveDate().substr(0,8));
     }
-    const backendTest = await fetch('/backend_test');
-    if (backendTest.ok) {
-       let json = await backendTest.json();
-       console.log(json.data);
-    } 
-    else {
-        errorHandler("HTTP-Error: " + backendTest.status);
-    }
+    serverGet('/backend_test');
+    this.syncAppData();
 }
 DataController.prototype.syncAppData = async function() {
+    const cloudData = await serverGet('/appdata');
+    console.log(cloudData);
+    if (!cloudData || cloudData.lastModified === this.appData.basedOn) {
+        await serverPut('/appdata');
+    }
+    else if (cloudData.lastModified === this.appData.basedOn) {
+        this.appData.rebase(cloudData);
+    }
     // if client basedOn date === cloud lastModified date --> replace cloud data with client data
     // if client basedOn date !== cloud lastModified date --> pull in new cloud data --> run each operation from log on new data --> clear log --> compare client basedOn date === cloud lastModified date again
 }

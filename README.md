@@ -14,13 +14,45 @@ A file-sorting app that takes dates from metadata to automatically produce a vis
 
 ## Setup :hammer_and_wrench:
 
-To run the app locally, clone the repo and install the app using: 
-
+### Clone repo and install dependencies
 ```
   $ git clone https://github.com/chingu-voyages/v18-geckos-team-02
   $ cd v18-geckos-team-02
   $ npm install 
-  $ npm start
+  $ cd client
+  $ npm install 
+```
+
+### Dev start
+#### Google Drive API credentials 
+- Visit [Google's developer console](https://console.cloud.google.com/) 
+- Navigation Menu (hamburger top left) --> APIs & Services --> Library --> Activate the Google drive API 
+- Create credentials 
+- Download credentials.json 
+- Make .env file in project root and paste in your credentials.json within CREDS="" (should look like below but remove \n newlines so it's JSON compliant)
+```
+CREDS="{
+  "type":"service_account",
+  "project_id":<>,
+  "private_key_id":<>,
+  "private_key":<>,
+  "client_email":<>,
+  "client_id":<>,
+  "auth_uri":"https://accounts.google.com/o/oauth2/auth",
+  "token_uri":"https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url":<>,
+  "redirect_uris":["http://localhost:3000/oauthcallback"]}"
+```
+#### Start server
+In project root run:
+``` 
+$ npm start
+ ```
+#### Start Client
+In another terminal cd into v18-geckos-team-02/client folder run:
+``` 
+$ npm start 
 ```
 
 ## Contributors :sparkler:

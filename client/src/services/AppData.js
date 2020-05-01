@@ -17,9 +17,9 @@ AppData.prototype.delete = function(uid, log = true) {
     log && this.changeLog.push({ func: 'delete', data: uid });
     delete this.fileObjs[uid];
 }
-AppData.prototype.rebase = function(newAppData) {
-    this.basedOn = newAppData.lastModified;
-    this.fileObjs = newAppData.fileObjs;
+AppData.prototype.rebase = function(newBase) {
+    this.basedOn = newBase.lastModified;
+    this.fileObjs = newBase.fileObjs;
     for (let op in this.changeLog) {
         this[op.func](op.data, false);
     }
