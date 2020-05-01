@@ -2,8 +2,64 @@ import AppData from './AppData';
 import FileObj from './FileObj';
 import errorHandler from './errorHandler';
 import { writeFile, readFile, writeAppData } from './localStorage';
+import Subscriber from './Subscriber';
 
-const appData = new AppData();
+const appData = new AppData(handleFileObjsChange);
+function handleFileObjsChange() {
+    setActiveFileObjs();
+    setNodesList();
+}
+
+let activeNode;
+function setActiveNode(fileObj) {
+    if (fileObj.hasOwnProperty('getActiveDate')) {
+        activeNode = fileObj.getActiveDate().substr(0, 8);
+        setActiveFileObjs();
+    }
+    else {
+        errorHandler(Error(`Unable to setActiveNode with ${fileObj}`));
+    }
+}
+const nodesListSubcribers = [];
+function subscribeNodesList(setNodesList) {
+    nodesListSubcribers.push(new Subscriber(setNodesList));
+}
+function setNodesList() {
+    const getPath = dateTime => [dateTime.substr(0,4), ...dateTime.substr(4).match(/.{2}/g)]; 
+    const fileObjs = Object.values(appData.fileObjs);
+    const nodes = {};
+    for (let fileObj of fileObjs) {
+        const path = getPath(fileObj.getActiveDate().substr(0, 8));
+        let head = nodes;
+        for (let key of path) {
+            if (!head.hasOwnProperty(key)) {
+                if (key !== path[path.length-1]) {
+                    head[key] = {};
+                }
+                else {
+                    head[key] = [];
+                }
+            }
+            head = head[key];
+        }
+        head.push(fileObj);
+    }
+    nodesListSubcribers.forEach(sub => sub.update(nodes));
+}
+const activeFileObjsSubcribers = [];
+function subscribeActiveFileObjs(setFileObjs) {
+    nodesListSubcribers.push(new Subscriber(setFileObjs));
+}
+function getFileObjs(from = '0', to = '0') {
+    return Object.values(appData.fileObjs).filter(fileObj => {
+        const key = fileObj.getActiveDate();
+        return (key.substr(0, from.length) >= from && key.substr(0, to.length) <= to)
+    }).sort((a, b) => a.getActiveDate() - b.getActiveDate());
+}
+function setActiveFileObjs() {
+    const activeFileObjs = getFileObjs(activeNode);
+    activeFileObjsSubcribers.forEach(sub => sub.update(activeFileObjs));
+}
 
 async function addFiles(uploadsArr) {
     let fileObj;
@@ -24,34 +80,6 @@ async function addFiles(uploadsArr) {
     await writeAppData(appData);
     return true
 }
-function listNodes() {
-        const getPath = dateTime => [dateTime.substr(0,4), ...dateTime.substr(4).match(/.{2}/g)]; 
-        const fileObjs = Object.values(appData.fileObjs);
-        const nodes = {};
-        for (let fileObj of fileObjs) {
-            const path = getPath(fileObj.getActiveDate().substr(0, 8));
-            let head = nodes;
-            for (let key of path) {
-                if (!head.hasOwnProperty(key)) {
-                    if (key !== path[path.length-1]) {
-                        head[key] = {};
-                    }
-                    else {
-                        head[key] = [];
-                    }
-                }
-                head = head[key];
-            }
-            head.push(fileObj);
-        }
-        return nodes
-}
-function getFileObjs(from = '0', to = '0') {
-    return Object.values(appData.fileObjs).filter(fileObj => {
-            const key = fileObj.getActiveDate();
-            return (key.substr(0, from.length) >= from && key.substr(0, to.length) <= to)
-        }).sort((a, b) => a.getActiveDate() - b.getActiveDate());
-}
 
 async function getFile(fileRef) {
     try {
@@ -67,10 +95,6 @@ async function getFile(fileRef) {
     catch (e) {
         errorHandler(e);
     }
-}
-function findFirstFileObj() {
-    const fileObjs = Object.values(appData.fileObjs).sort((a, b) => a.getActiveDate() - b.getActiveDate());
-    return fileObjs[0];
 }
 
 function removeFiles(fileObjs) {
@@ -101,4 +125,4 @@ function checkFileType(type, name) {
     return type
 }
 
-export {addFiles, listNodes, getFileObjs, getFile, removeFiles}
+export {addFiles, getFile, removeFiles, subscribeNodesList, subscribeActiveFileObjs, setActiveNode}
