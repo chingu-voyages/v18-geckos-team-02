@@ -8,9 +8,6 @@ localDB.version(1).stores({
     files: 'ref',
 });
 
-//  localDB.files.clear();
-//  localDB.appData.clear();
-
 async function writeFile(ref, file) {
     try {
         const data = await fileToArrayBuffer(file);
@@ -43,22 +40,20 @@ async function readFile(ref) {
         errorHandler(e);
     }
 }
-async function readAppData(source = 'local') {
-    if (source === 'local') {
-        try {
-            let appData = await localDB.appData.get(0);
-            let output = false;
-            if (appData) {
-                output = JSON.parse(appData.data);
-                const fileObjs = Object.values(output.fileObjs).map(data => new FileObj({...data}));
-                output.fileObjs = {};
-                fileObjs.forEach(fileObj => output.fileObjs[fileObj.uid] = fileObj);
-            }
-            return output
+async function readAppData() {
+    try {
+        let appData = await localDB.appData.get(0);
+        let output = false;
+        if (appData) {
+            output = JSON.parse(appData.data);
+            const fileObjs = Object.values(output.fileObjs).map(data => new FileObj({...data}));
+            output.fileObjs = {};
+            fileObjs.forEach(fileObj => output.fileObjs[fileObj.uid] = fileObj);
         }
-        catch (e) {
-            errorHandler(e);
-        }
+        return output
+    }
+    catch (e) {
+        errorHandler(e);
     }
 }
 async function writeAppData(appData) {
@@ -70,9 +65,6 @@ async function writeAppData(appData) {
     catch (e) {
         errorHandler(e);
     }
-}
-async function syncToCloud() {
-
 }
 
 function fileToArrayBuffer(file) {
