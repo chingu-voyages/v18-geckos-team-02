@@ -161,7 +161,7 @@ z-index: 100;
 }
 `;
 
-function Timeline({activeNode, setActiveNode, nodesList, getFile}) {
+function Timeline({activeNode, setActiveNode, nodesList, getFile, removeFile}) {
   const [showNodes, setShowNodes] = useState(false);
   let output = '';
   if (nodesList) {
@@ -213,7 +213,7 @@ function Timeline({activeNode, setActiveNode, nodesList, getFile}) {
                           {showBar && <Bar className={showNodes && 'expanded'}></Bar>}
                           <DateItem ref={ref} className={(isActive ? 'active ' : '')+(showNodes && 'expanded')} onLoad={handleLoad} onClick={handleClick}>
                             <header>{nodeDate.substr(0,3)+' '+nodeDate.substr(8,2)}</header>
-                            {showNodes && <Node fileObjs={nodesList[year][month][date]} {...{getFile}} />}
+                            {showNodes && <Node fileObjs={nodesList[year][month][date]} {...{getFile, removeFile}} />}
                           </DateItem>
                           {atEnd && <Gap></Gap>}
                         </Fragment>) 

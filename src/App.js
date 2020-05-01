@@ -13,25 +13,28 @@ function App() {
   const [nodesList, setNodesList] = useState([]);
   const [activeNode, setActiveNode] = useState('');
   const dataController = useRef(new DataController(setStatus, setNodesList, setActiveNode));
-  const {addFiles, getFileObjs, getFile, start} = dataController.current;
+  const {addFiles, getFileObjs, getFile, start, removeFiles} = dataController.current;
   useEffect(() => { start() }, [start]);
 
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [uploads, setUploads] = useState([]);
   const [appTheme, setTheme] = useState(theme);
+  const [test, setTest] = useState('');
 
   const [fileObjs, setFileObjs] = useState([]);
   const [activeNodeDate, setActiveNodeDate] = useState('');
+
   useEffect(() => {
     if (activeNode) {
       const objs = getFileObjs(activeNode, activeNode.substr(0,8)+'2359');
       if (objs && objs.length > 0) {
         setActiveNodeDate(new Date(objs[0].unFormatDate(objs[0].getActiveDate()).substr(0, 10)).toDateString());
         setFileObjs(objs);
+        console.log(objs);
       }
     }
-  }, [activeNode, getFileObjs]);
+  }, [activeNode, getFileObjs, uploads]);
 
   function addUploadsToList(newUploads) {
     const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
@@ -94,6 +97,10 @@ function App() {
     setUploads([]);
     setUploadModalOpen(false);
   }
+
+  function removeFile(fileObj) {
+    removeFiles([fileObj]);
+  }
  
   return (
     <>
@@ -102,9 +109,9 @@ function App() {
         {uploadModalOpen && !noteModalOpen &&
           <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, getTags, deleteTag }} />}
         {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
-        <Main {...{activeNodeDate, fileObjs, getFile}} />
+        <Main {...{getFile, fileObjs, removeFile, activeNode, getFileObjs, activeNodeDate, test }} />
         <nav>
-          <Timeline {...{ activeNode, setActiveNode, nodesList, getFile }} />
+          <Timeline {...{ activeNode, setActiveNode, nodesList, getFile, removeFile }} />
           <NavBar openNote={() => setNoteModalOpen(true)} {...{ addUploadsToList }} />
         </nav>
       </ThemeProvider>

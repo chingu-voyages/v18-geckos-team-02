@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Node from './Node';
 import styled from 'styled-components';
 
@@ -22,14 +22,15 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main({activeNodeDate, fileObjs, getFile}) {
+function Main({ test, uploads, getFileObjs, getFile, removeFile, activeNode, setActiveNode, activeNodeDate, fileObjs})  {
+
   let output = 'tutorial Gifs';
   if (activeNodeDate) {
     output = <>
     <Header>
       <time dateTime={activeNodeDate}>{activeNodeDate}</time>
     </Header>
-    <Node {...{fileObjs, getFile}} timeWanted />
+    <Node {...{fileObjs, getFile, removeFile}} timeWanted />
     </>;
   }
   
