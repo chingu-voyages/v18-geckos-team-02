@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import {getFile, removeFiles} from '../services/dataController';
 
 const Wrapper = styled.div`
     max-width: 100%;
@@ -53,7 +54,7 @@ const FileContainer = styled.div`
     }
 `;
 
-export default function File({fileObj, showTime, time, getFile, removeFile }) {
+export default function File({fileObj, showTime, time}) {
     const [file, setFile] = useState('');
 
     useState(() => {
@@ -68,7 +69,7 @@ export default function File({fileObj, showTime, time, getFile, removeFile }) {
 
     function handleClick(e) {
         let selectedFile = fileObj;
-        removeFile(selectedFile);
+        removeFiles([selectedFile]);
   
     }
    

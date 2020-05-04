@@ -10,7 +10,7 @@ const Wrapper = styled.section`
     justify-content: center;
 `;
 
-export default function Node({ fileObjs, timeWanted = false, getFile, removeFile }) {
+export default function Node({ fileObjs, timeWanted = false }) {
     let lastTime = '';
     let output = '';
     if (fileObjs) {
@@ -21,7 +21,7 @@ export default function Node({ fileObjs, timeWanted = false, getFile, removeFile
                 showTime = time !== lastTime;
                 lastTime = time;
             }
-            return <File key={fileObj.uid} {...{fileObj, showTime, time, getFile, removeFile}} />
+            return <File key={fileObj.uid} {...{fileObj, showTime, time}} />
         });
     }
     return (

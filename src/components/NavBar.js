@@ -1,5 +1,8 @@
 import React from 'react';
 import styled  from 'styled-components';
+import { uploadFuncs } from '../services/dataController';
+
+const { add } = uploadFuncs;
 
 export const NavBarContainer = styled.div`
     display: flex;
@@ -65,10 +68,10 @@ export const FileUploadLabel = styled.label`
   font-size: 15px;
 `;
 
-function NavBar({ openTimeline, openNote, addUploadsToList }) {
+function NavBar({ openTimeline, openNote, addUploadsToList, uploadFuncs }) {
 
   function handleOnChange(e) {
-    addUploadsToList(e.target.files);
+    add(e.target.files);
     e.target.value = null;
   }
 
