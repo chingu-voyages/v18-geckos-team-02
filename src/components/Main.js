@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Node from './Node';
 import styled from 'styled-components';
+import { subscribeActiveFileObjs } from '../services/dataController';
 
 const Wrapper = styled.main`
   display: grid;
@@ -22,15 +23,27 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main({ test, uploads, getFileObjs, getFile, removeFile, activeNode, setActiveNode, activeNodeDate, fileObjs})  {
+function Main()  {
+  const [activeFileObjs, setActiveFileObjs] = useState([])
+  useEffect(() => {
+    subscribeActiveFileObjs(setActiveFileObjs);
+  }, []
+  )
+
+  function getActiveNodeDate() {
+    const obj = activeFileObjs[0];
+    if(obj) {
+      return new Date(obj.unFormatDate(obj.getActiveDate()).substr(0, 10)).toDateString()
+    }
+  } 
 
   let output = 'tutorial Gifs';
-  if (activeNodeDate) {
+  if (activeFileObjs.length !== 0) {
     output = <>
     <Header>
-      <time dateTime={activeNodeDate}>{activeNodeDate}</time>
+      <time>{getActiveNodeDate()}</time>
     </Header>
-    <Node {...{fileObjs, getFile, removeFile}} timeWanted />
+    <Node fileObjs={activeFileObjs} timeWanted />
     </>;
   }
   

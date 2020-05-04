@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import {uploadFuncs} from'../services/dataController'; 
 // import DateAndTagsEditor from './DateAndTagsEditor';
+
+const { add } = uploadFuncs;
 
 const ModalWindow = styled.section`
   width: 100vw;
@@ -56,7 +59,7 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
 `;
 
-const AddNoteModal = ({ addUploadsToList, onCancel }) => {
+const AddNoteModal = ({ onCancel }) => {
   const [notesTitle, setNotesTitle] = useState("");
   const [notesBody, setNotesBody] = useState("");
   
@@ -67,7 +70,7 @@ const AddNoteModal = ({ addUploadsToList, onCancel }) => {
       text: notesBody,
       type: 'note'
     };
-    addUploadsToList([note]);
+    add([note]);
 
   }
 

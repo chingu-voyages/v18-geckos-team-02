@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { ReactComponent as EditorIcon } from './../assets/editor-icon.svg';
+import { uploadFuncs } from '../services/dataController';
+
+const { update } = uploadFuncs;
 
 const EditorBox = styled.div`
   position: relative;
@@ -68,7 +71,7 @@ const DeleteBtn = styled.span`
   }
 `;
 
-function DateAndTagsEditor({ uploads, updateDatesOrTags, getTags, deleteTag, global }) {
+function DateAndTagsEditor({ uploads, getTags, deleteTag, global }) {
   const currentDate = Date.now();
   const uids = uploads.map(upload => upload.uid);
   const [isOpen, setIsOpen] = useState(false);
@@ -88,7 +91,7 @@ function DateAndTagsEditor({ uploads, updateDatesOrTags, getTags, deleteTag, glo
   useEffect(() => {
     if (!isOpen) {
       const {user, modified, tags, activeTimeStamp} = values;
-      updateDatesOrTags(uids, {
+      update(uids, {
         timeStamps: {
           modified: modified,
           user: user,

@@ -1,6 +1,9 @@
-import React from 'react';
+import React , {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import DateAndTagsEditor from './DateAndTagsEditor';
+import { uploadFuncs } from '../services/dataController';
+
+const { add, submit, subscribe, cancel } = uploadFuncs;
 
 const ModalWindow = styled.section`
   width: 100%;
@@ -87,7 +90,24 @@ const getShortName = fileName =>  fileName.length <= 23 ? fileName : fileName.su
   // fileName.length < 22 ? fileName : fileName.substr(0, 20) + "-" + fileName.substr(20, 18) + "...";
 
 
-const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, close, getTags, deleteTag }) => {
+function UploadModal() {
+
+  const [uploads, setUploads] = useState([]);
+  useEffect(() => {
+    add(setUploads);
+    submit(setUploads)
+    subscribe(setUploads);
+  }, []
+  )
+
+  // add the file sto the List
+  // submit theme
+  // update the data
+
+  function handleCancel() {
+    cancel();
+  }
+
   return (
     <ModalWindow>
       <UploadModalWrapper>
@@ -97,19 +117,19 @@ const UploadModal = ({ uploads, deleteUpload, updateDatesOrTags, sumbitUploads, 
             {uploads.map(upload =>
               <FileItem key={upload.uid}>
               <FileName>{getShortName(upload.file.name).toLowerCase()}</FileName>
-                <DateAndTagsEditor {...{ uploads: [upload], updateDatesOrTags, getTags, deleteTag }}/>
+                <DateAndTagsEditor {...{ uploads: [upload] }}/>
                 <DeleteButton
-                  onClick={ () => deleteUpload(upload.uid) }
+                  onClick={ () => delete(upload.uid) }
                   aria-label="Delete upload">
                   &times;
               </DeleteButton>
             </FileItem>)}
           </FileList>
         </AddedFiles>
-        {uploads.length > 1 && <DateAndTagsEditor {...{ uploads, updateDatesOrTags, getTags, global }} />}
+        {uploads.length > 1 && <DateAndTagsEditor {...{ uploads }} />}
         <ButtonGroup>
-          <Button disabled={uploads.length < 1 ? true : false } onClick={sumbitUploads}>Save</Button>
-          <Button onClick={ close } name="cancel">Cancel</Button>
+          <Button disabled={uploads.length < 1 ? true : false } onClick={submit}>Save</Button>
+          <Button onClick={handleCancel} name="cancel">Cancel</Button>
         </ButtonGroup>
       </UploadModalWrapper>
     </ModalWindow>
