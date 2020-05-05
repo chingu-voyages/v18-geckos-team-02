@@ -1,11 +1,11 @@
 export default function FileObj({uid, fileRef, activeTimeStamp, timeStamps, tags, type, name, text}) {
     this.uid = uid;
     this.timeStamps = {};
-    this.activeTimeStamp = activeTimeStamp;
-    this.tags = tags;
+    this.activeTimeStamp = activeTimeStamp || 'modified';
+    this.tags = tags || [];
     this.fileRef = fileRef;
     this.name = name;
-    this.text = text;
+    this.text = text || '';
     this.type = type;
     Object.keys(timeStamps).forEach(key => this.timeStamps[key] = this.formatDate(timeStamps[key]));
 }

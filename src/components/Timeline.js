@@ -2,7 +2,7 @@ import React, { useState, Fragment, useEffect } from 'react';
 import styled from 'styled-components';
 import Node from './Node';
 import openTimelineIcon from '../assets/openTimelineButton.svg';
-import { subscribeNodesList, setActiveNode } from '../services/dataController';
+import { subscribeNodesList, setActiveNode, activeNode } from '../services/dataController';
 
 const Wrapper = styled.div`
 width: 100%;
@@ -165,18 +165,15 @@ z-index: 100;
 function Timeline() {
 
   const [showNodes, setShowNodes] = useState(false);
-  const [nodesList, setNodesList] = useState([]);
-  const [node, setNode] = useState([]);
+  const [nodesList, setNodesList] = useState(null);
 
   useEffect(() => {
     subscribeNodesList(setNodesList);
-    setActiveNode(setNode);
   }, []
   )
 
-
   let output = '';
-  if (nodesList) {
+  if (nodesList && Object.keys(nodesList).length > 0) {
     let lastDate = null;
     const scrollTo = ref =>
       ref.current.scrollIntoView({
@@ -210,9 +207,9 @@ function Timeline() {
                         lastDate = {year,month,date};
                         const nodeDate = new Date(`${year}-${month}-${date}`).toDateString();
                         const ref = React.createRef();
-                        const isActive = year+month+date === node;
+                        const isActive = year+month+date === activeNode;
                         const handleClick = () => {
-                          setActiveNode(year+month+date);
+                          setActiveNode(nodesList[year][month][date][0]);
                           scrollTo(ref);
                         }
                         const handleLoad = () => {
