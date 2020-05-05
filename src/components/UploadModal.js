@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import DateAndTagsEditor from './DateAndTagsEditor';
 import { uploadFuncs } from '../services/dataController';
 import AddNoteModal from './AddNoteModal';
+import completionTick from '../assets/completionTick.svg';
 
 const { add, submit, subscribe, cancel } = uploadFuncs;
 
@@ -31,7 +32,7 @@ const AddedFiles = styled.div`
   width: 100%;
   border: 2px solid ${props => props.theme.blue};
   padding: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 7px;
   display: grid;
   grid-template-rows: 40px auto 40px;
 `;
@@ -75,41 +76,43 @@ const DeleteButton = styled.button`
 const Button = styled.button`
   padding: 0.8rem;
   border: none; 
-  width: ${props => props.name === "cancel" ? "30%" : "63%"};
+  width: ${props => props.name === "cancel" ? "30%" : "70%"};
   color: ${props => props.theme.offWhite};
   background: ${props => props.name === "cancel" ? props.theme.red : props.theme.blue};
   cursor: ${props => props.disabled === true ? "not-allowed": "pointer"};
+  // border-radius: 10px;
 `;
 
 const ButtonGroup = styled.div`
   margin: 1rem auto;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 `;
 
 export const ToolsGroups = styled.div`
     display: flex;
     flex-direction: row;
+    width: 70%;
+    margin-top: 5px;
     justify-content: space-between;
     align-items: center;
     place-self: bottom center;
+
 `;
 
 const AddNoteButton = styled.button`
-  width: 140px;
+  width: 120px;
   height: 60px;
-  border-radius: 20px;
+  // border-radius: 20px;
   padding: 1px;
   display: flex;
-  margin: 3px;
   justify-content: center;
   align-items: center;
   font-family: 'Proza Libre', sans-serif;
   background-color: white;
   opacity: 0.9;
   border: solid 3px #1B71D5;
-  border-radius: 20px;
   color: #EA9713;
   font-size: 15px;
 `;
@@ -126,20 +129,25 @@ export const FileUploadInput = styled.input`
 `;
 
 export const FileUploadLabel = styled.label`
-  width: 140px;
+  width: 120px;
   height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;
+  // border-radius: 20px;
   padding: 1px;
-  margin: 3px;
+  // margin: 3px;
   font-family: 'Proza Libre', sans-serif;
   background-color: white;
   opacity: 0.9;
   border: solid 3px #1B71D5;
   color: #EA9713;
   font-size: 15px;
+`;
+
+const Img = styled.img`
+  height: 40px;
+  padding: none;
 `;
 
 const getShortName = fileName =>  fileName.length <= 23 ? fileName : fileName.substr(0, 20) + "...";
@@ -178,16 +186,17 @@ function UploadModal({close}) {
             </FileItem>)}
           </FileList>
         </AddedFiles>
+        {uploads.length > 1 && <DateAndTagsEditor {...{ uploads }} />}
         <ToolsGroups>
             <FileUploadInput type="file" id="file" onChange={handleOnChange} multiple/> 
             <FileUploadLabel htmlFor="file">ADD FILES</FileUploadLabel>
             <AddNoteButton onClick={() => setNoteModalOpen(true)}>ADD NOTE</AddNoteButton>
           </ToolsGroups>
-        {uploads.length > 1 && <DateAndTagsEditor {...{ uploads }} />}
+
         <ButtonGroup>
-          <Button disabled={uploads.length < 1 ? true : false } onClick={() => {submit(); close()}}>Save</Button>
-          {/* <Button onClick={() => {cancel(); close()}} name="cancel">Cancel</Button> */}
+          <Button disabled={uploads.length < 1 ? true : false } onClick={() => {submit(); close()}}><Img src={completionTick} alt='green tick' /></Button>
         </ButtonGroup>
+        
       </UploadModalWrapper>
     </ModalWindow>
   </>);
