@@ -4,7 +4,7 @@ import { uploadFuncs } from '../services/dataController';
 
 const { add } = uploadFuncs;
 
-export const NavBarContainer = styled.div`
+const NavBarContainer = styled.div`
     display: flex;
     justify-content: center;
     width: 100vw;
@@ -15,14 +15,14 @@ export const NavBarContainer = styled.div`
     bottom: 0px;
 `;
 
-export const ButtonContainer = styled.div`
+const ButtonContainer = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 `;
 
-const AddNoteButton = styled.button`
+const AddButton = styled.button`
   width: 140px;
   height: 60px;
   border-radius: 20px;
@@ -40,18 +40,7 @@ const AddNoteButton = styled.button`
   font-size: 15px;
 `;
 
-export const FileUploadInput = styled.input`
-  border: 0;
-  clip: rect(0, 0, 0, 0);
-  height: 1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute !important;
-  white-space: nowrap;
-  width: 1px;
-`;
-
-export const FileUploadLabel = styled.label`
+const FileUploadLabel = styled.label`
   width: 140px;
   height: 60px;
   display: flex;
@@ -68,18 +57,11 @@ export const FileUploadLabel = styled.label`
   font-size: 15px;
 `;
 
-function NavBar({ openTimeline, openNote, addUploadsToList, uploadFuncs }) {
-
-  function handleOnChange(e) {
-    add(e.target.files);
-    e.target.value = null;
-  }
+function NavBar({showUploads, setShowUploads}) {
   return (
     <NavBarContainer>
         <ButtonContainer>
-          <FileUploadInput type="file" id="file" onChange={handleOnChange} multiple/> 
-          <FileUploadLabel htmlFor="file">UPLOAD FILES</FileUploadLabel>
-          <AddNoteButton onClick={openNote}>ADD NOTE</AddNoteButton>
+          <AddButton onClick={() => setShowUploads(!showUploads)}>{showUploads ? '-' : '+'}</AddButton>
         </ButtonContainer>
     </NavBarContainer>
   );
