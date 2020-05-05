@@ -169,6 +169,7 @@ function Timeline() {
 
   useEffect(() => {
     subscribeNodesList(setNodesList);
+    return subscribeNodesList(setNodesList);
   }, []
   )
 

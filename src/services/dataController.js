@@ -30,7 +30,13 @@ function setToLatestNode() {
 
 const nodesListSubcribers = [];
 function subscribeNodesList(setNodesList) {
-    nodesListSubcribers.push(new Subscriber(setNodesList));
+    const currentIndex = nodesListSubcribers.findIndex(subscriber => subscriber.stateSetter === setNodesList);
+    if (currentIndex > 0) {
+        nodesListSubcribers.splice(currentIndex, 1);
+    }
+    else {
+        nodesListSubcribers.push(new Subscriber(setNodesList));
+    }
 }
 function setNodesList() {
     const getPath = dateTime => [dateTime.substr(0,4), ...dateTime.substr(4).match(/.{2}/g)]; 
@@ -58,7 +64,13 @@ function setNodesList() {
 let activeFileObjs = [];
 const activeFileObjsSubcribers = [];
 function subscribeActiveFileObjs(setFileObjs) {
-    activeFileObjsSubcribers.push(new Subscriber(setFileObjs));
+    const currentIndex = activeFileObjsSubcribers.findIndex(subscriber => subscriber.stateSetter === setFileObjs);
+    if (currentIndex > 0) {
+        activeFileObjsSubcribers.splice(currentIndex, 1);
+    }
+    else {
+        activeFileObjsSubcribers.push(new Subscriber(setFileObjs));
+    }
 }
 function setActiveFileObjs() {
     if (!activeNode) {
@@ -158,7 +170,13 @@ const uploadsListSubcribers = [];
 let uploadsList = [];
 const uploadFuncs = {
     subscribe: function subscribeUploadsList(setUploadsList) {
-        uploadsListSubcribers.push(new Subscriber(setUploadsList));
+        const currentIndex = uploadsListSubcribers.findIndex(subscriber => subscriber.stateSetter === setUploadsList);
+        if (currentIndex > 0) {
+            uploadsListSubcribers.splice(currentIndex, 1);
+        }
+        else {
+            uploadsListSubcribers.push(new Subscriber(setUploadsList));
+        }
     },
     set: function setUploadsList(arr) {
         uploadsList = arr;
