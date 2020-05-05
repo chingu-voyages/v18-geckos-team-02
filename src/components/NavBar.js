@@ -1,8 +1,8 @@
 import React from 'react';
 import styled  from 'styled-components';
 import { uploadFuncs } from '../services/dataController';
-
-const { add } = uploadFuncs;
+import plusSign from '../assets/plusSign.svg';
+import minusSign from '../assets/minusSign.svg'
 
 const NavBarContainer = styled.div`
     display: flex;
@@ -22,46 +22,25 @@ const ButtonContainer = styled.div`
     align-items: center;
 `;
 
-const AddButton = styled.button`
-  width: 140px;
-  height: 60px;
-  border-radius: 20px;
-  padding: 1px;
-  display: flex;
-  margin: 3px;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Proza Libre', sans-serif;
-  background-color: white;
-  opacity: 0.9;
-  border: solid 3px #1B71D5;
-  border-radius: 20px;
-  color: #EA9713;
-  font-size: 15px;
-`;
-
-const FileUploadLabel = styled.label`
-  width: 140px;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  padding: 1px;
-  margin: 3px;
-  font-family: 'Proza Libre', sans-serif;
-  background-color: white;
-  opacity: 0.9;
-  border: solid 3px #1B71D5;
-  color: #EA9713;
-  font-size: 15px;
+export const TogglenModalButton = styled.div`
+    display: flex;
+    height: 60px;
+    width: 60px;
+    align-items: center;
+    justify-content: center;
 `;
 
 function NavBar({showUploads, setShowUploads}) {
   return (
     <NavBarContainer>
         <ButtonContainer>
-          <AddButton onClick={() => setShowUploads(!showUploads)}>{showUploads ? '-' : '+'}</AddButton>
+          <TogglenModalButton onClick={() => setShowUploads(!showUploads)}>
+            {
+              !showUploads ?
+              <img src={plusSign} alt="toggle upload modal open button" /> : 
+              <img  src={minusSign} alt="toggle upload modal open button" />  
+            } 
+          </TogglenModalButton>
         </ButtonContainer>
     </NavBarContainer>
   );
