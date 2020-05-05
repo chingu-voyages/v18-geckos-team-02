@@ -29,7 +29,6 @@ const Options = styled.button`
     width: auto;
     background: red;
     position: absolute;
-    
 `;
 
 const OptionsContainer = styled.div`
@@ -78,7 +77,7 @@ export default function File({fileObj, showTime, time}) {
             <>
             <FileContainer>
                 {showTime && <time dateTime={time}>{time}</time>}
-                <OptionsContainer> 
+                <OptionsContainer className="edit-options"> 
                     <Options onClick={handleClick}>X</Options> 
                 </OptionsContainer> 
                 {fileObj.type.includes('image') ? 
