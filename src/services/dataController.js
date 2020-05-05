@@ -5,21 +5,29 @@ import { writeFile, readFile, writeAppData } from './localStorage';
 import Subscriber from './Subscriber';
 
 const appData = new AppData(handleFileObjsChange);
-function handleFileObjsChange() {
-    setActiveFileObjs();
+async function handleFileObjsChange() {
     setNodesList();
+    setActiveFileObjs();
 }
 
 let activeNode;
 function setActiveNode(fileObj) {
-    if (fileObj.hasOwnProperty('getActiveDate')) {
-        activeNode = fileObj.getActiveDate().substr(0, 8);
-        setActiveFileObjs();
+    if (fileObj && fileObj.__proto__.hasOwnProperty('getActiveDate')) {
+        const fileObjDate = fileObj.getActiveDate();
+        if (fileObjDate) {
+            activeNode = fileObjDate.substr(0, 8);
+            setActiveFileObjs();
+        }
     }
     else {
-        errorHandler(Error(`Unable to setActiveNode with ${fileObj}`));
+        errorHandler(Error(`Unable to setActiveNode with ${JSON.stringify(fileObj)}`));
     }
 }
+function setToLatestNode() {
+    const lastFileObj = Object.values(appData.fileObjs).sort((a, b) => b.getActiveDate() - a.getActiveDate())[0];
+    lastFileObj && setActiveNode(lastFileObj);
+}
+
 const nodesListSubcribers = [];
 function subscribeNodesList(setNodesList) {
     nodesListSubcribers.push(new Subscriber(setNodesList));
@@ -46,19 +54,33 @@ function setNodesList() {
     }
     nodesListSubcribers.forEach(sub => sub.update(nodes));
 }
+
+let activeFileObjs = [];
 const activeFileObjsSubcribers = [];
 function subscribeActiveFileObjs(setFileObjs) {
-    nodesListSubcribers.push(new Subscriber(setFileObjs));
+    activeFileObjsSubcribers.push(new Subscriber(setFileObjs));
+}
+function setActiveFileObjs() {
+    if (!activeNode) {
+        setToLatestNode();
+    }
+    else {
+        let from = activeNode+'000000';
+        let to = activeNode+'235959';
+        activeFileObjs = getFileObjs(from, to);
+        if (activeFileObjs.length > 0) {
+            activeFileObjsSubcribers.forEach(sub => sub.update(activeFileObjs));
+        }
+        else {
+            activeFileObjsSubcribers.forEach(sub => sub.update([]));
+        }
+    }
 }
 function getFileObjs(from = '0', to = '0') {
     return Object.values(appData.fileObjs).filter(fileObj => {
         const key = fileObj.getActiveDate();
         return (key.substr(0, from.length) >= from && key.substr(0, to.length) <= to)
     }).sort((a, b) => a.getActiveDate() - b.getActiveDate());
-}
-function setActiveFileObjs() {
-    const activeFileObjs = getFileObjs(activeNode);
-    activeFileObjsSubcribers.forEach(sub => sub.update(activeFileObjs));
 }
 
 async function addFiles(uploadsArr) {
@@ -67,6 +89,10 @@ async function addFiles(uploadsArr) {
         const ref = makeFileRef(upload.file);
         const {name, text = '', type} = upload.file;
         const checkedType = checkFileType(type, name);
+        if (!upload.hasOwnProperty('timeStamps')) {
+            upload.timeStamps = {};
+        } 
+        upload.timeStamps.modified = upload.file.lastModified || Date.now();
         fileObj = new FileObj({...upload, name, text, fileRef: ref, type: checkedType});
         const activeDate = fileObj.getActiveDate();
         const fObjsWithSameFile = Object.values(appData.fileObjs).filter(fObj => fObj.fileRef === ref).map(fObj => fObj.getActiveDate());
@@ -78,6 +104,8 @@ async function addFiles(uploadsArr) {
         }
     }
     await writeAppData(appData);
+    setActiveNode(fileObj);
+    setNodesList();
     return true
 }
 
@@ -126,7 +154,7 @@ function checkFileType(type, name) {
 }
 
 const uploadsListSubcribers = [];
-let uploadsList;
+let uploadsList = [];
 const uploadFuncs = {
     subscribe: function subscribeUploadsList(setUploadsList) {
         uploadsListSubcribers.push(new Subscriber(setUploadsList));
@@ -148,19 +176,9 @@ const uploadFuncs = {
         const newUploadsList = uploadsList.slice(0);
         for (let uid of uids) {
             const index = newUploadsList.findIndex(upload => upload.uid === uid);
-            const hasOwnTags = newUploadsList[index].hasOwnProperty("tags") && newUploadsList[index].tags[0] !== "";
-            const privateTags = hasOwnTags && [...newUploadsList[index].tags];
-            Object.assign(newUploadsList[index], uploadMeta);
-            if (hasOwnTags) {
-            if (uploadMeta.tags[0] !== "") {
-                const combinedTags = newUploadsList[index].tags.concat(privateTags);
-                newUploadsList[index].tags = combinedTags;
-            } else {
-                newUploadsList[index].tags = privateTags;
-            }
-            }
-            uploadFuncs.set([...newUploadsList]);
+            Object.assign(newUploadsList[index], {...uploadMeta, tags: uploadMeta.tags || []});
         }
+        uploadFuncs.set([...newUploadsList]);
     },
     add: function addUploadsToList(newUploads) {
         const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
@@ -177,4 +195,4 @@ function formatNewUpload(upload) {
     })
 }
 
-export {addFiles, getFile, removeFiles, subscribeNodesList, subscribeActiveFileObjs, setActiveNode, uploadFuncs}
+export {addFiles, getFile, removeFiles, subscribeNodesList, subscribeActiveFileObjs, setActiveNode, activeNode, uploadFuncs}

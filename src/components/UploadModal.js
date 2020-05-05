@@ -2,6 +2,7 @@ import React , {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import DateAndTagsEditor from './DateAndTagsEditor';
 import { uploadFuncs } from '../services/dataController';
+import AddNoteModal from './AddNoteModal';
 
 const { add, submit, subscribe, cancel } = uploadFuncs;
 
@@ -31,6 +32,8 @@ const AddedFiles = styled.div`
   border: 2px solid ${props => props.theme.blue};
   padding: 1rem;
   margin-bottom: 1rem;
+  display: grid;
+  grid-template-rows: 40px auto 40px;
 `;
 
 const ModalTitle = styled.h2`
@@ -85,30 +88,79 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
 `;
 
+export const ToolsGroups = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    place-self: bottom center;
+`;
+
+const AddNoteButton = styled.button`
+  width: 140px;
+  height: 60px;
+  border-radius: 20px;
+  padding: 1px;
+  display: flex;
+  margin: 3px;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Proza Libre', sans-serif;
+  background-color: white;
+  opacity: 0.9;
+  border: solid 3px #1B71D5;
+  border-radius: 20px;
+  color: #EA9713;
+  font-size: 15px;
+`;
+
+export const FileUploadInput = styled.input`
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  white-space: nowrap;
+  width: 1px;
+`;
+
+export const FileUploadLabel = styled.label`
+  width: 140px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  padding: 1px;
+  margin: 3px;
+  font-family: 'Proza Libre', sans-serif;
+  background-color: white;
+  opacity: 0.9;
+  border: solid 3px #1B71D5;
+  color: #EA9713;
+  font-size: 15px;
+`;
+
 const getShortName = fileName =>  fileName.length <= 23 ? fileName : fileName.substr(0, 20) + "...";
   
   // fileName.length < 22 ? fileName : fileName.substr(0, 20) + "-" + fileName.substr(20, 18) + "...";
 
 
-function UploadModal() {
-
+function UploadModal({close}) {
+  const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploads, setUploads] = useState([]);
   useEffect(() => {
-    add(setUploads);
-    submit(setUploads)
     subscribe(setUploads);
   }, []
   )
 
-  // add the file sto the List
-  // submit theme
-  // update the data
-
-  function handleCancel() {
-    cancel();
+  function handleOnChange(e) {
+    add(e.target.files);
+    e.target.value = null;
   }
 
-  return (
+  const modal = (<>
     <ModalWindow>
       <UploadModalWrapper>
         <AddedFiles>
@@ -125,15 +177,24 @@ function UploadModal() {
               </DeleteButton>
             </FileItem>)}
           </FileList>
+          <ToolsGroups>
+            <FileUploadInput type="file" id="file" onChange={handleOnChange} multiple/> 
+            <FileUploadLabel htmlFor="file">ADD FILES</FileUploadLabel>
+            <AddNoteButton onClick={() => setNoteModalOpen(true)}>ADD NOTE</AddNoteButton>
+          </ToolsGroups>
         </AddedFiles>
         {uploads.length > 1 && <DateAndTagsEditor {...{ uploads }} />}
         <ButtonGroup>
-          <Button disabled={uploads.length < 1 ? true : false } onClick={submit}>Save</Button>
-          <Button onClick={handleCancel} name="cancel">Cancel</Button>
+          <Button disabled={uploads.length < 1 ? true : false } onClick={() => {submit(); close()}}>Save</Button>
+          <Button onClick={() => {cancel(); close()}} name="cancel">Cancel</Button>
         </ButtonGroup>
       </UploadModalWrapper>
     </ModalWindow>
-    );
+  </>);
+
+  
+
+  return noteModalOpen ? <AddNoteModal close={() => setNoteModalOpen(false)}/> : modal;
 }
  
 export default UploadModal;

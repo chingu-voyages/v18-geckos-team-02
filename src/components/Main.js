@@ -24,7 +24,7 @@ const Header = styled.header`
 `;
 
 function Main()  {
-  const [activeFileObjs, setActiveFileObjs] = useState([])
+  const [activeFileObjs, setActiveFileObjs] = useState(null);
   useEffect(() => {
     subscribeActiveFileObjs(setActiveFileObjs);
   }, []
@@ -38,7 +38,7 @@ function Main()  {
   } 
 
   let output = 'tutorial Gifs';
-  if (activeFileObjs.length !== 0) {
+  if (activeFileObjs && activeFileObjs.length > 0) {
     output = <>
     <Header>
       <time>{getActiveNodeDate()}</time>
