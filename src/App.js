@@ -18,7 +18,7 @@ function App() {
         {showUploads && <UploadModal close={() => setShowUploads(false)} />}
         <Main {...{editMode}} />
         <nav>
-          <Timeline />
+          <Timeline {...{editMode}} />
           <NavBar {...{showUploads, setShowUploads, editMode, setEditMode}} />
         </nav>
       </ThemeProvider>
