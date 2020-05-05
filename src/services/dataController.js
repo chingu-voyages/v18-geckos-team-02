@@ -73,6 +73,7 @@ function setActiveFileObjs() {
         }
         else {
             activeFileObjsSubcribers.forEach(sub => sub.update([]));
+            setToLatestNode();
         }
     }
 }
