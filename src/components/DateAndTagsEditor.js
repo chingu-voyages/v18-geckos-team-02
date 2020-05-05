@@ -71,39 +71,55 @@ const DeleteBtn = styled.span`
   }
 `;
 
-function DateAndTagsEditor({ uploads, getTags, deleteTag, global }) {
-  const currentDate = Date.now();
+function DateAndTagsEditor({ uploads, global = false }) {
   const uids = uploads.map(upload => upload.uid);
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
-    user: currentDate,
-    modified: !uploads[0].file.lastModified ? currentDate : uploads[0].file.lastModified,
-    tags: "",
-    time:!uploads[0].file.lastModified ? currentDate : uploads[0].file.lastModified,
-    activeTimeStamp: "modified",
+    activeTimeStamp: uploads.activeTimeStamp || "modified",
+    user: (uploads.timeStamps && uploads.timeStamps.user) || formatForyyyyMMdd(Date.now()),
+    modified: (uploads[0].file && uploads[0].file.lastModified) || (uploads.timeStamps && uploads.timeStamps.modified) || Date.now(),
+    time: formatForHHMM((uploads.timeStamps && uploads.timeStamps.user) || Date.now()) || '00:00',
+    tags: uploads.tags || []
   });
-  
+  const [tags, setTags] = useState([...new Set(uploads.map(upload => upload.tag).filter(tag => tag))]);
+  const removeTag = tag => setTags( [...tags.slice(0, tags.indexOf(tag)), ...tags.slice(tags.indexOf(tag)+1)] );
+
   const handleCustomValueChange = e => {
-    const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
-  }
-
-  useEffect(() => {
-    if (!isOpen) {
-      const {user, modified, tags, activeTimeStamp} = values;
-      update(uids, {
-        timeStamps: {
-          modified: modified,
-          user: user,
-        },
-        activeTimeStamp: activeTimeStamp,
-        tags: tags.split(","),
-      });
+    let { name, value } = e.target;
+    if (name === 'tags') {
+      if (value.match(/,/g)) {
+        const cleanedValue = value.replace(/^\s+|,|\s+$/g, '');
+        if (cleanedValue !== "") {
+          const newTags = [...new Set([...tags, cleanedValue])];
+          setTags(newTags);
+          update(uids, { tags: newTags });
+        }
+        value = '';
+      }
+      setValues({ ...values, tags: value });
     }
-    values.tags = "";
-  }, [isOpen]);
-
-  const Tags = getTags(uploads[0]);
+    if (name === 'user') {
+      setValues({ ...values, user: value, activeTimeStamp: 'user'});
+      const userDatePlusTime = formatForyyyyMMdd(value)+' '+formatForHHMM(values['time']);
+        if (userDatePlusTime) {
+        update(uids, {activeTimeStamp: 'user', timeStamps: { user: userDatePlusTime }});
+      }
+    }
+    else if (name === 'time') {
+      setValues({ ...values, time: value });
+      const userDatePlusTime = formatForyyyyMMdd(values['user'])+' '+formatForHHMM(value);
+      if (userDatePlusTime) {
+        update(uids, {timeStamps: { user: userDatePlusTime }});
+      }
+    }
+    else if (name === 'activeTimeStamp') {
+      setValues({ ...values, activeTimeStamp: value });
+      update(uids, {activeTimeStamp: value});
+      if (value === 'user') {
+        update(uids, {timeStamps: { user: values.user }});
+      } 
+    } 
+  }
 
   return (
     <EditorBox>
@@ -116,27 +132,36 @@ function DateAndTagsEditor({ uploads, getTags, deleteTag, global }) {
             <Option value="modified">Date Modified</Option>
             <Option value="user">Custom Date</Option>
           </Select>
-      
-            <LineBreak />
+          <LineBreak />
+      {values.activeTimeStamp === 'modified' ? <>
+        <Input
+            type="date"
+            value={formatForyyyyMMdd(values.modified)}
+            onChange={handleCustomValueChange}
+            disabled
+        /> 
+        <Input
+          type="time"
+          value={formatForHHMM(values.modified)}
+          onChange={handleCustomValueChange}
+          disabled
+        /> 
+      </> : 
+          <>
             <Input
                 type="date"
-                name={values.activeTimeStamp}
-                value={formatForyyyyMMdd(values[values.activeTimeStamp])}
+                name="user"
+                value={formatForyyyyMMdd(values.user)}
                 onChange={handleCustomValueChange}
-                disabled={values.activeTimeStamp === "user" ? false : true}
             /> 
-
-              <LineBreak />
-              <Label>Time: 
-                <Input
-                  type="time"
-                  name={values.time}
-                  value={formatForHHMM(values[values.activeTimeStamp])}
-                  onChange={handleCustomValueChange}
-                  disabled={values.activeTimeStamp === "user" ? false : true}
-                />
-              </Label> 
-              <LineBreak />
+            <Input
+              type="time"
+              name="time"
+              value={formatForHHMM(values.time)}
+              onChange={handleCustomValueChange}
+            /> 
+          </>}
+          <LineBreak />
               <Label>Tags:  
                 <Input
                   type="text"
@@ -148,7 +173,7 @@ function DateAndTagsEditor({ uploads, getTags, deleteTag, global }) {
               </Label> 
               <LineBreak />
           <TagLists>
-            {!global && Tags && Tags.map((tag, index) => <Tag key={tag+index}>{tag}<DeleteBtn ariaLabel="Delete tag" onClick = {() => deleteTag(uploads[0], tag[index])}>&times;</DeleteBtn></Tag>)}
+            {!global && tags.map(tag => <Tag key={tag}>{tag}<DeleteBtn ariaLabel="Delete tag" onClick = {() => removeTag(tag)}>&times;</DeleteBtn></Tag>)}
             </TagLists>
         </EditorForm>
       }
@@ -164,13 +189,25 @@ const makeMinTwoDigits = n => {
 };
 function formatForyyyyMMdd(date) {
   const d = new Date(date);
-  return d.getFullYear() + '-' +
+  const output = d.getFullYear() + '-' +
       makeMinTwoDigits(d.getMonth()+1) + '-' +
       makeMinTwoDigits(d.getDate());
+  if (output.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    return output
+  }
+  else {
+    return date
+  }
 }
 
 function formatForHHMM(date) {
   const d = new Date(date);
-  return makeMinTwoDigits(d.getHours()) + ':' +
+  const output = makeMinTwoDigits(d.getHours()) + ':' +
   makeMinTwoDigits(d.getMinutes());
+  if (output.match(/^\d\d:\d\d$/)) {
+    return output
+  }
+  else {
+    return date
+  }
 }
