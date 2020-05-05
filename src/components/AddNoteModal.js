@@ -14,7 +14,7 @@ const ModalWindow = styled.section`
   background: ${props => props.theme.greyBlueTransp};
 `;
 
-const NotesForm = styled.form`
+const NotesForm = styled.div`
   max-width: 414px;
   margin: auto;
   background: ${props => props.theme.lightGrey};
@@ -59,24 +59,23 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
 `;
 
-const AddNoteModal = ({ onCancel }) => {
+const AddNoteModal = ({ close }) => {
   const [notesTitle, setNotesTitle] = useState("");
   const [notesBody, setNotesBody] = useState("");
   
-  const handleSubmit = e => {
-    e.preventDefault();
+  const submit = () => {
     const note = {
       name: notesTitle,
       text: notesBody,
       type: 'note'
     };
     add([note]);
-
+    close();
   }
 
   return (
     <ModalWindow>
-      <NotesForm onSubmit={handleSubmit}>
+      <NotesForm>
         <Input type="text"
           name="title"
           id="title" 
@@ -97,9 +96,9 @@ const AddNoteModal = ({ onCancel }) => {
           <Button disabled={notesTitle === "" || notesBody === "" ? true : false }
             type="submit"
             value="Submit"
-            primary>Submit</Button>
+            onClick={submit}>Submit</Button>
           <Button
-            onClick={ onCancel }
+            onClick={close}
             type="button"> 
             Back
           </Button>
