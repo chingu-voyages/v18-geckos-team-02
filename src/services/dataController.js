@@ -196,4 +196,15 @@ function formatNewUpload(upload) {
     })
 }
 
-export {addFiles, getFile, removeFiles, subscribeNodesList, subscribeActiveFileObjs, setActiveNode, activeNode, uploadFuncs}
+function updateFiles(filesArr) {
+    filesArr.forEach(fileObj => {
+        let key = fileObj.key;
+        if (appData.fileObjs[key]) {
+            Object.assign(appData.fileObjs[key], fileObj);
+            appData.update(appData.fileObjs[key]);
+            return true;
+        }    
+    })
+}
+
+export {addFiles, getFile, removeFiles, subscribeNodesList, subscribeActiveFileObjs, setActiveNode, activeNode, uploadFuncs, updateFiles}
