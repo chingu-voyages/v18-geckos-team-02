@@ -177,16 +177,16 @@ function UploadModal({close}) {
               </DeleteButton>
             </FileItem>)}
           </FileList>
-          <ToolsGroups>
+        </AddedFiles>
+        <ToolsGroups>
             <FileUploadInput type="file" id="file" onChange={handleOnChange} multiple/> 
             <FileUploadLabel htmlFor="file">ADD FILES</FileUploadLabel>
             <AddNoteButton onClick={() => setNoteModalOpen(true)}>ADD NOTE</AddNoteButton>
           </ToolsGroups>
-        </AddedFiles>
         {uploads.length > 1 && <DateAndTagsEditor {...{ uploads }} />}
         <ButtonGroup>
           <Button disabled={uploads.length < 1 ? true : false } onClick={() => {submit(); close()}}>Save</Button>
-          <Button onClick={() => {cancel(); close()}} name="cancel">Cancel</Button>
+          {/* <Button onClick={() => {cancel(); close()}} name="cancel">Cancel</Button> */}
         </ButtonGroup>
       </UploadModalWrapper>
     </ModalWindow>
