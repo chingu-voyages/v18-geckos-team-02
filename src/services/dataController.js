@@ -159,6 +159,7 @@ let uploadsList = [];
 const uploadFuncs = {
     subscribe: function subscribeUploadsList(setUploadsList) {
         uploadsListSubcribers.push(new Subscriber(setUploadsList));
+        uploadFuncs.set(uploadsList);
     },
     set: function setUploadsList(arr) {
         uploadsList = arr;
