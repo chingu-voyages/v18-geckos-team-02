@@ -1,27 +1,24 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState} from 'react';
 import Main from './components/Main';
 import Timeline from './components/Timeline';
 import NavBar from './components/NavBar';
 import UploadModal from './components/UploadModal';
-import AddNoteModal from './components/AddNoteModal';
 import styled, {ThemeProvider} from 'styled-components';
 import GlobalStyle, {theme} from './theme/globalStyles';
 
 function App() {
-
-  const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [appTheme, setAppTheme] = useState(theme);
+  const [showUploads, setShowUploads] = useState(false);
 
   return (
     <>
       <GlobalStyle />
       <ThemeProvider theme={appTheme}>
-          <UploadModal />
-        {noteModalOpen && <AddNoteModal onCancel={() => setNoteModalOpen(false)}/>}
+        {showUploads && <UploadModal close={() => setShowUploads(false)} />}
         <Main />
         <nav>
           <Timeline />
-          <NavBar openNote={() => setNoteModalOpen(true)} />
+          <NavBar {...{showUploads, setShowUploads}} />
         </nav>
       </ThemeProvider>
     </>
