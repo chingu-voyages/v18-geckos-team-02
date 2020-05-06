@@ -27,10 +27,13 @@ const UploadModalWrapper = styled.div`
   position: relative;
   z-index: 60;
 `;
+
 const AddedFiles = styled.div`
-  min-height: 50vh;
-  width: 100%;
-  border: 2px solid ${props => props.theme.blue};
+  min-height: 52vh;
+  position: relative;
+  top: -16px;
+  width: 108%;
+  background-color: ${props => props.theme.offWhite};
   padding: 1rem;
   margin-bottom: 7px;
   display: grid;
@@ -41,6 +44,7 @@ const ModalTitle = styled.h2`
   text-transform: uppercase;
   margin-bottom: 1.5rem;
   text-align: center;
+  color: ${props => props.theme.orange};
 `;
 
 const FileList = styled.ul`
@@ -54,6 +58,8 @@ const FileItem = styled.li`
   align-items: center;
   border-bottom: 1px solid ${props => props.theme.lightGrey};
   padding: 0.5rem;
+  margin-left: 15px;
+  margin-right: 15px;
 `;
 
 const FileName = styled.p`
@@ -80,7 +86,7 @@ const Button = styled.button`
   color: ${props => props.theme.offWhite};
   background: ${props => props.name === "cancel" ? props.theme.red : props.theme.blue};
   cursor: ${props => props.disabled === true ? "not-allowed": "pointer"};
-  // border-radius: 10px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 `;
 
 const ButtonGroup = styled.div`
@@ -101,10 +107,9 @@ export const ToolsGroups = styled.div`
 
 `;
 
-const AddNoteButton = styled.button`
+const AddNoteButton = styled.div`
   width: 120px;
   height: 60px;
-  // border-radius: 20px;
   padding: 1px;
   display: flex;
   justify-content: center;
@@ -112,10 +117,13 @@ const AddNoteButton = styled.button`
   font-family: 'Proza Libre', sans-serif;
   background-color: white;
   opacity: 0.9;
-  border: solid 3px #1B71D5;
   color: #EA9713;
   font-size: 15px;
-`;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+ `;
 
 export const FileUploadInput = styled.input`
   border: 0;
@@ -134,15 +142,16 @@ export const FileUploadLabel = styled.label`
   display: flex;
   justify-content: center;
   align-items: center;
-  // border-radius: 20px;
   padding: 1px;
-  // margin: 3px;
   font-family: 'Proza Libre', sans-serif;
-  background-color: white;
+  background: white;
   opacity: 0.9;
-  border: solid 3px #1B71D5;
   color: #EA9713;
   font-size: 15px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 `;
 
 const Img = styled.img`

@@ -2,7 +2,7 @@ import React from 'react';
 import styled  from 'styled-components';
 import { uploadFuncs } from '../services/dataController';
 import plusSign from '../assets/plusSign.svg';
-import minusSign from '../assets/minusSign.svg'
+import minusSign from '../assets/minusSign2.svg'
 
 const NavBarContainer = styled.div`
     display: flex;
