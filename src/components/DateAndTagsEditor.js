@@ -15,7 +15,7 @@ const baseCss = css`
   background: ${props => props.theme.lightGrey};
 `;
 
-const EditorForm = styled.form`
+const EditorForm = styled.div`
   width: 280px;
   margin: auto;
   padding: 1rem;
@@ -87,7 +87,7 @@ function DateAndTagsEditor({ uploads, global = false }) {
   const handleCustomValueChange = e => {
     let { name, value } = e.target;
     if (name === 'tags') {
-      if (value.match(/,/g)) {
+      if (value.match(/,/g) || e.key === "Enter") {
         const cleanedValue = value.replace(/^\s+|,|\s+$/g, '');
         if (cleanedValue !== "") {
           const newTags = [...new Set([...tags, cleanedValue])];
@@ -169,6 +169,7 @@ function DateAndTagsEditor({ uploads, global = false }) {
                   value={ values.tags }
                   placeholder="Enter tags..."
                   onChange={handleCustomValueChange}
+                  onKeyPress={handleCustomValueChange}
                 />
               </Label> 
               <LineBreak />
