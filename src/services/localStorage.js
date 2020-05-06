@@ -1,12 +1,52 @@
 import Dexie from 'dexie';
 import errorHandler from './errorHandler';
 import FileObj from './FileObj';
+import {exportDB, importInto} from "dexie-export-import";
 
 const localDB = new Dexie('user_dbac');
 localDB.version(1).stores({
     appData: 'ref',
     files: 'ref',
 });
+
+async function wipeAllData() {
+    await localDB.files.clear();
+    await localDB.appData.clear();
+    await localDB.files.delete('appData');
+    await localDB.appData.delete('files');
+    return true
+}
+
+async function importData(file) {
+    try {
+        const backup = await exportData();
+        try {
+            await wipeAllData();
+            await importInto(localDB, file);
+            return true
+        }
+        catch (e) {
+            await wipeAllData();
+            importData(backup);
+            errorHandler(e);
+            return false 
+        }
+    } catch (e) {
+        errorHandler(e);
+        throw Error('Unable to make a backup before import!')
+    }
+}
+
+async function exportData() {
+    try {
+        const blob = await exportDB(localDB);
+        return blob
+    }
+    catch (e) {
+        errorHandler(e);
+        return e
+    }
+}
 
 async function writeFile(ref, file) {
     try {
@@ -79,4 +119,4 @@ function fileToArrayBuffer(file) {
     });
 }
 
-export {writeFile, readFile, readAppData, writeAppData}
+export {writeFile, readFile, readAppData, writeAppData, wipeAllData, exportData, importData}
