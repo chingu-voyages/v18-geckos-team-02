@@ -4,7 +4,7 @@ import DateAndTagsEditor from './DateAndTagsEditor';
 import { uploadFuncs } from '../services/dataController';
 import AddNoteModal from './AddNoteModal';
 
-const { add, submit, subscribe, cancel } = uploadFuncs;
+const { add, submit, subscribe, deleteUpload } = uploadFuncs;
 
 const ModalWindow = styled.section`
   width: 100%;
@@ -171,7 +171,7 @@ function UploadModal({close}) {
               <FileName>{getShortName(upload.file.name).toLowerCase()}</FileName>
                 <DateAndTagsEditor {...{ uploads: [upload] }}/>
                 <DeleteButton
-                  onClick={ () => delete(upload.uid) }
+                  onClick={ () => deleteUpload(upload.uid) }
                   aria-label="Delete upload">
                   &times;
               </DeleteButton>
