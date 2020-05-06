@@ -181,7 +181,7 @@ function UploadModal({close}) {
     <ModalWindow>
       <UploadModalWrapper>
         <AddedFiles>
-          <ModalTitle>{uploads.length < 1 ? "Upload some file(s)" : "Files ready to upload!"}</ModalTitle>
+          <ModalTitle>{uploads.length < 1 ? "Upload some file(s)" : "Uploads"}</ModalTitle>
           <FileList>
             {uploads.map(upload =>
               <FileItem key={upload.uid}>
