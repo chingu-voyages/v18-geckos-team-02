@@ -3,6 +3,7 @@ import FileObj from './FileObj';
 import errorHandler from './errorHandler';
 import { writeFile, readFile, writeAppData } from './localStorage';
 import Subscriber from './Subscriber';
+import Subscription from './Subscription';
 
 const appData = new AppData(handleFileObjsChange);
 async function handleFileObjsChange() {
@@ -28,16 +29,9 @@ function setToLatestNode() {
     lastFileObj && setActiveNode(lastFileObj);
 }
 
-const nodesListSubcribers = [];
-function subscribeNodesList(setNodesList) {
-    const currentIndex = nodesListSubcribers.findIndex(subscriber => subscriber.stateSetter === setNodesList);
-    if (currentIndex > 0) {
-        nodesListSubcribers.splice(currentIndex, 1);
-    }
-    else {
-        nodesListSubcribers.push(new Subscriber(setNodesList));
-    }
-}
+
+const nodesListSubcription = new Subscription();
+const subscribeNodesList = nodesListSubcription.subscribe;
 function setNodesList() {
     const getPath = dateTime => [dateTime.substr(0,4), ...dateTime.substr(4).match(/.{2}/g)]; 
     const fileObjs = Object.values(appData.fileObjs);
@@ -58,20 +52,12 @@ function setNodesList() {
         }
         head.push(fileObj);
     }
-    nodesListSubcribers.forEach(sub => sub.update(nodes));
+    nodesListSubcription.update(nodes);
 }
 
 let activeFileObjs = [];
-const activeFileObjsSubcribers = [];
-function subscribeActiveFileObjs(setFileObjs) {
-    const currentIndex = activeFileObjsSubcribers.findIndex(subscriber => subscriber.stateSetter === setFileObjs);
-    if (currentIndex > 0) {
-        activeFileObjsSubcribers.splice(currentIndex, 1);
-    }
-    else {
-        activeFileObjsSubcribers.push(new Subscriber(setFileObjs));
-    }
-}
+const fileObjsSubcription = new Subscription();
+const subscribeActiveFileObjs = fileObjsSubcription.subscribe;
 function setActiveFileObjs() {
     if (!activeNode) {
         setToLatestNode();
@@ -81,10 +67,10 @@ function setActiveFileObjs() {
         let to = activeNode+'235959';
         activeFileObjs = getFileObjs(from, to);
         if (activeFileObjs.length > 0) {
-            activeFileObjsSubcribers.forEach(sub => sub.update(activeFileObjs));
+            fileObjsSubcription.update(activeFileObjs);
         }
         else {
-            activeFileObjsSubcribers.forEach(sub => sub.update([]));
+            fileObjsSubcription.update([]);
             setToLatestNode();
         }
     }
@@ -166,21 +152,13 @@ function checkFileType(type, name) {
     return type
 }
 
-const uploadsListSubcribers = [];
 let uploadsList = [];
+const uploadsListSubcription = new Subscription();
 const uploadFuncs = {
-    subscribe: function subscribeUploadsList(setUploadsList) {
-        const currentIndex = uploadsListSubcribers.findIndex(subscriber => subscriber.stateSetter === setUploadsList);
-        if (currentIndex > 0) {
-            uploadsListSubcribers.splice(currentIndex, 1);
-        }
-        else {
-            uploadsListSubcribers.push(new Subscriber(setUploadsList));
-        }
-    },
+    subscribe: uploadsListSubcription.subscribe,
     set: function setUploadsList(arr) {
         uploadsList = arr;
-        uploadsListSubcribers.forEach(sub => sub.update(uploadsList));
+        uploadsListSubcription.update(uploadsList);
     },
     submit: function submitUploadsList() {
         addFiles(uploadsList);
