@@ -169,7 +169,7 @@ const uploadFuncs = {
         uploadFuncs.set([]);
     },
     cancel: () => uploadFuncs.set([]),
-    delete: function deleteUpload(uid) {
+    deleteUpload: function deleteUpload(uid) {
         const appendedUploads = uploadsList.filter(upload => upload.uid !== uid);
         uploadFuncs.set(appendedUploads);
     },
