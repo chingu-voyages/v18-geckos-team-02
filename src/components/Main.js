@@ -33,6 +33,7 @@ function Main({editMode})  {
   const [activeFileObjs, setActiveFileObjs] = useState(null);
   useEffect(() => {
     subscribeActiveFileObjs(setActiveFileObjs);
+    return subscribeActiveFileObjs(setActiveFileObjs);
   }, []
   )
 
