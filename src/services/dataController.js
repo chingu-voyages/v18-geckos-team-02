@@ -1,13 +1,13 @@
 import AppData from './AppData';
 import FileObj from './FileObj';
 import errorHandler from './errorHandler';
-import { writeFile, readFile, writeAppData } from './localStorage';
+import { writeFile, readFile, writeAppData, importData, exportData as exportTimeLine, wipeAllData } from './localStorage';
 import Subscriber from './Subscriber';
 
 const appData = new AppData(handleFileObjsChange);
 async function handleFileObjsChange() {
-    setNodesList();
     setActiveFileObjs();
+    setNodesList();
 }
 
 let activeNode;
@@ -207,4 +207,10 @@ function updateFiles(filesArr) {
     })
 }
 
-export {addFiles, getFile, removeFiles, subscribeNodesList, subscribeActiveFileObjs, setActiveNode, activeNode, uploadFuncs, updateFiles}
+async function importTimeLine(file) {
+    await importData(file);
+    appData.init();
+    return true
+}
+
+export {addFiles, getFile, removeFiles, subscribeNodesList, subscribeActiveFileObjs, setActiveNode, activeNode, uploadFuncs, updateFiles, exportTimeLine, importTimeLine}

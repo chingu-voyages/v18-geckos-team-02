@@ -41,3 +41,10 @@ AppData.prototype.rebase = function(newAppData) {
     this.changeLog = [];
     this.onUpdate();
 }
+AppData.prototype.clear = function() {
+    this.lastModified = null;
+    this.basedOn = null;
+    this.changeLog = [];
+    this.fileObjs = {};
+    this.onUpdate();
+}
