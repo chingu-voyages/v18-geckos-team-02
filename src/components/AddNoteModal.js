@@ -25,6 +25,7 @@ const NotesForm = styled.div`
   padding: 0.5rem 2rem 2rem;
   position: relative;
   z-index: 60;
+  top: 20px;
 `;
 
 const formControlBase = css`
