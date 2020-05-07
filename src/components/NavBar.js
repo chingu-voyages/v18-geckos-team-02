@@ -1,9 +1,8 @@
 import React from 'react';
 import styled  from 'styled-components';
-import { uploadFuncs } from '../services/dataController';
 import plusSign from '../assets/plusSign.svg';
-import minusSign from '../assets/minusSign.svg'
 import logo from './../../src/assets/wavy-logo.svg';
+import minusSign from '../assets/minusSign2.svg'
 
 const NavBarContainer = styled.div`
     display: flex;
@@ -23,7 +22,7 @@ const ButtonContainer = styled.div`
     align-items: center;
 `;
 
-export const TogglenModalButton = styled.div`
+const TogglenModalButton = styled.div`
     display: flex;
     height: 60px;
     width: 60px;
@@ -35,7 +34,15 @@ const LogoWrapper = styled.div`
   left: 0;
 `;
 
-function NavBar({showUploads, setShowUploads}) {
+const EditModeButton = styled.div`
+    display: flex;
+    height: 60px;
+    width: 60px;
+    align-items: center;
+    justify-content: center;
+`;
+
+function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
   return (
     <NavBarContainer>
       <LogoWrapper>
@@ -48,8 +55,11 @@ function NavBar({showUploads, setShowUploads}) {
               <img src={plusSign} alt="toggle upload modal open button" /> : 
               <img  src={minusSign} alt="toggle upload modal open button" />  
             } 
-        </TogglenModalButton>
-      </ButtonContainer>
+          </TogglenModalButton>
+          <EditModeButton onClick={() => setEditMode(!editMode)}>
+            E
+          </EditModeButton>
+        </ButtonContainer>
     </NavBarContainer>
   );
 }

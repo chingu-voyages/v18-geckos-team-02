@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Node from './Node';
 import styled from 'styled-components';
-import { subscribeActiveFileObjs } from '../services/dataController';
+import { fileObjsSubcription } from '../services/dataController';
 
 const Wrapper = styled.main`
   display: grid;
@@ -15,6 +15,17 @@ const Wrapper = styled.main`
   & section>.note {
     min-width: 300px;
   }
+  & .edit-options {
+    display: none;
+  }
+  &.editing .edit-options {
+    display: flex;
+  }
+
+  &.hidden {
+    overflow: hidden;
+    max-height: 100vh;
+  }
   color: ${props => props.theme.darkGrey};
 `;
 const Header = styled.header`
@@ -24,10 +35,11 @@ const Header = styled.header`
   // color: ${props => props.theme.orange};
 `;
 
-function Main()  {
+function Main({editMode, showUploads})  {
   const [activeFileObjs, setActiveFileObjs] = useState(null);
   useEffect(() => {
-    subscribeActiveFileObjs(setActiveFileObjs);
+    fileObjsSubcription.subscribe(setActiveFileObjs);
+    return () => fileObjsSubcription.unsubscribe(setActiveFileObjs);
   }, []
   )
 
@@ -44,12 +56,12 @@ function Main()  {
     <Header>
       <time>{getActiveNodeDate()}</time>
     </Header>
-    <Node fileObjs={activeFileObjs} timeWanted />
+    <Node fileObjs={activeFileObjs} isMain />
     </>;
   }
   
   return (
-    <Wrapper>
+    <Wrapper className={editMode ? 'editing' : showUploads ? "hidden" : ''}>
       {output}
     </Wrapper>
   );

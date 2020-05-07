@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import {getFile, removeFiles} from '../services/dataController';
+import placeholder from '../assets/placeholder.svg';
 
 const Wrapper = styled.div`
     max-width: 100%;
@@ -15,7 +16,7 @@ const Note = styled(Wrapper)`
     min-height: 100%;
     padding: 10%;
 `;
-const FileIcon = styled.a`
+const FileIcon = styled.div`
     max-width: 100%;
     display: grid;
     place-items: center center;
@@ -29,7 +30,6 @@ const Options = styled.button`
     width: auto;
     background: red;
     position: absolute;
-    
 `;
 
 const OptionsContainer = styled.div`
@@ -60,38 +60,64 @@ const Time = styled.time`
     text-decoration-color: ${props => props.theme.blue};
 `;
 
-export default function File({fileObj, showTime, time}) {
-    const [file, setFile] = useState('');
+export default function File({fileObj, showTime, time, isMain}) {
+    const [file, setFile] = useState(placeholder);
+    const enableEditOptions = isMain;
+    const enableDownload = isMain;
 
-    useState(() => {
-        getFile(fileObj.fileRef).then(blob => {
-            let url = "TODO import file not found image here";
-            if (blob) {
-                url = URL.createObjectURL(blob);
-            }
-            setFile(url);
-        });
-    }, []);
-
-    function handleClick(e) {
+    function removeFile() {
         let selectedFile = fileObj;
         removeFiles([selectedFile]);
-  
+    }
+
+    const ref = useRef(null);
+
+    useEffect(() => {
+        const refCurrent = ref.current;
+        if (ref.current) {
+            let observer = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    getFile(fileObj.fileRef).then(blob => {
+                        let url = "TODO import file not found image here";
+                        if (blob) {
+                            url = URL.createObjectURL(blob);
+                        }
+                        setFile(url);
+                        observer.unobserve(ref.current);
+                    }); 
+                }
+            });
+            observer.observe(ref.current); 
+            return () => observer.unobserve(refCurrent);
+        }
+    }, [ref, fileObj]);
+
+    const DownloadWrapper = props => {
+        if (props.enabled) {
+            return <a href={file} download={fileObj.name}>
+                {props.children}
+            </a>
+        }
+        return props.children
     }
    
     if (fileObj) {
         return (
             <>
-            <FileContainer>
-                {showTime && <Time dateTime={time}>{time}</Time>}
-                <OptionsContainer> 
-                    <Options onClick={handleClick}>X</Options> 
+            <FileContainer ref={ref} >
+                {enableEditOptions && <time dateTime={time}>{time}</time>}
+                {isMain &&
+                <OptionsContainer className="edit-options"> 
+                    <Options onClick={removeFile}>X</Options> 
                 </OptionsContainer> 
-                {fileObj.type.includes('image') ? 
-                    <Img src={file} alt="" /> : 
-                    fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.name}</h1><p>{fileObj.text}</p></Note> :
-                    <FileIcon href={file} download={fileObj.name} {...charsToColour(fileObj.type)}>{fileObj.name}</FileIcon>
                 }
+                <DownloadWrapper enabled={enableDownload}>
+                    {fileObj.type.includes('image') ? 
+                        <Img src={file} alt="" /> : 
+                        fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.name}</h1><p>{fileObj.text}</p></Note> :
+                        <FileIcon {...charsToColour(fileObj.type)}>{fileObj.name}</FileIcon>
+                    }
+                </DownloadWrapper>
             </FileContainer>
             </>
         )

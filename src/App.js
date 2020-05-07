@@ -8,6 +8,7 @@ import GlobalStyle, {theme} from './theme/globalStyles';
 
 function App() {
   const [appTheme, setAppTheme] = useState(theme);
+  const [editMode, setEditMode] = useState(false);
   const [showUploads, setShowUploads] = useState(false);
 
   return (
@@ -15,10 +16,10 @@ function App() {
       <GlobalStyle />
       <ThemeProvider theme={appTheme}>
         {showUploads && <UploadModal close={() => setShowUploads(false)} />}
-        <Main />
+        <Main {...{editMode, showUploads}} />
         <nav>
-          <Timeline />
-          <NavBar {...{showUploads, setShowUploads}} />
+          <Timeline {...{editMode}} />
+          <NavBar {...{showUploads, setShowUploads, editMode, setEditMode}} />
         </nav>
       </ThemeProvider>
     </>

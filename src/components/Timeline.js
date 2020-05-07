@@ -2,7 +2,7 @@ import React, { useState, Fragment, useEffect } from 'react';
 import styled from 'styled-components';
 import Node from './Node';
 import openTimelineIcon from '../assets/openTimelineButton.svg';
-import { subscribeNodesList, setActiveNode, activeNode } from '../services/dataController';
+import { nodesListSubcription, setActiveNode, activeNode } from '../services/dataController';
 
 const Wrapper = styled.div`
 width: 100%;
@@ -30,6 +30,12 @@ padding-top: 18px;
 }
 &::-webkit-scrollbar-thumb:hover {
   background: ${props => props.theme.lightBlue};
+}
+&.editing .edit-options {
+  display: flex;
+}
+& .edit-options {
+  display: none;
 }
 z-index: 50;
 `;
@@ -162,13 +168,14 @@ z-index: 100;
 }
 `;
 
-function Timeline() {
+function Timeline({editMode}) {
 
   const [showNodes, setShowNodes] = useState(false);
   const [nodesList, setNodesList] = useState(null);
 
   useEffect(() => {
-    subscribeNodesList(setNodesList);
+    nodesListSubcription.subscribe(setNodesList);
+    return () => nodesListSubcription.unsubscribe(setNodesList);
   }, []
   )
 
@@ -236,7 +243,7 @@ function Timeline() {
         )
       })} 
     </Line>;
-    output = <Wrapper className={!showNodes && 'contracted'}>
+    output = <Wrapper className={`${!showNodes && 'contracted'} ${editMode && 'editing'}`}>
       <ExpandButton className={showNodes && 'close'} onClick={() => setShowNodes(!showNodes)}><img src={openTimelineIcon} alt="close timeline" /></ExpandButton>
       {TimeLine}
     </Wrapper>;
