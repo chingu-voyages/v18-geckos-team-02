@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { ReactComponent as EditorIcon } from './../assets/dateAndTagsIcon.svg';
+import EditorIcon from '../assets/dateAndTagsIcon.svg';
 import { uploadFuncs } from '../services/dataController';
 
 const { update } = uploadFuncs;
@@ -8,6 +8,11 @@ const { update } = uploadFuncs;
 const EditorBox = styled.div`
   position: relative;
 `;
+
+const Img = styled.img`
+  width: ${props => props.isGlobal ? "100px" : "60px"};
+`;
+
 const baseCss = css`
   border: none;
   padding: 0.5rem;
@@ -71,7 +76,7 @@ const DeleteBtn = styled.span`
   }
 `;
 
-function DateAndTagsEditor({ uploads, global = false }) {
+function DateAndTagsEditor({ uploads, isGlobal = false }) {
   const uids = uploads.map(upload => upload.uid);
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
@@ -123,7 +128,7 @@ function DateAndTagsEditor({ uploads, global = false }) {
 
   return (
     <EditorBox>
-      <EditorIcon
+      <Img src={EditorIcon} isGlobal={isGlobal}
         onClick={() => setIsOpen(isOpen === false ? true : false)}
       /> 
       {isOpen && 
@@ -212,3 +217,5 @@ function formatForHHMM(date) {
     return date
   }
 }
+
+
