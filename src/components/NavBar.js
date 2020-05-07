@@ -1,6 +1,7 @@
 import React from 'react';
 import styled  from 'styled-components';
 import plusSign from '../assets/plusSign.svg';
+import logo from './../../src/assets/wavy-logo.svg';
 import minusSign from '../assets/minusSign2.svg'
 
 const NavBarContainer = styled.div`
@@ -28,6 +29,10 @@ const TogglenModalButton = styled.div`
     align-items: center;
     justify-content: center;
 `;
+const LogoWrapper = styled.div`
+  position: absolute;
+  left: 0;
+`;
 
 const EditModeButton = styled.div`
     display: flex;
@@ -40,6 +45,9 @@ const EditModeButton = styled.div`
 function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
   return (
     <NavBarContainer>
+      <LogoWrapper>
+        <img src={logo} alt="Wavy logo"/>
+      </LogoWrapper>
         <ButtonContainer>
           <TogglenModalButton onClick={() => setShowUploads(!showUploads)}>
             {

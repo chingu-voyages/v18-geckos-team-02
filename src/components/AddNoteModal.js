@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
-import {uploadFuncs} from'../services/dataController'; 
+import { uploadFuncs } from '../services/dataController'; 
+import { ReactComponent as BackArrow } from './../assets/back-arrow.svg';
+import { ReactComponent as TickIcon } from './../assets/completionTick.svg';
 // import DateAndTagsEditor from './DateAndTagsEditor';
 
 const { add } = uploadFuncs;
@@ -40,24 +42,14 @@ const Input = styled.input`
 
 const Button = styled.button`
   ${formControlBase}
-  background: ${props => props.primary
-    ? props.theme.blue
-    : props.theme.red};
-  color: ${props => props.theme.offWhite};
-  width: 45%;
+  background: ${props => props.theme.blue};
+  width: 100%;
   outline: none;
-  cursor: ${props => props.disabled ? "not-allowed": "pointer"};
 `;
 
 const NotesArea = styled.textarea`
   height: 30vh;
   ${formControlBase};
-`;
-
-const ButtonGroup = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
 `;
 
 const AddNoteModal = ({ close }) => {
@@ -73,6 +65,7 @@ const AddNoteModal = ({ close }) => {
     add([note]);
     close();
   }
+  const hasNotes = notesTitle !== "" && notesBody !== "";
 
   return (
     <ModalWindow>
@@ -93,19 +86,11 @@ const AddNoteModal = ({ close }) => {
           value={ notesBody }
           onChange={ e => setNotesBody(e.target.value) }
         />
-        <ButtonGroup>
-          <Button disabled={notesTitle === "" || notesBody === "" ? true : false }
-            type="submit"
-            value="Submit"
-            onClick={submit}>Submit</Button>
           <Button
-            onClick={close}
-            type="button"> 
-            Back
-          </Button>
-        </ButtonGroup>
+          type={hasNotes ? "submit" : "button"}
+          onClick={hasNotes ? submit : close}>{hasNotes ? <TickIcon /> : <BackArrow />}
+        </Button>
         </NotesForm>
-
     </ModalWindow>
     );
 }
