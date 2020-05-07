@@ -21,7 +21,7 @@ const FileIcon = styled.div`
     display: grid;
     place-items: center center;
     background: ${props => props.background};
-    color: ${props => props.color};
+    color: ${props => props.theme.darkGrey};
     width: 300px;
     height: 150px;
 `;
@@ -52,6 +52,12 @@ const FileContainer = styled.div`
     @media (max-width: 500px){
         max-width: 90vw;
     }
+`;
+
+const Time = styled.time`
+    color: ${props => props.theme.orange};
+    text-decoration: underline;
+    text-decoration-color: ${props => props.theme.blue};
 `;
 
 export default function File({fileObj, showTime, time, isMain}) {
