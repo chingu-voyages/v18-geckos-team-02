@@ -38,6 +38,7 @@ const AddedFiles = styled.div`
   margin-bottom: 7px;
   display: grid;
   grid-template-rows: 40px auto 40px;
+  // justify-content: center;
 `;
 
 const ModalTitle = styled.h2`
@@ -77,6 +78,11 @@ const DeleteButton = styled.button`
     color: ${props => props.theme.offWhite};
     background: ${props => props.theme.red};
   }
+`;
+
+const GlobalWrapper = styled.div`
+  justify-self: center;  
+  justify-items: center;
 `;
 
 const Button = styled.button`
@@ -159,6 +165,8 @@ const Img = styled.img`
   padding: none;
 `;
 
+
+
 const getShortName = fileName =>  fileName.length <= 23 ? fileName : fileName.substr(0, 20) + "...";
   
   // fileName.length < 22 ? fileName : fileName.substr(0, 20) + "-" + fileName.substr(20, 18) + "...";
@@ -195,8 +203,9 @@ function UploadModal({close}) {
               </DeleteButton>
             </FileItem>)}
           </FileList>
+          {uploads.length > 1 && <GlobalWrapper><DateAndTagsEditor  {...{ uploads }} isGlobal></DateAndTagsEditor></GlobalWrapper>}
         </AddedFiles>
-        {uploads.length > 1 && <DateAndTagsEditor {...{ uploads }} />}
+
         <ToolsGroups>
             <FileUploadInput type="file" id="file" onChange={handleOnChange} multiple/> 
             <FileUploadLabel htmlFor="file">ADD FILES</FileUploadLabel>
