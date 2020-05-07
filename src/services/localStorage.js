@@ -8,10 +8,11 @@ localDB.version(1).stores({
     files: 'ref',
 });
 
+
 async function writeFile(ref, file) {
     try {
         const data = await fileToArrayBuffer(file);
-        await localDB.files.add({ref, data});
+        await localDB.files.add({ref, data: {blob: data, type: file.type}});
         return true
     }
     catch (e) {
@@ -34,7 +35,7 @@ async function readFile(ref) {
         if (!dataObj) {
             throw new Error(`Could not get data for ref: ${ref} !`)
         }
-        return new Blob([dataObj.data])
+        return new Blob([dataObj.data.blob], {type : dataObj.data.type})
     }
     catch (e) {
         errorHandler(e);

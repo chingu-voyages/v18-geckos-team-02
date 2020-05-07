@@ -1,6 +1,5 @@
 import React from 'react';
 import styled  from 'styled-components';
-import { uploadFuncs } from '../services/dataController';
 import plusSign from '../assets/plusSign.svg';
 import minusSign from '../assets/minusSign2.svg'
 
@@ -22,7 +21,7 @@ const ButtonContainer = styled.div`
     align-items: center;
 `;
 
-export const TogglenModalButton = styled.div`
+const TogglenModalButton = styled.div`
     display: flex;
     height: 60px;
     width: 60px;
@@ -30,7 +29,15 @@ export const TogglenModalButton = styled.div`
     justify-content: center;
 `;
 
-function NavBar({showUploads, setShowUploads}) {
+const EditModeButton = styled.div`
+    display: flex;
+    height: 60px;
+    width: 60px;
+    align-items: center;
+    justify-content: center;
+`;
+
+function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
   return (
     <NavBarContainer>
         <ButtonContainer>
@@ -41,6 +48,9 @@ function NavBar({showUploads, setShowUploads}) {
               <img  src={minusSign} alt="toggle upload modal open button" />  
             } 
           </TogglenModalButton>
+          <EditModeButton onClick={() => setEditMode(!editMode)}>
+            E
+          </EditModeButton>
         </ButtonContainer>
     </NavBarContainer>
   );
