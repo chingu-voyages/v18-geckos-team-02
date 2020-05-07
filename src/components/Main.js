@@ -50,7 +50,7 @@ function Main({editMode})  {
     <Header>
       <time>{getActiveNodeDate()}</time>
     </Header>
-    <Node fileObjs={activeFileObjs} timeWanted />
+    <Node fileObjs={activeFileObjs} isMain />
     </>;
   }
   

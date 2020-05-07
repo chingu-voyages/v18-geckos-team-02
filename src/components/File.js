@@ -54,7 +54,7 @@ const FileContainer = styled.div`
     }
 `;
 
-export default function File({fileObj, showTime, time}) {
+export default function File({fileObj, showTime, time, isMain}) {
     const [file, setFile] = useState(placeholder);
 
     function handleClick(e) {
@@ -90,9 +90,11 @@ export default function File({fileObj, showTime, time}) {
             <>
             <FileContainer ref={ref} >
                 {showTime && <time dateTime={time}>{time}</time>}
+                {isMain &&
                 <OptionsContainer className="edit-options"> 
                     <Options onClick={handleClick}>X</Options> 
                 </OptionsContainer> 
+                }
                 {fileObj.type.includes('image') ? 
                     <Img src={file} alt="" /> : 
                     fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.name}</h1><p>{fileObj.text}</p></Note> :
