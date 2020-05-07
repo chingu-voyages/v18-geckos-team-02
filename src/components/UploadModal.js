@@ -26,6 +26,7 @@ const UploadModalWrapper = styled.div`
   background: ${props => props.theme.lightGrey};
   position: relative;
   z-index: 60;
+  top: 20px;
 `;
 
 const AddedFiles = styled.div`
