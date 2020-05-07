@@ -1,6 +1,5 @@
 import React from 'react';
 import styled  from 'styled-components';
-import { uploadFuncs } from '../services/dataController';
 import plusSign from '../assets/plusSign.svg';
 import minusSign from '../assets/minusSign.svg'
 
