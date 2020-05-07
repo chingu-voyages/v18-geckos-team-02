@@ -57,10 +57,9 @@ const FileContainer = styled.div`
 export default function File({fileObj, showTime, time, isMain}) {
     const [file, setFile] = useState(placeholder);
 
-    function handleClick(e) {
+    function removeFile() {
         let selectedFile = fileObj;
         removeFiles([selectedFile]);
-  
     }
 
     const ref = useRef(null);
@@ -92,7 +91,7 @@ export default function File({fileObj, showTime, time, isMain}) {
                 {showTime && <time dateTime={time}>{time}</time>}
                 {isMain &&
                 <OptionsContainer className="edit-options"> 
-                    <Options onClick={handleClick}>X</Options> 
+                    <Options onClick={removeFile}>X</Options> 
                 </OptionsContainer> 
                 }
                 {fileObj.type.includes('image') ? 
