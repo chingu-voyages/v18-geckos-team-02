@@ -16,7 +16,7 @@ const Note = styled(Wrapper)`
     min-height: 100%;
     padding: 10%;
 `;
-const FileIcon = styled.a`
+const FileIcon = styled.div`
     max-width: 100%;
     display: grid;
     place-items: center center;
@@ -56,6 +56,8 @@ const FileContainer = styled.div`
 
 export default function File({fileObj, showTime, time, isMain}) {
     const [file, setFile] = useState(placeholder);
+    const enableEditOptions = isMain;
+    const enableDownload = isMain;
 
     function removeFile() {
         let selectedFile = fileObj;
@@ -83,22 +85,33 @@ export default function File({fileObj, showTime, time, isMain}) {
             return () => observer.unobserve(refCurrent);
         }
     }, [ref, fileObj]);
+
+    const DownloadWrapper = props => {
+        if (props.enabled) {
+            return <a href={file} download={fileObj.name}>
+                {props.children}
+            </a>
+        }
+        return props.children
+    }
    
     if (fileObj) {
         return (
             <>
             <FileContainer ref={ref} >
-                {showTime && <time dateTime={time}>{time}</time>}
+                {enableEditOptions && <time dateTime={time}>{time}</time>}
                 {isMain &&
                 <OptionsContainer className="edit-options"> 
                     <Options onClick={removeFile}>X</Options> 
                 </OptionsContainer> 
                 }
-                {fileObj.type.includes('image') ? 
-                    <Img src={file} alt="" /> : 
-                    fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.name}</h1><p>{fileObj.text}</p></Note> :
-                    <FileIcon href={file} download={fileObj.name} {...charsToColour(fileObj.type)}>{fileObj.name}</FileIcon>
-                }
+                <DownloadWrapper enabled={enableDownload}>
+                    {fileObj.type.includes('image') ? 
+                        <Img src={file} alt="" /> : 
+                        fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.name}</h1><p>{fileObj.text}</p></Note> :
+                        <FileIcon {...charsToColour(fileObj.type)}>{fileObj.name}</FileIcon>
+                    }
+                </DownloadWrapper>
             </FileContainer>
             </>
         )
