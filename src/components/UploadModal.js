@@ -204,7 +204,7 @@ function UploadModal({close}) {
           </ToolsGroups>
 
         <ButtonGroup>
-          <Button disabled={uploads.length < 1 ? true : false } onClick={() => {submit(); close()}}><Img src={completionTick} alt='green tick' /></Button>
+          <Button onClick={() => {submit(); close();}}><Img src={completionTick} alt='green tick' /></Button>
         </ButtonGroup>
         
       </UploadModalWrapper>
