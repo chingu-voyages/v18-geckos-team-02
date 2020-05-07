@@ -82,7 +82,8 @@ const DeleteButton = styled.button`
 
 const GlobalWrapper = styled.div`
   justify-self: center;  
-  justify-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
 const Button = styled.button`

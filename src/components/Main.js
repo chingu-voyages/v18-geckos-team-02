@@ -21,6 +21,11 @@ const Wrapper = styled.main`
   &.editing .edit-options {
     display: flex;
   }
+
+  &.hidden {
+    overflow: hidden;
+    max-height: 100vh;
+  }
   color: ${props => props.theme.darkGrey};
 `;
 const Header = styled.header`
@@ -29,7 +34,7 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main({editMode})  {
+function Main({editMode, showUploads})  {
   const [activeFileObjs, setActiveFileObjs] = useState(null);
   useEffect(() => {
     fileObjsSubcription.subscribe(setActiveFileObjs);
@@ -55,7 +60,7 @@ function Main({editMode})  {
   }
   
   return (
-    <Wrapper className={editMode ? 'editing' : ''}>
+    <Wrapper className={editMode ? 'editing' : showUploads ? "hidden" : ''}>
       {output}
     </Wrapper>
   );
