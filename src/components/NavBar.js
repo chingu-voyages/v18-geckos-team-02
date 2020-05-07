@@ -3,6 +3,7 @@ import styled  from 'styled-components';
 import { uploadFuncs } from '../services/dataController';
 import plusSign from '../assets/plusSign.svg';
 import minusSign from '../assets/minusSign.svg'
+import logo from './../../src/assets/wavy-logo.svg';
 
 const NavBarContainer = styled.div`
     display: flex;
@@ -29,10 +30,17 @@ export const TogglenModalButton = styled.div`
     align-items: center;
     justify-content: center;
 `;
+const LogoWrapper = styled.div`
+  position: absolute;
+  left: 0;
+`;
 
 function NavBar({showUploads, setShowUploads}) {
   return (
     <NavBarContainer>
+      <LogoWrapper>
+        <img src={logo} alt="Wavy logo"/>
+      </LogoWrapper>
         <ButtonContainer>
           <TogglenModalButton onClick={() => setShowUploads(!showUploads)}>
             {
@@ -40,8 +48,8 @@ function NavBar({showUploads, setShowUploads}) {
               <img src={plusSign} alt="toggle upload modal open button" /> : 
               <img  src={minusSign} alt="toggle upload modal open button" />  
             } 
-          </TogglenModalButton>
-        </ButtonContainer>
+        </TogglenModalButton>
+      </ButtonContainer>
     </NavBarContainer>
   );
 }

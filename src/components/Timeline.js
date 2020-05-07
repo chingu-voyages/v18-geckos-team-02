@@ -44,22 +44,22 @@ width: 100%;
 text-align: center;
 display: flex;
 flex-flow: row nowrap;
-color: ${props => props.theme.darkGrey};
+// color: ${props => props.theme.darkGrey};
 font-size: 11px;
 &::before,
 &::after {
   display: inline-block;
   content: '';
-  border-top: 1px solid ${props => props.theme.darkGrey};
+  border-top: 1px solid ${props => props.theme.blue};
   width: 50%;
   margin: 0 12px;
   transform: translateY(50%);
 }
 &::before {
-  border-left: 1px solid ${props => props.theme.darkGrey};
+  border-left: 1px solid ${props => props.theme.blue};
 }
 &::after {
-  border-right: 1px solid ${props => props.theme.darkGrey};
+  border-right: 1px solid ${props => props.theme.blue};
 }
 `;
 const Year = styled.div`
@@ -93,7 +93,7 @@ grid-template-rows: 18px 0;
 place-items: start center;
 width: 10vw;
 & header {
-  color: ${props => props.theme.darkGrey};
+  // color: ${props => props.theme.darkGrey};
   font-size: 10px;
   text-align: center;
 }

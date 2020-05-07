@@ -21,6 +21,7 @@ const Header = styled.header`
   width: 100%;
   text-align: center;
   margin: 24px;
+  // color: ${props => props.theme.orange};
 `;
 
 function Main()  {
