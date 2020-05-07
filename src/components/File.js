@@ -60,6 +60,17 @@ const Time = styled.time`
     text-decoration-color: ${props => props.theme.blue};
 `;
 
+const FileNotFound = styled.div`
+    max-width: 100%;
+    display: grid;
+    place-items: center center;
+    background: ${props => props.theme.red};
+    color: ${props => props.theme.offWhite};
+    width: 300px;
+    height: 150px;
+    text-align: center;
+`;
+
 export default function File({fileObj, showTime, time, isMain}) {
     const [file, setFile] = useState(placeholder);
     const enableEditOptions = isMain;
@@ -78,11 +89,14 @@ export default function File({fileObj, showTime, time, isMain}) {
             let observer = new IntersectionObserver(entries => {
                 if (entries[0].isIntersecting) {
                     getFile(fileObj.fileRef).then(blob => {
-                        let url = "TODO import file not found image here";
+                        let url = null
                         if (blob) {
                             url = URL.createObjectURL(blob);
                         }
                         setFile(url);
+                        if (url === null) {
+                            fileObj.flagMissingData();
+                        }
                         observer.unobserve(ref.current);
                     }); 
                 }
@@ -90,15 +104,18 @@ export default function File({fileObj, showTime, time, isMain}) {
             observer.observe(ref.current); 
             return () => observer.unobserve(refCurrent);
         }
-    }, [ref, fileObj]);
+    }, [ref, fileObj, fileObj.fileMissing]);
 
     const DownloadWrapper = props => {
-        if (props.enabled) {
-            return <a href={file} download={fileObj.name}>
-                {props.children}
-            </a>
+        if (file) {
+            if (props.enabled) {
+                return <a href={file} download={fileObj.name}>
+                    {props.children}
+                </a>
+            }
+            return props.children
         }
-        return props.children
+        return <FileNotFound>File Not Found! Please upload file: {fileObj.name}</FileNotFound>
     }
    
     if (fileObj) {
