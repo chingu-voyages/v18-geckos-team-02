@@ -175,6 +175,7 @@ function Timeline({editMode}) {
 
   useEffect(() => {
     subscribeNodesList(setNodesList);
+    return subscribeNodesList(setNodesList);
   }, []
   )
 

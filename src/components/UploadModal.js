@@ -169,6 +169,7 @@ function UploadModal({close}) {
   const [uploads, setUploads] = useState([]);
   useEffect(() => {
     subscribe(setUploads);
+    return subscribe(setUploads);
   }, []
   )
 
