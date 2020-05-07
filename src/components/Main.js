@@ -15,6 +15,12 @@ const Wrapper = styled.main`
   & section>.note {
     min-width: 300px;
   }
+  & .edit-options {
+    display: none;
+  }
+  &.editing .edit-options {
+    display: flex;
+  }
   color: ${props => props.theme.darkGrey};
 `;
 const Header = styled.header`
@@ -23,7 +29,7 @@ const Header = styled.header`
   margin: 24px;
 `;
 
-function Main()  {
+function Main({editMode})  {
   const [activeFileObjs, setActiveFileObjs] = useState(null);
   useEffect(() => {
     subscribeActiveFileObjs(setActiveFileObjs);
@@ -48,7 +54,7 @@ function Main()  {
   }
   
   return (
-    <Wrapper>
+    <Wrapper className={editMode ? 'editing' : ''}>
       {output}
     </Wrapper>
   );
