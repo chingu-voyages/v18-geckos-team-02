@@ -2,7 +2,11 @@ import React from 'react';
 import styled  from 'styled-components';
 import plusSign from '../assets/plusSign.svg';
 import logo from './../../src/assets/wavy-logo.svg';
-import minusSign from '../assets/minusSign2.svg'
+import minusSign from '../assets/minusSign2.svg';
+import EditButton from  '../assets/trashIcon.svg';
+import ImportButton from '../assets/importButton.svg';
+import ExportButton from '../assets/exportButton.svg';
+
 
 const NavBarContainer = styled.div`
     display: flex;
@@ -34,12 +38,28 @@ const LogoWrapper = styled.div`
   left: 0;
 `;
 
-const EditModeButton = styled.div`
+const EditModeButton = styled.img`
     display: flex;
     height: 60px;
     width: 60px;
     align-items: center;
     justify-content: center;
+`;
+
+const ExportButtonContainer = styled.img`
+  display: flex;
+  height: 60px;
+  width: 60px;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ImportButtonContainer = styled.img`
+  display: flex;
+  height: 60px;
+  width: 60px;
+  align-items: center;
+  justify-content: center;
 `;
 
 function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
@@ -53,12 +73,13 @@ function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
             {
               !showUploads ?
               <img src={plusSign} alt="toggle upload modal open button" /> : 
-              <img  src={minusSign} alt="toggle upload modal open button" />  
+              <img  src={minusSign} alt="toggle upload modal closed button" />  
             } 
           </TogglenModalButton>
-          <EditModeButton onClick={() => setEditMode(!editMode)}>
-            E
-          </EditModeButton>
+          <EditModeButton src={EditButton} onClick={() => setEditMode(!editMode)} />
+          <ImportButtonContainer src={ImportButton} alt="import a timline button" />
+          <ExportButtonContainer src={ExportButton} alt="export a timline button" />
+
         </ButtonContainer>
     </NavBarContainer>
   );
