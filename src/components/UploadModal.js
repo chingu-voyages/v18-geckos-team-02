@@ -5,7 +5,7 @@ import { uploadFuncs } from '../services/dataController';
 import AddNoteModal from './AddNoteModal';
 import completionTick from '../assets/completionTick.svg';
 
-const { add, submit, subscribe, deleteUpload } = uploadFuncs;
+const { add, submit, subscribe, deleteUpload, unsubscribe } = uploadFuncs;
 
 const ModalWindow = styled.section`
   width: 100%;
@@ -168,18 +168,14 @@ const Img = styled.img`
 
 
 const getShortName = fileName =>  fileName.length <= 23 ? fileName : fileName.substr(0, 20) + "...";
-  
-  // fileName.length < 22 ? fileName : fileName.substr(0, 20) + "-" + fileName.substr(20, 18) + "...";
-
 
 function UploadModal({close}) {
   const [noteModalOpen, setNoteModalOpen] = useState(false);
   const [uploads, setUploads] = useState([]);
   useEffect(() => {
     subscribe(setUploads);
-    return subscribe(setUploads);
-  }, []
-  )
+    return () => unsubscribe(setUploads)
+  }, []);
 
   function handleOnChange(e) {
     add(e.target.files);
