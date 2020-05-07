@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import {getFile, removeFiles} from '../services/dataController';
+import placeholder from '../assets/placeholder.svg';
 
 const Wrapper = styled.div`
     max-width: 100%;
@@ -29,7 +30,6 @@ const Options = styled.button`
     width: auto;
     background: red;
     position: absolute;
-    
 `;
 
 const OptionsContainer = styled.div`
@@ -55,30 +55,42 @@ const FileContainer = styled.div`
 `;
 
 export default function File({fileObj, showTime, time}) {
-    const [file, setFile] = useState('');
-
-    useState(() => {
-        getFile(fileObj.fileRef).then(blob => {
-            let url = "TODO import file not found image here";
-            if (blob) {
-                url = URL.createObjectURL(blob);
-            }
-            setFile(url);
-        });
-    }, []);
+    const [file, setFile] = useState(placeholder);
 
     function handleClick(e) {
         let selectedFile = fileObj;
         removeFiles([selectedFile]);
   
     }
+
+    const ref = useRef(null);
+
+    useEffect(() => {
+        const refCurrent = ref.current;
+        if (ref.current) {
+            let observer = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    getFile(fileObj.fileRef).then(blob => {
+                        let url = "TODO import file not found image here";
+                        if (blob) {
+                            url = URL.createObjectURL(blob);
+                        }
+                        setFile(url);
+                        observer.unobserve(ref.current);
+                    }); 
+                }
+            });
+            observer.observe(ref.current); 
+            return () => observer.unobserve(refCurrent);
+        }
+    }, [ref, fileObj]);
    
     if (fileObj) {
         return (
             <>
-            <FileContainer>
+            <FileContainer ref={ref} >
                 {showTime && <time dateTime={time}>{time}</time>}
-                <OptionsContainer> 
+                <OptionsContainer className="edit-options"> 
                     <Options onClick={handleClick}>X</Options> 
                 </OptionsContainer> 
                 {fileObj.type.includes('image') ? 
