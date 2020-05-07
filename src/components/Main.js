@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Node from './Node';
 import styled from 'styled-components';
-import { subscribeActiveFileObjs } from '../services/dataController';
+import { fileObjsSubcription } from '../services/dataController';
 
 const Wrapper = styled.main`
   display: grid;
@@ -32,8 +32,8 @@ const Header = styled.header`
 function Main({editMode})  {
   const [activeFileObjs, setActiveFileObjs] = useState(null);
   useEffect(() => {
-    subscribeActiveFileObjs(setActiveFileObjs);
-    return subscribeActiveFileObjs(setActiveFileObjs);
+    fileObjsSubcription.subscribe(setActiveFileObjs);
+    return () => fileObjsSubcription.unsubscribe(setActiveFileObjs);
   }, []
   )
 

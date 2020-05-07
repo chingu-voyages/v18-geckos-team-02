@@ -31,7 +31,6 @@ function setToLatestNode() {
 
 
 const nodesListSubcription = new Subscription();
-const subscribeNodesList = nodesListSubcription.subscribe;
 function setNodesList() {
     const getPath = dateTime => [dateTime.substr(0,4), ...dateTime.substr(4).match(/.{2}/g)]; 
     const fileObjs = Object.values(appData.fileObjs);
@@ -57,7 +56,6 @@ function setNodesList() {
 
 let activeFileObjs = [];
 const fileObjsSubcription = new Subscription();
-const subscribeActiveFileObjs = fileObjsSubcription.subscribe;
 function setActiveFileObjs() {
     if (!activeNode) {
         setToLatestNode();
@@ -155,7 +153,11 @@ function checkFileType(type, name) {
 let uploadsList = [];
 const uploadsListSubcription = new Subscription();
 const uploadFuncs = {
-    subscribe: uploadsListSubcription.subscribe,
+    subscribe: function(stateSetter, uid) {
+        uploadsListSubcription.subscribe(stateSetter, uid);
+        uploadFuncs.set(uploadsList);
+    },
+    unsubscribe: uploadsListSubcription.unsubscribe,
     set: function setUploadsList(arr) {
         uploadsList = arr;
         uploadsListSubcription.update(uploadsList);
@@ -209,4 +211,4 @@ async function importTimeLine(file) {
     return true
 }
 
-export {addFiles, getFile, removeFiles, subscribeNodesList, subscribeActiveFileObjs, setActiveNode, activeNode, uploadFuncs, updateFiles, exportTimeLine, importTimeLine}
+export {addFiles, getFile, removeFiles, nodesListSubcription, fileObjsSubcription, setActiveNode, activeNode, uploadFuncs, updateFiles, exportTimeLine, importTimeLine}
