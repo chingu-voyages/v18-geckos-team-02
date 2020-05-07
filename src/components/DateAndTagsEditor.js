@@ -9,23 +9,8 @@ const EditorBox = styled.div`
   position: relative;
 `;
 
-const globalStyles = css`
-  width: 100px ;
-  height: 80px ;
-`;
-
-const getGlobalStyles = props => {
-  if (props.isGlobal) {
-    return globalStyles;
-  }
-}
-
 const Img = styled.img`
-  width: 60px;
-  height: 45px;
-
-  ${getGlobalStyles}
-
+  width: ${props => props.isGlobal ? "100px" : "60px"};
 `;
 
 const baseCss = css`
@@ -91,7 +76,7 @@ const DeleteBtn = styled.span`
   }
 `;
 
-function DateAndTagsEditor({ uploads, global = false }) {
+function DateAndTagsEditor({ uploads, isGlobal = false }) {
   const uids = uploads.map(upload => upload.uid);
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
@@ -143,7 +128,7 @@ function DateAndTagsEditor({ uploads, global = false }) {
 
   return (
     <EditorBox>
-      <Img src={EditorIcon}
+      <Img src={EditorIcon} isGlobal={isGlobal}
         onClick={() => setIsOpen(isOpen === false ? true : false)}
       /> 
       {isOpen && 

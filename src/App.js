@@ -8,7 +8,6 @@ import GlobalStyle, {theme} from './theme/globalStyles';
 
 function App() {
   const [appTheme, setAppTheme] = useState(theme);
-
   const [editMode, setEditMode] = useState(false);
   const [showUploads, setShowUploads] = useState(false);
 
