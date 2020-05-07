@@ -155,7 +155,10 @@ function checkFileType(type, name) {
 let uploadsList = [];
 const uploadsListSubcription = new Subscription();
 const uploadFuncs = {
-    subscribe: uploadsListSubcription.subscribe,
+    subscribe: function(stateSetter) {
+        uploadsListSubcription.subscribe(stateSetter);
+        uploadFuncs.set(uploadsList);
+    },
     set: function setUploadsList(arr) {
         uploadsList = arr;
         uploadsListSubcription.update(uploadsList);
