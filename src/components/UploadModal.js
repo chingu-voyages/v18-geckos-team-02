@@ -67,10 +67,6 @@ const FileName = styled.p`
   flex-basis: 50%;
 `;
 
-const GlobalWrapper = styled.div`
-  justify-self: center;   
-`;
-
 const DeleteButton = styled.button`
   background: none;
   outline: none;
@@ -82,6 +78,11 @@ const DeleteButton = styled.button`
     color: ${props => props.theme.offWhite};
     background: ${props => props.theme.red};
   }
+`;
+
+const GlobalWrapper = styled.div`
+  justify-self: center;  
+  justify-items: center;
 `;
 
 const Button = styled.button`
@@ -202,7 +203,7 @@ function UploadModal({close}) {
               </DeleteButton>
             </FileItem>)}
           </FileList>
-          {uploads.length > 1 && <GlobalWrapper><DateAndTagsEditor {...{ uploads }} /></GlobalWrapper>}
+          {uploads.length > 1 && <GlobalWrapper><DateAndTagsEditor  {...{ uploads }} isGlobal></DateAndTagsEditor></GlobalWrapper>}
         </AddedFiles>
 
         <ToolsGroups>
