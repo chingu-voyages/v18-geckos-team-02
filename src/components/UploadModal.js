@@ -26,6 +26,7 @@ const UploadModalWrapper = styled.div`
   background: ${props => props.theme.lightGrey};
   position: relative;
   z-index: 60;
+  top: 20px;
 `;
 
 const AddedFiles = styled.div`
@@ -82,7 +83,8 @@ const DeleteButton = styled.button`
 
 const GlobalWrapper = styled.div`
   justify-self: center;  
-  justify-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
 
 const Button = styled.button`
