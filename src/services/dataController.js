@@ -92,11 +92,12 @@ async function addFiles(uploadsArr) {
         upload.timeStamps.modified = upload.file.lastModified || Date.now();
         fileObj = new FileObj({...upload, name, text, fileRef: ref, type: checkedType, size: upload.file.size});
         const activeDate = fileObj.getActiveDate();
-        const fObjsWithSameFile = Object.values(appData.fileObjs).filter(fObj => fObj.fileRef === ref).map(fObj => fObj.getActiveDate());
-        if (fObjsWithSameFile.filter(date => date === activeDate).length === 0) {
+        const fObjsWithSameFile = Object.values(appData.fileObjs).filter(fObj => fObj.fileRef === ref);
+        if (fObjsWithSameFile.filter(fObj => fObj.getActiveDate() === activeDate).length === 0) {
             appData.fileObjs[fileObj.uid] = fileObj;
         }
-        if (fObjsWithSameFile.length < 1) {
+        if (fObjsWithSameFile.filter(fObj => !fObj.fileMissing).length < 1) {
+            fObjsWithSameFile.forEach(fObj => fObj.fileMissing && fObj.flagMissingData(false));
             await writeFile(ref, upload.file);
         }
     }
