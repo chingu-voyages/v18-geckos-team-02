@@ -32,8 +32,6 @@ const ToggleModalButton = styled.div`
     width: 60px;
     align-items: center;
     justify-content: center;
-
-
     @media (max-width: 500px){
       height: 40px;
       width: 40px;
@@ -43,7 +41,6 @@ const ToggleModalButton = styled.div`
 const PlusImg = styled.img`
     height: 60px;
     width: 60px;
-
     @media (max-width: 500px){
       height: 40px;
       width: 40px;
@@ -53,7 +50,6 @@ const PlusImg = styled.img`
 const MinusImg = styled.img`
     height: 60px;
     width: 60px;
-
     @media (max-width: 500px){
       height: 40px;
       width: 40px;
@@ -71,7 +67,6 @@ const EditModeButton = styled.img`
     align-items: center;
     justify-content: center;
     margin-left: 5px;
-
     @media (max-width: 500px){
       height: 40px;
       width: 40px;
@@ -95,7 +90,6 @@ export const ImportButtonLabel = styled.label`
   align-items: center;
   justify-content: center;
   margin-left: 5px;
-
   @media (max-width: 500px){
     height: 40px;
     width: 40px;
@@ -108,7 +102,6 @@ const ImportButtonIcon = styled.img`
   width: 60px;
   align-items: center;
   justify-content: center;
-
   @media (max-width: 500px){
     height: 40px;
     width: 40px;
@@ -122,7 +115,6 @@ const ExportButtonContainer = styled.img`
   align-items: center;
   justify-content: center;
   margin-left: 10px;
-
   @media (max-width: 500px){
     height: 40px;
     width: 40px;
