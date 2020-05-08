@@ -1,21 +1,30 @@
 {
   "files": {
-    "main.js": "/v18-geckos-team-02/static/js/main.c52fd4d8.chunk.js",
-    "main.js.map": "/v18-geckos-team-02/static/js/main.c52fd4d8.chunk.js.map",
+    "main.js": "/v18-geckos-team-02/static/js/main.86efbf20.chunk.js",
+    "main.js.map": "/v18-geckos-team-02/static/js/main.86efbf20.chunk.js.map",
     "runtime-main.js": "/v18-geckos-team-02/static/js/runtime-main.f11fd062.js",
     "runtime-main.js.map": "/v18-geckos-team-02/static/js/runtime-main.f11fd062.js.map",
-    "static/js/2.4021a2b9.chunk.js": "/v18-geckos-team-02/static/js/2.4021a2b9.chunk.js",
-    "static/js/2.4021a2b9.chunk.js.map": "/v18-geckos-team-02/static/js/2.4021a2b9.chunk.js.map",
+    "static/js/2.b430b95d.chunk.js": "/v18-geckos-team-02/static/js/2.b430b95d.chunk.js",
+    "static/js/2.b430b95d.chunk.js.map": "/v18-geckos-team-02/static/js/2.b430b95d.chunk.js.map",
     "index.html": "/v18-geckos-team-02/index.html",
-    "precache-manifest.38ce8eb00b00baf300f0318f20558e36.js": "/v18-geckos-team-02/precache-manifest.38ce8eb00b00baf300f0318f20558e36.js",
+    "precache-manifest.9293619b82f8ed1ee3e055def11a868d.js": "/v18-geckos-team-02/precache-manifest.9293619b82f8ed1ee3e055def11a868d.js",
     "service-worker.js": "/v18-geckos-team-02/service-worker.js",
-    "static/js/2.4021a2b9.chunk.js.LICENSE.txt": "/v18-geckos-team-02/static/js/2.4021a2b9.chunk.js.LICENSE.txt",
-    "static/media/editor-icon.c5559fd0.svg": "/v18-geckos-team-02/static/media/editor-icon.c5559fd0.svg",
-    "static/media/openTimelineButton.svg": "/v18-geckos-team-02/static/media/openTimelineButton.67321164.svg"
+    "static/js/2.b430b95d.chunk.js.LICENSE.txt": "/v18-geckos-team-02/static/js/2.b430b95d.chunk.js.LICENSE.txt",
+    "static/media/back-arrow.cef689aa.svg": "/v18-geckos-team-02/static/media/back-arrow.cef689aa.svg",
+    "static/media/completionTick.svg": "/v18-geckos-team-02/static/media/completionTick.e5ae86e5.svg",
+    "static/media/dateAndTagsIcon.svg": "/v18-geckos-team-02/static/media/dateAndTagsIcon.3f1d548c.svg",
+    "static/media/exportButton.svg": "/v18-geckos-team-02/static/media/exportButton.9eb61a1b.svg",
+    "static/media/importButton.svg": "/v18-geckos-team-02/static/media/importButton.0e1a5dbb.svg",
+    "static/media/minusSign2.svg": "/v18-geckos-team-02/static/media/minusSign2.e2ee8f29.svg",
+    "static/media/openIcon.svg": "/v18-geckos-team-02/static/media/openIcon.c2d348c7.svg",
+    "static/media/placeholder.svg": "/v18-geckos-team-02/static/media/placeholder.a8a9abfe.svg",
+    "static/media/plusSign.svg": "/v18-geckos-team-02/static/media/plusSign.d940466c.svg",
+    "static/media/trashTumbleIcon.svg": "/v18-geckos-team-02/static/media/trashTumbleIcon.8a43959d.svg",
+    "static/media/wavy-logo.svg": "/v18-geckos-team-02/static/media/wavy-logo.5fa604da.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.f11fd062.js",
-    "static/js/2.4021a2b9.chunk.js",
-    "static/js/main.c52fd4d8.chunk.js"
+    "static/js/2.b430b95d.chunk.js",
+    "static/js/main.86efbf20.chunk.js"
   ]
 }
