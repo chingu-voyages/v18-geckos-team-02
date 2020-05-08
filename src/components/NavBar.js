@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import styled  from 'styled-components';
+import plusSign from '../assets/plusSign.svg';
+import logo from './../../src/assets/wavy-logo.svg';
+import minusSign from '../assets/minusSign2.svg';
+import EditButton from  '../assets/trashTumbleIcon.svg';
+import ImportButton from '../assets/importButton.svg';
+import ExportButton from '../assets/exportButton.svg';
+import {exportTimeLine, importTimeLine} from '../services/dataController';
 
-export const NavBarContainer = styled.div`
-    display: flex;
+const NavBarContainer = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 200px 1fr;
     justify-content: center;
     width: 100vw;
     height: 70px;
@@ -12,32 +20,80 @@ export const NavBarContainer = styled.div`
     bottom: 0px;
 `;
 
-export const ButtonContainer = styled.div`
+const Logo = styled.img`
+  padding-left: 30px;
+  width: 230px;
+  height: 50px;
+  align-self: center;
+
+  @media (max-width: 800px){
+    width: 70px;
+    height: 30px;
+    align-self: center;
+    padding-left: 5px;
+
+  }
+`;
+
+const ButtonContainer = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    position: relative;
+    justify-content: center;
     align-items: center;
+    justify-self: center;
+    border: 1px solid green;
+    width: auto;
 `;
 
-const AddNoteButton = styled.button`
-  width: 140px;
-  height: 60px;
-  border-radius: 20px;
-  padding: 1px;
-  display: flex;
-  margin: 3px;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Proza Libre', sans-serif;
-  background-color: white;
-  opacity: 0.9;
-  border: solid 3px #1B71D5;
-  border-radius: 20px;
-  color: #EA9713;
-  font-size: 15px;
+const ToggleModalButton = styled.div`
+    display: flex;
+    height: 60px;
+    width: 60px;
+    align-items: center;
+    justify-content: center;
+
+    @media (max-width: 800px){
+      height: 40px;
+      width: 40px;
+    }
 `;
 
-export const FileUploadInput = styled.input`
+const PlusImg = styled.img`
+    height: 60px;
+    width: 60px;
+
+    @media (max-width: 800px){
+      height: 40px;
+      width: 40px;
+    }
+`;
+
+const MinusImg = styled.img`
+    height: 60px;
+    width: 60px;
+    @media (max-width: 800px){
+      height: 40px;
+      width: 40px;
+    }
+`;
+
+
+const EditModeButton = styled.img`
+    display: flex;
+    height: 60px;
+    width: 60px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+
+    @media (max-width: 800px){
+      height: 40px;
+      width: 40px;
+    }
+`;
+
+export const ImportButtonInput = styled.input`
   border: 0;
   clip: rect(0, 0, 0, 0);
   height: 1px;
@@ -48,30 +104,97 @@ export const FileUploadInput = styled.input`
   width: 1px;
 `;
 
-export const FileUploadLabel = styled.label`
-  width: 140px;
+export const ImportButtonLabel = styled.label`
   height: 60px;
-  display: flex;
-  justify-content: center;
+  width: 60px;
   align-items: center;
-  border-radius: 20px;
-  padding: 1px;
-  margin: 3px;
-  font-family: 'Proza Libre', sans-serif;
-  background-color: white;
-  opacity: 0.9;
-  border: solid 3px #1B71D5;
-  color: #EA9713;
-  font-size: 15px;
+  justify-content: center;
+  margin-left: 5px;
+
+  @media (max-width: 800px){
+    height: 40px;
+    width: 40px;
+  }
 `;
 
-function NavBar({ openTimeline, openNote, addUploadsToList }) {
+const ImportButtonIcon = styled.img`
+  display: flex;
+  height: 60px;
+  width: 60px;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 800px){
+    height: 40px;
+    width: 40px;
+  }
+`;
+
+const ExportButtonContainer = styled.img`
+  display: flex;
+  height: 60px;
+  width: 60px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  
+  @media (max-width: 800px){
+    height: 40px;
+    width: 40px;
+  }
+`;
+
+const HiddenDownloadLink = styled.a`
+  display: none;
+`;
+
+function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
+  const [downloadStatus, setDownloadStatus] = useState(null);
+  const downloadLinkRef = useRef();
+  
+  async function startDownload(e) {
+    if (!downloadStatus && downloadStatus !== 'inprogress') {
+      setDownloadStatus('inprogress');
+      try {
+        const file = await exportTimeLine();
+        if (file) {
+          setDownloadStatus(null);
+          const url = await URL.createObjectURL(file);
+          downloadLinkRef.current.href = url;
+          downloadLinkRef.current.download = Date.now().toString()+'.wavy';
+          downloadLinkRef.current.click();
+        }
+      }
+      catch (e) {
+        setDownloadStatus(null);
+        console.error(e);
+      }
+    }
+    return true
+  }
+
+  function handleUpload(e) {
+    importTimeLine(e.target.files[0]);
+  }
+
   return (
     <NavBarContainer>
+      <Logo src={logo} alt="Wavy logo"/>
         <ButtonContainer>
-          <FileUploadInput type="file" id="file" onChange={e => addUploadsToList(e.target.files)} multiple/> 
-          <FileUploadLabel htmlFor="file">UPLOAD FILES</FileUploadLabel>
-          <AddNoteButton onClick={openNote}>ADD NOTE</AddNoteButton>
+          <ToggleModalButton onClick={() => setShowUploads(!showUploads)}>
+            {
+              !showUploads ?
+              <PlusImg src={plusSign} alt="toggle upload modal open button" /> : 
+              <MinusImg  src={minusSign} alt="toggle upload modal closed button" />  
+            } 
+          </ToggleModalButton>
+          <EditModeButton src={EditButton} onClick={() => setEditMode(!editMode)} />
+          <ImportButtonInput type="file" id="file" accept=".wavy" onChange={handleUpload} />
+          <ImportButtonLabel htmlFor="file">
+            <ImportButtonIcon src={ImportButton} alt="import a timeline file" />
+          </ImportButtonLabel> 
+          <ExportButtonContainer src={ExportButton} onClick={startDownload} alt="export a timline file" />
+          <HiddenDownloadLink ref={downloadLinkRef} />
         </ButtonContainer>
     </NavBarContainer>
   );

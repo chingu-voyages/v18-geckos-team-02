@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import { uploadFuncs } from '../services/dataController'; 
+import { ReactComponent as BackArrow } from './../assets/back-arrow.svg';
+import { ReactComponent as TickIcon } from './../assets/completionTick.svg';
 // import DateAndTagsEditor from './DateAndTagsEditor';
+
+const { add } = uploadFuncs;
 
 const ModalWindow = styled.section`
   width: 100vw;
@@ -11,7 +16,7 @@ const ModalWindow = styled.section`
   background: ${props => props.theme.greyBlueTransp};
 `;
 
-const NotesForm = styled.form`
+const NotesForm = styled.div`
   max-width: 414px;
   margin: auto;
   background: ${props => props.theme.lightGrey};
@@ -22,6 +27,7 @@ const NotesForm = styled.form`
   padding: 0.5rem 2rem 2rem;
   position: relative;
   z-index: 60;
+  top: 20px;
 `;
 
 const formControlBase = css`
@@ -36,13 +42,9 @@ const Input = styled.input`
 
 const Button = styled.button`
   ${formControlBase}
-  background: ${props => props.primary
-    ? props.theme.blue
-    : props.theme.red};
-  color: ${props => props.theme.offWhite};
-  width: 45%;
+  background: ${props => props.theme.blue};
+  width: 100%;
   outline: none;
-  cursor: ${props => props.disabled ? "not-allowed": "pointer"};
 `;
 
 const NotesArea = styled.textarea`
@@ -50,30 +52,24 @@ const NotesArea = styled.textarea`
   ${formControlBase};
 `;
 
-const ButtonGroup = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const AddNoteModal = ({ addUploadsToList, onCancel }) => {
+const AddNoteModal = ({ close }) => {
   const [notesTitle, setNotesTitle] = useState("");
   const [notesBody, setNotesBody] = useState("");
   
-  const handleSubmit = e => {
-    e.preventDefault();
+  const submit = () => {
     const note = {
       name: notesTitle,
       text: notesBody,
       type: 'note'
     };
-    addUploadsToList([note]);
-
+    add([note]);
+    close();
   }
+  const hasNotes = notesTitle !== "" && notesBody !== "";
 
   return (
     <ModalWindow>
-      <NotesForm onSubmit={handleSubmit}>
+      <NotesForm>
         <Input type="text"
           name="title"
           id="title" 
@@ -90,19 +86,11 @@ const AddNoteModal = ({ addUploadsToList, onCancel }) => {
           value={ notesBody }
           onChange={ e => setNotesBody(e.target.value) }
         />
-        <ButtonGroup>
-          <Button disabled={notesTitle === "" || notesBody === "" ? true : false }
-            type="submit"
-            value="Submit"
-            primary>Submit</Button>
           <Button
-            onClick={ onCancel }
-            type="button"> 
-            Back
-          </Button>
-        </ButtonGroup>
+          type={hasNotes ? "submit" : "button"}
+          onClick={hasNotes ? submit : close}>{hasNotes ? <TickIcon /> : <BackArrow />}
+        </Button>
         </NotesForm>
-
     </ModalWindow>
     );
 }

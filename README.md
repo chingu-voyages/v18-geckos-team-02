@@ -2,7 +2,7 @@
 A file-sorting app that takes dates from metadata to automatically produce a visual timeline.
 
 ## Overview
-**Wavy** is a break away from the dated and boring file storage sytstem. The app uses a timestamp algorithm to store and retrieve files, delivering a fast and efficient way to sort through records. A User can upload or drag-in file(s) on their timeline, and the app organizes the files into a visually appealing series of events. Wavy has a 'share' feature that enables sharing of files amongst friends.
+**Wavy** is a break away from the dated and boring file storage system. The app uses a timestamp algorithm to store and retrieve files, delivering a fast and efficient way to sort through records. A User can upload or drag-in file(s) on their timeline, and the app organizes the files into a visually appealing series of events. Wavy has a 'share' feature that enables sharing of files amongst friends.
 
 [Checkout the demo](https://chingu-voyages.github.io/v18-geckos-team-02/)
 
@@ -11,6 +11,9 @@ A file-sorting app that takes dates from metadata to automatically produce a vis
 
 * React v16.13.1
 * Styled Components v5.0.1
+* Dexie v2.0.4
+* Gh-pages v2.2.0
+
 
 ## Setup :hammer_and_wrench:
 
@@ -28,6 +31,14 @@ This project is designed and developed by the [Chingu](https://www.chingu.io/) V
 
 ## Contributing 
 Thanks for your interest in contributing! There are many ways to contribute to this project. Get [started here](CONTRIBUTING.md).
+
+Wishlist:
+
+* Backend store for user files with user authentication
+* Ablity to 'share' timeline with friends
+* Loading status componenet - current idea is an animated wave function
+* tutorial GIF
+
 
 
 ## License 

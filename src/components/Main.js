@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Node from './Node';
-import { getRefs } from '../services/dataController';
 import styled from 'styled-components';
+import { fileObjsSubcription } from '../services/dataController';
+import plusSign from '../assets/plusSign.svg';
 
 const Wrapper = styled.main`
   display: grid;
@@ -10,10 +11,20 @@ const Wrapper = styled.main`
   margin-top: 0;
   & section>div {
     margin: 8px;
-    min-height: 150px;
   }
-  & section>.note {
+  & section .note {
     min-width: 300px;
+  }
+  & .edit-options {
+    display: none;
+  }
+  &.editing .edit-options {
+    display: flex;
+  }
+
+  &.hidden {
+    overflow: hidden;
+    max-height: 100vh;
   }
   color: ${props => props.theme.darkGrey};
 `;
@@ -21,17 +32,64 @@ const Header = styled.header`
   width: 100%;
   text-align: center;
   margin: 24px;
+  // color: ${props => props.theme.orange};
 `;
 
-function Main({activeNode}) {
-  const fileRefs = getRefs(activeNode, activeNode.substr(0,8)+'2359');
-  const nodeDate = new Date(`${activeNode.substr(0,4)}-${activeNode.substr(4,2)}-${activeNode.substr(6,2)}`).toDateString();
+const PlusImg = styled.img`
+    height: 120px;
+    width: 120px;
+    @media (max-width: 500px){
+      height: 40px;
+      width: 40px;
+    }
+`;
+
+const StartHelp = styled.div`
+  height: 80vh;
+  width: 80%;
+  margin-left: 10%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  box-sizing: border-box;
+`;
+
+function Main({editMode, showUploads, setShowUploads})  {
+  const [activeFileObjs, setActiveFileObjs] = useState(null);
+  useEffect(() => {
+    fileObjsSubcription.subscribe(setActiveFileObjs);
+    return () => fileObjsSubcription.unsubscribe(setActiveFileObjs);
+  }, []);
+
+  function getActiveNodeDate() {
+    const obj = activeFileObjs[0];
+    if(obj) {
+      return new Date(obj.unFormatDate(obj.getActiveDate()).substr(0, 10)).toDateString()
+    }
+  } 
+
+  let output = (<>
+    <Header>
+      <StartHelp>
+      <h1>Welcome!</h1>
+      <PlusImg onClick={() => setShowUploads(true)} src={plusSign} alt="toggle upload modal open button" />
+      <h2>Add some files to begin.</h2>
+      </StartHelp>
+    </Header>
+  </>);
+  if (activeFileObjs && activeFileObjs.length > 0) {
+    output = <>
+    <Header>
+      <time>{getActiveNodeDate()}</time>
+    </Header>
+    <Node fileObjs={activeFileObjs} isMain />
+    </>;
+  }
+  
   return (
-    <Wrapper>
-      <Header>
-        <time dateTime={nodeDate}>{nodeDate}</time>
-      </Header>
-      <Node fileRefs={fileRefs} timeWanted />
+    <Wrapper className={editMode ? 'editing' : showUploads ? "hidden" : ''}>
+      {output}
     </Wrapper>
   );
 }
