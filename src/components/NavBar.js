@@ -25,12 +25,38 @@ const ButtonContainer = styled.div`
     align-items: center;
 `;
 
-const TogglenModalButton = styled.div`
+const ToggleModalButton = styled.div`
     display: flex;
     height: 60px;
     width: 60px;
     align-items: center;
     justify-content: center;
+
+
+    @media (max-width: 500px){
+      height: 40px;
+      width: 40px;
+    }
+`;
+
+const PlusImg = styled.img`
+    height: 60px;
+    width: 60px;
+
+    @media (max-width: 500px){
+      height: 40px;
+      width: 40px;
+    }
+`;
+
+const MinusImg = styled.img`
+    height: 60px;
+    width: 60px;
+
+    @media (max-width: 500px){
+      height: 40px;
+      width: 40px;
+    }
 `;
 
 const EditModeButton = styled.img`
@@ -39,14 +65,13 @@ const EditModeButton = styled.img`
     width: 60px;
     align-items: center;
     justify-content: center;
-`;
+    margin-left: 5px;
 
-const ExportButtonContainer = styled.img`
-  display: flex;
-  height: 60px;
-  width: 60px;
-  align-items: center;
-  justify-content: center;
+    @media (max-width: 500px){
+      height: 40px;
+      width: 40px;
+    
+
 `;
 
 const ImportButtonContainer = styled.img`
@@ -55,19 +80,41 @@ const ImportButtonContainer = styled.img`
   width: 60px;
   align-items: center;
   justify-content: center;
+  margin-left: 5px;
+
+
+  @media (max-width: 500px){
+    height: 40px;
+    width: 40px;
 `;
+
+const ExportButtonContainer = styled.img`
+  display: flex;
+  height: 60px;
+  width: 60px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+
+
+  @media (max-width: 500px){
+    height: 40px;
+    width: 40px;
+`;
+
+
 
 function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
   return (
     <NavBarContainer>
         <ButtonContainer>
-          <TogglenModalButton onClick={() => setShowUploads(!showUploads)}>
+          <ToggleModalButton onClick={() => setShowUploads(!showUploads)}>
             {
               !showUploads ?
-              <img src={plusSign} alt="toggle upload modal open button" /> : 
-              <img  src={minusSign} alt="toggle upload modal closed button" />  
+              <PlusImg src={plusSign} alt="toggle upload modal open button" /> : 
+              <MinusImg  src={minusSign} alt="toggle upload modal closed button" />  
             } 
-          </TogglenModalButton>
+          </ToggleModalButton>
           <EditModeButton src={EditButton} onClick={() => setEditMode(!editMode)} />
           <ImportButtonContainer src={ImportButton} alt="import a timline button" />
           <ExportButtonContainer src={ExportButton} alt="export a timline button" />
