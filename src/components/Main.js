@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import Node from './Node';
 import styled from 'styled-components';
 import { fileObjsSubcription } from '../services/dataController';
+import plusSign from '../assets/plusSign.svg';
 
 const Wrapper = styled.main`
   display: grid;
@@ -34,13 +35,32 @@ const Header = styled.header`
   // color: ${props => props.theme.orange};
 `;
 
-function Main({editMode, showUploads})  {
+const PlusImg = styled.img`
+    height: 120px;
+    width: 120px;
+    @media (max-width: 500px){
+      height: 40px;
+      width: 40px;
+    }
+`;
+
+const StartHelp = styled.div`
+  height: 80vh;
+  width: 80%;
+  margin-left: 10%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  box-sizing: border-box;
+`;
+
+function Main({editMode, showUploads, setShowUploads})  {
   const [activeFileObjs, setActiveFileObjs] = useState(null);
   useEffect(() => {
     fileObjsSubcription.subscribe(setActiveFileObjs);
     return () => fileObjsSubcription.unsubscribe(setActiveFileObjs);
-  }, []
-  )
+  }, []);
 
   function getActiveNodeDate() {
     const obj = activeFileObjs[0];
@@ -49,7 +69,15 @@ function Main({editMode, showUploads})  {
     }
   } 
 
-  let output = 'tutorial Gifs';
+  let output = (<>
+    <Header>
+      <StartHelp>
+      <h1>Welcome!</h1>
+      <PlusImg onClick={() => setShowUploads(true)} src={plusSign} alt="toggle upload modal open button" />
+      <h2>Add some files to begin.</h2>
+      </StartHelp>
+    </Header>
+  </>);
   if (activeFileObjs && activeFileObjs.length > 0) {
     output = <>
     <Header>
