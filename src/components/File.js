@@ -132,12 +132,11 @@ ${fileObj.tag?.length > 0 ? 'tags: '+fileObj.tags.join(' ')+'\n' : ''}${fileObj.
                 {props.children}
             </Link>
         }
-        return <FileNotFound>File Not Found! Please upload file: {fileObj.name}</FileNotFound>
+        return props.children
     }
    
     if (fileObj) {
         return (
-            <>
             <FileContainer ref={ref} >
                 {showTime && <Time dateTime={time}>{time}</Time>}
                 {enableEditOptions &&
@@ -145,19 +144,19 @@ ${fileObj.tag?.length > 0 ? 'tags: '+fileObj.tags.join(' ')+'\n' : ''}${fileObj.
                     <Options onClick={removeFile}>X</Options> 
                 </OptionsContainer> 
                 }
+                {file === null ? <FileNotFound>File Not Found! Please upload file: {fileObj.name}</FileNotFound> :
                 <DownloadWrapper enabled={enableDownload}>
                     {fileObj.type.includes('image') ? 
                         <Img src={file} alt="" /> : 
                         fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.name}</h1><p>{fileObj.text}</p></Note> :
                         <FileIcon {...charsToColour(fileObj.type)}>{fileObj.name}</FileIcon>
                     }
-                </DownloadWrapper>
+                </DownloadWrapper>}
             </FileContainer>
-            </>
         )
     }
-    else { // TODO make placeholder
-        return <></>
+    else { 
+        return <FileNotFound>File has vanished! :&lt;</FileNotFound>
     }
 }
 
