@@ -144,6 +144,7 @@ width: 5vw;
 place-items: start center;
 `;
 const Bar = styled(Gap)`
+  width: ${props => (props.wide/2)+'vw'};
   &.expanded::before {
     display: inline-block;
     content: '';
@@ -188,29 +189,25 @@ function Timeline({editMode}) {
       inline: 'center'
     });
     const TimeLine = <Line>
-      {Object.keys(nodesList).sort().map((year, i, arr) => {
-        const yearEnd = i === arr.length-1;
-        const yearStart = i === 0;
-        const ref = React.createRef();
+      {Object.keys(nodesList).sort().map(year => {
+        const ref = React.createRef(); 
         return (
           <Year ref={ref} key={year}>
             <Title onClick={() => scrollTo(ref)}>{year}</Title>
             <Months>
-              {Object.keys(nodesList[year]).sort().map((month, i, arr) => {
-                const monthEnd = i === arr.length-1;
-                const monthStart = i === 0;
+              {Object.keys(nodesList[year]).sort().map(month => {
                 const ref = React.createRef();
                 const monthStr = new Date(`${year}-${month}-01`).toDateString().substr(4,3);
                 return (
                   <Month ref={ref} key={year+month}>
                     <Title onClick={() => scrollTo(ref)}>{monthStr}</Title>
                     <Dates>
-                      {Object.keys(nodesList[year][month]).sort().map((date, i, arr) => {
-                        const dateEnd = i === arr.length-1;
-                        const dateStart = i === 0;
-                        const atStart = dateStart && monthStart && yearStart;
-                        const atEnd = dateEnd && monthEnd && yearEnd;
-                        const showBar = lastDate && (date > parseInt(lastDate.date)+1 || month > parseInt(lastDate.month)+1 || year > parseInt(lastDate.year)+1);
+                      <Bar wide={5} className={showNodes && 'expanded'}></Bar>
+                      {Object.keys(nodesList[year][month]).sort().map(date => {
+                        let totalBars = 0;
+                        if (lastDate) {
+                          totalBars += ((year - lastDate.year) > 0 && 10) || ((month - lastDate.month) > 0 && 5) || (date - lastDate.date > 0 && 1);
+                        }
                         lastDate = {year,month,date};
                         const nodeDate = new Date(`${year}-${month}-${date}`).toDateString();
                         const ref = React.createRef();
@@ -224,16 +221,15 @@ function Timeline({editMode}) {
                             scrollTo(ref);
                           }
                         }
-                        return (<Fragment key={year+month+date+showBar}> 
-                          {atStart && <Gap></Gap>}
-                          {showBar && <Bar className={showNodes && 'expanded'}></Bar>}
+                        return (<Fragment key={year+month+date+totalBars}> 
+                          <Bar wide={totalBars} className={showNodes && 'expanded'}></Bar>
                           <DateItem ref={ref} className={(isActive ? 'active ' : '')+(showNodes && 'expanded')} onLoad={handleLoad} onClick={handleClick}>
                             <header>{nodeDate.substr(0,3)+' '+nodeDate.substr(8,2)}</header>
                             {showNodes && <Node fileObjs={nodesList[year][month][date]} />}
                           </DateItem>
-                          {atEnd && <Gap></Gap>}
                         </Fragment>) 
-                    })}
+                      })}
+                    <Bar wide={5} className={showNodes && 'expanded'}></Bar>
                     </Dates>
                   </Month>
                 )
@@ -241,6 +237,7 @@ function Timeline({editMode}) {
             </Months>
           </Year>
         )
+        
       })} 
     </Line>;
     output = <Wrapper className={`${!showNodes && 'contracted'} ${editMode && 'editing'}`}>
