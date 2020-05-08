@@ -30,10 +30,19 @@ const FileIcon = styled.div`
     height: 150px;
 `;
 
-const Options = styled.button`
-    width: auto;
-    background: red;
+const Options = styled.div`
+    background: none;
     position: absolute;
+    background: none;
+    outline: none;
+    border: 1px solid ${props => props.theme.greyBlue};
+    font-size: 1rem;
+    padding: 0.1rem 0.5rem;
+  
+    &:hover {
+      color: ${props => props.theme.offWhite};
+      background: ${props => props.theme.red};
+    }
 `;
 
 const OptionsContainer = styled.div`
@@ -141,7 +150,7 @@ ${fileObj.tag?.length > 0 ? 'tags: '+fileObj.tags.join(' ')+'\n' : ''}${fileObj.
                 {showTime && <Time dateTime={time}>{time}</Time>}
                 {enableEditOptions &&
                 <OptionsContainer className="edit-options"> 
-                    <Options onClick={removeFile}>X</Options> 
+                    <Options onClick={removeFile}>&times;</Options> 
                 </OptionsContainer> 
                 }
                 {file === null ? <FileNotFound>File Not Found! Please upload file: {fileObj.name}</FileNotFound> :
