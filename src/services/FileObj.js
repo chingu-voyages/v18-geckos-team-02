@@ -1,4 +1,4 @@
-export default function FileObj({uid, fileRef, activeTimeStamp, timeStamps, tags, type, name, text}) {
+export default function FileObj({uid, fileRef, activeTimeStamp, timeStamps, tags, type, name, text, size}) {
     this.uid = uid;
     this.timeStamps = {};
     this.activeTimeStamp = activeTimeStamp || 'modified';
@@ -7,6 +7,7 @@ export default function FileObj({uid, fileRef, activeTimeStamp, timeStamps, tags
     this.name = name;
     this.text = text || '';
     this.type = type;
+    this.size = size;
     Object.keys(timeStamps).forEach(key => this.timeStamps[key] = this.formatDate(timeStamps[key]));
 }
 FileObj.prototype.formatDate = function(dateTime) {
@@ -27,7 +28,8 @@ FileObj.prototype.formatDate = function(dateTime) {
 }
 FileObj.prototype.unFormatDate = function(date) {
     if (this.isFormatedDate(date)) {
-        return `${date.substr(0,4)}-${date.substr(4,2)}-${date.substr(6,2)}-${date.substr(8,2)}-${date.substr(10,2)}`
+        const len = date.length;
+        return `${len > 3 && date.substr(0,4)}${len > 5 && '-'+date.substr(4,2)}${len > 7 && '-'+date.substr(6,2)}${len > 9 && ' '+date.substr(8,2)}${len > 11 && ':'+date.substr(10,2)}${len > 13 && ':'+date.substr(10,2)}`
     }
     else {
         console.error(date+' not formatted!')
