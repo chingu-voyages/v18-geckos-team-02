@@ -1,7 +1,7 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import styled from 'styled-components';
 import Node from './Node';
-import openTimelineIcon from '../assets/openTimelineButton.svg';
+import openTimelineIcon from '../assets/openIcon.svg';
 import { nodesListSubcription, setActiveNode, activeNode } from '../services/dataController';
 
 const Wrapper = styled.div`
@@ -155,14 +155,12 @@ const Bar = styled(Gap)`
     top: 10.5vw;
   }
 `;
-const ExpandButton = styled.button`
+const ExpandButton = styled.div`
 position:fixed;
-bottom: 90px;
-right: 10px;
-width: 34px;
-height: 34px;
-background: none;
-border: none;
+bottom: 94px;
+right: 40px;
+width: 50px;
+height: 50px;
 z-index: 100;
 &.close img {
   transform: rotate(180deg);
