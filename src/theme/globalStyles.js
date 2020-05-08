@@ -1,25 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
 
-const GlobalStyle = createGlobalStyle`
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-}
-
-body {
-  font-family: 'Lato', sans-serif;
-  font-size: 16px;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Proza Libre', sans-serif;
-  font-weight: 600;
-}
-`;
-export default GlobalStyle;
-
 export const theme = {
   red: "#FC5F6B",
   blue: "#12A7EA",
@@ -38,3 +18,30 @@ export const theme = {
   greyBlueTransp: "rgba(174,193,213,0.75)",
   darkBlueTransp: "rgba(27,113,213,0.6)"
 }
+
+const GlobalStyle = createGlobalStyle`
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Proza Libre', sans-serif;
+  font-weight: 600;
+  color: ${theme.orange};
+}
+
+header {
+  color: ${theme.orange};
+}
+`;
+
+export default GlobalStyle;
+

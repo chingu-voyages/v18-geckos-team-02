@@ -1,8 +1,8 @@
-import React, { useState, Fragment } from 'react';
-import { listNodes } from '../services/dataController';
+import React, { useState, Fragment, useEffect } from 'react';
 import styled from 'styled-components';
 import Node from './Node';
-import openTimelineIcon from '../assets/openTimelineButton.svg';
+import openTimelineIcon from '../assets/openIcon.svg';
+import { nodesListSubcription, setActiveNode, activeNode } from '../services/dataController';
 
 const Wrapper = styled.div`
 width: 100%;
@@ -31,6 +31,12 @@ padding-top: 18px;
 &::-webkit-scrollbar-thumb:hover {
   background: ${props => props.theme.lightBlue};
 }
+&.editing .edit-options {
+  display: flex;
+}
+& .edit-options {
+  display: none;
+}
 z-index: 50;
 `;
 const Line = styled.div`
@@ -44,22 +50,22 @@ width: 100%;
 text-align: center;
 display: flex;
 flex-flow: row nowrap;
-color: ${props => props.theme.darkGrey};
+// color: ${props => props.theme.darkGrey};
 font-size: 11px;
 &::before,
 &::after {
   display: inline-block;
   content: '';
-  border-top: 1px solid ${props => props.theme.darkGrey};
+  border-top: 1px solid ${props => props.theme.blue};
   width: 50%;
   margin: 0 12px;
   transform: translateY(50%);
 }
 &::before {
-  border-left: 1px solid ${props => props.theme.darkGrey};
+  border-left: 1px solid ${props => props.theme.blue};
 }
 &::after {
-  border-right: 1px solid ${props => props.theme.darkGrey};
+  border-right: 1px solid ${props => props.theme.blue};
 }
 `;
 const Year = styled.div`
@@ -93,7 +99,7 @@ grid-template-rows: 18px 0;
 place-items: start center;
 width: 10vw;
 & header {
-  color: ${props => props.theme.darkGrey};
+  // color: ${props => props.theme.darkGrey};
   font-size: 10px;
   text-align: center;
 }
@@ -138,6 +144,7 @@ width: 5vw;
 place-items: start center;
 `;
 const Bar = styled(Gap)`
+  width: ${props => (props.wide/2)+'vw'};
   &.expanded::before {
     display: inline-block;
     content: '';
@@ -148,25 +155,31 @@ const Bar = styled(Gap)`
     top: 10.5vw;
   }
 `;
-const ExpandButton = styled.button`
+const ExpandButton = styled.div`
 position:fixed;
-bottom: 90px;
-right: 10px;
-width: 34px;
-height: 34px;
-background: none;
-border: none;
+bottom: 94px;
+right: 40px;
+width: 50px;
+height: 50px;
 z-index: 100;
 &.close img {
   transform: rotate(180deg);
 }
 `;
 
-function Timeline({activeNode, setActiveNode}) {
+function Timeline({editMode}) {
+
   const [showNodes, setShowNodes] = useState(false);
-  const nodes = listNodes();
+  const [nodesList, setNodesList] = useState(null);
+
+  useEffect(() => {
+    nodesListSubcription.subscribe(setNodesList);
+    return () => nodesListSubcription.unsubscribe(setNodesList);
+  }, []
+  )
+
   let output = '';
-  if (nodes) {
+  if (nodesList && Object.keys(nodesList).length > 0) {
     let lastDate = null;
     const scrollTo = ref =>
       ref.current.scrollIntoView({
@@ -174,35 +187,31 @@ function Timeline({activeNode, setActiveNode}) {
       inline: 'center'
     });
     const TimeLine = <Line>
-      {Object.keys(nodes).sort().map((year, i, arr) => {
-        const yearEnd = i === arr.length-1;
-        const yearStart = i === 0;
-        const ref = React.createRef();
+      {Object.keys(nodesList).sort().map(year => {
+        const ref = React.createRef(); 
         return (
           <Year ref={ref} key={year}>
             <Title onClick={() => scrollTo(ref)}>{year}</Title>
             <Months>
-              {Object.keys(nodes[year]).sort().map((month, i, arr) => {
-                const monthEnd = i === arr.length-1;
-                const monthStart = i === 0;
+              {Object.keys(nodesList[year]).sort().map(month => {
                 const ref = React.createRef();
                 const monthStr = new Date(`${year}-${month}-01`).toDateString().substr(4,3);
                 return (
                   <Month ref={ref} key={year+month}>
                     <Title onClick={() => scrollTo(ref)}>{monthStr}</Title>
                     <Dates>
-                      {Object.keys(nodes[year][month]).sort().map((date, i, arr) => {
-                        const dateEnd = i === arr.length-1;
-                        const dateStart = i === 0;
-                        const atStart = dateStart && monthStart && yearStart;
-                        const atEnd = dateEnd && monthEnd && yearEnd;
-                        const showBar = lastDate && (date > parseInt(lastDate.date)+1 || month > parseInt(lastDate.month)+1 || year > parseInt(lastDate.year)+1);
+                      <Bar wide={5} className={showNodes && 'expanded'}></Bar>
+                      {Object.keys(nodesList[year][month]).sort().map(date => {
+                        let totalBars = 0;
+                        if (lastDate) {
+                          totalBars += ((year - lastDate.year) > 0 && 10) || ((month - lastDate.month) > 0 && 5) || (date - lastDate.date > 0 && 1);
+                        }
                         lastDate = {year,month,date};
                         const nodeDate = new Date(`${year}-${month}-${date}`).toDateString();
                         const ref = React.createRef();
                         const isActive = year+month+date === activeNode;
                         const handleClick = () => {
-                          setActiveNode(year+month+date);
+                          setActiveNode(nodesList[year][month][date][0]);
                           scrollTo(ref);
                         }
                         const handleLoad = () => {
@@ -210,16 +219,15 @@ function Timeline({activeNode, setActiveNode}) {
                             scrollTo(ref);
                           }
                         }
-                        return (<Fragment key={year+month+date+showBar}> 
-                          {atStart && <Gap></Gap>}
-                          {showBar && <Bar className={showNodes && 'expanded'}></Bar>}
+                        return (<Fragment key={year+month+date+totalBars}> 
+                          <Bar wide={totalBars} className={showNodes && 'expanded'}></Bar>
                           <DateItem ref={ref} className={(isActive ? 'active ' : '')+(showNodes && 'expanded')} onLoad={handleLoad} onClick={handleClick}>
                             <header>{nodeDate.substr(0,3)+' '+nodeDate.substr(8,2)}</header>
-                            {showNodes && <Node fileRefs={nodes[year][month][date]} />}
+                            {showNodes && <Node fileObjs={nodesList[year][month][date]} />}
                           </DateItem>
-                          {atEnd && <Gap></Gap>}
                         </Fragment>) 
-                    })}
+                      })}
+                    <Bar wide={5} className={showNodes && 'expanded'}></Bar>
                     </Dates>
                   </Month>
                 )
@@ -227,9 +235,10 @@ function Timeline({activeNode, setActiveNode}) {
             </Months>
           </Year>
         )
+        
       })} 
     </Line>;
-    output = <Wrapper className={!showNodes && 'contracted'}>
+    output = <Wrapper className={`${!showNodes && 'contracted'} ${editMode && 'editing'}`}>
       <ExpandButton className={showNodes && 'close'} onClick={() => setShowNodes(!showNodes)}><img src={openTimelineIcon} alt="close timeline" /></ExpandButton>
       {TimeLine}
     </Wrapper>;

@@ -3,86 +3,23 @@ import Main from './components/Main';
 import Timeline from './components/Timeline';
 import NavBar from './components/NavBar';
 import UploadModal from './components/UploadModal';
-import AddNoteModal from './components/AddNoteModal';
 import styled, {ThemeProvider} from 'styled-components';
 import GlobalStyle, {theme} from './theme/globalStyles';
-import { addFiles, findKey } from './services/dataController';
 
 function App() {
-  const [noteModalOpen, setNoteModalOpen] = useState(false);
-  const [uploadModalOpen, setUploadModalOpen] = useState(false);
-  const [activeNode, setActiveNode] = useState(findKey('start'));
-  const [uploads, setUploads] = useState([]);
-  const [appTheme, setTheme] = useState(theme);
+  const [appTheme, setAppTheme] = useState(theme);
+  const [editMode, setEditMode] = useState(false);
+  const [showUploads, setShowUploads] = useState(false);
 
-  function addUploadsToList(newUploads) {
-    const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
-    const fileIds = uploads.map(upload => upload.fileId);
-    const noDuplicateIdsArr = newUploadsArr.filter(upload => removeDuplicate(fileIds, upload));
-    setUploads([...uploads, ...noDuplicateIdsArr]);
-    setUploadModalOpen(true);
-    setNoteModalOpen(false);
-  }
-
-  function removeDuplicate(fileIds, upload) {
-    const isDuplicate = fileIds.some(id => id === upload.fileId);
-    if (isDuplicate)
-      alert(`"${upload.file.name}" already added to list`);
-    return !isDuplicate;
-  }
-
-  function deleteUpload(uid) {
-    const appendedUploads = uploads.filter(upload => upload.uid !== uid);
-    setUploads(appendedUploads);
-  }
-
-  function updateDatesOrTags(uids, values) {
-    for (let uid of uids) {
-      const index = uploads.findIndex(upload => upload.uid === uid);
-      Object.assign(uploads[index], values);
-    }
-  }
-
-  let newUploadCount = 0;
-  function formatNewUpload(upload) {
-    const dateNow = Date.now();
-    const { name, lastModified, size } = upload;
-    return ({
-      uid: dateNow+`${++newUploadCount}`,
-      file: upload,
-      timeStamps: {
-        modified: !lastModified ? dateNow : lastModified,
-        user: dateNow
-      },
-      activeTimeStamp: 'modified',
-      tags: [],
-      fileId: !lastModified ? name.replace(/ /g,'') + dateNow : name.replace(/ /g,'') + size + lastModified
-    })
-  }
-
-  function sumbitUploads() {
-    const lastStoredFile = addFiles(uploads);
-    setUploads([]);
-    setUploadModalOpen(false);
-    setActiveNode(lastStoredFile.timeStamps[lastStoredFile.activeTimeStamp]);
-  }
-
-  function handleCancel() {
-    setUploads([]);
-    setUploadModalOpen(false);
-  }
-    
   return (
     <>
       <GlobalStyle />
       <ThemeProvider theme={appTheme}>
-        {uploadModalOpen && !noteModalOpen &&
-          <UploadModal close={handleCancel} {...{ uploads, deleteUpload, updateDatesOrTags, sumbitUploads }} />}
-        {noteModalOpen && <AddNoteModal close={() => setUploadModalOpen(false)} onCancel={() => setNoteModalOpen(false)} {...{ addUploadsToList }} />}
-        <Main {...{activeNode, setActiveNode}} />
+        {showUploads && <UploadModal close={() => setShowUploads(false)} />}
+        <Main {...{editMode, showUploads}} />
         <nav>
-          <Timeline {...{ activeNode, setActiveNode }} />
-          <NavBar openNote={() => setNoteModalOpen(true)} {...{ addUploadsToList }} />
+          <Timeline {...{editMode}} />
+          <NavBar {...{showUploads, setShowUploads, editMode, setEditMode}} />
         </nav>
       </ThemeProvider>
     </>

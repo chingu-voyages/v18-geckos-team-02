@@ -10,14 +10,23 @@ const Wrapper = styled.section`
     justify-content: center;
 `;
 
-export default function Node({ fileRefs, timeWanted = false }) {
+export default function Node({ fileObjs, isMain = false }) {
     let lastTime = '';
-    function updateLastTime(time) {
-        lastTime = time;
+    let output = '';
+    if (fileObjs) {
+        output = fileObjs.map(fileObj => {
+            let showTime = isMain;
+            if (isMain) {
+                var time = fileObj.getActiveDate().substr(8).match(/.{2}/g).join(':');
+                showTime = time !== lastTime;
+                lastTime = time;
+            }
+            return <File key={fileObj.uid} {...{fileObj, showTime, time, isMain}} />
+        });
     }
     return (
         <Wrapper>
-           {fileRefs.map(fileRef => <File key={fileRef} {...{fileRef, timeWanted, lastTime, updateLastTime}} />)}
+            {output}
         </Wrapper>
     )
 }
