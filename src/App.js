@@ -16,7 +16,7 @@ function App() {
       <GlobalStyle />
       <ThemeProvider theme={appTheme}>
         {showUploads && <UploadModal close={() => setShowUploads(false)} />}
-        <Main {...{editMode, showUploads}} />
+        <Main {...{editMode, showUploads, setShowUploads}} />
         <nav>
           <Timeline {...{editMode}} />
           <NavBar {...{showUploads, setShowUploads, editMode, setEditMode}} />
