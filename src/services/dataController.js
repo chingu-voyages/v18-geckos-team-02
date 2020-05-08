@@ -90,7 +90,7 @@ async function addFiles(uploadsArr) {
             upload.timeStamps = {};
         } 
         upload.timeStamps.modified = upload.file.lastModified || Date.now();
-        fileObj = new FileObj({...upload, name, text, fileRef: ref, type: checkedType});
+        fileObj = new FileObj({...upload, name, text, fileRef: ref, type: checkedType, size: upload.file.size});
         const activeDate = fileObj.getActiveDate();
         const fObjsWithSameFile = Object.values(appData.fileObjs).filter(fObj => fObj.fileRef === ref);
         if (fObjsWithSameFile.filter(fObj => fObj.getActiveDate() === activeDate).length === 0) {

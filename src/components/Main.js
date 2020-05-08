@@ -10,9 +10,8 @@ const Wrapper = styled.main`
   margin-top: 0;
   & section>div {
     margin: 8px;
-    min-height: 150px;
   }
-  & section>.note {
+  & section .note {
     min-width: 300px;
   }
   & .edit-options {
