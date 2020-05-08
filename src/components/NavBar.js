@@ -3,13 +3,14 @@ import styled  from 'styled-components';
 import plusSign from '../assets/plusSign.svg';
 import logo from './../../src/assets/wavy-logo.svg';
 import minusSign from '../assets/minusSign2.svg';
-import EditButton from  '../assets/trashIcon.svg';
+import EditButton from  '../assets/trashTumbleIcon.svg';
 import ImportButton from '../assets/importButton.svg';
 import ExportButton from '../assets/exportButton.svg';
 import {exportTimeLine, importTimeLine} from '../services/dataController';
 
 const NavBarContainer = styled.div`
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 200px 1fr;
     justify-content: center;
     width: 100vw;
     height: 70px;
@@ -19,11 +20,30 @@ const NavBarContainer = styled.div`
     bottom: 0px;
 `;
 
+const Logo = styled.img`
+  padding-left: 30px;
+  width: 230px;
+  height: 50px;
+  align-self: center;
+
+  @media (max-width: 800px){
+    width: 70px;
+    height: 30px;
+    align-self: center;
+    padding-left: 5px;
+
+  }
+`;
+
 const ButtonContainer = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    position: relative;
+    justify-content: center;
     align-items: center;
+    justify-self: center;
+    border: 1px solid green;
+    width: auto;
 `;
 
 const ToggleModalButton = styled.div`
@@ -32,7 +52,8 @@ const ToggleModalButton = styled.div`
     width: 60px;
     align-items: center;
     justify-content: center;
-    @media (max-width: 500px){
+
+    @media (max-width: 800px){
       height: 40px;
       width: 40px;
     }
@@ -41,7 +62,8 @@ const ToggleModalButton = styled.div`
 const PlusImg = styled.img`
     height: 60px;
     width: 60px;
-    @media (max-width: 500px){
+
+    @media (max-width: 800px){
       height: 40px;
       width: 40px;
     }
@@ -50,15 +72,12 @@ const PlusImg = styled.img`
 const MinusImg = styled.img`
     height: 60px;
     width: 60px;
-    @media (max-width: 500px){
+    @media (max-width: 800px){
       height: 40px;
       width: 40px;
     }
 `;
-const LogoWrapper = styled.div`
-  position: absolute;
-  left: 0;
-`;
+
 
 const EditModeButton = styled.img`
     display: flex;
@@ -67,7 +86,8 @@ const EditModeButton = styled.img`
     align-items: center;
     justify-content: center;
     margin-left: 5px;
-    @media (max-width: 500px){
+
+    @media (max-width: 800px){
       height: 40px;
       width: 40px;
     }
@@ -90,7 +110,8 @@ export const ImportButtonLabel = styled.label`
   align-items: center;
   justify-content: center;
   margin-left: 5px;
-  @media (max-width: 500px){
+
+  @media (max-width: 800px){
     height: 40px;
     width: 40px;
   }
@@ -102,7 +123,8 @@ const ImportButtonIcon = styled.img`
   width: 60px;
   align-items: center;
   justify-content: center;
-  @media (max-width: 500px){
+
+  @media (max-width: 800px){
     height: 40px;
     width: 40px;
   }
@@ -115,7 +137,8 @@ const ExportButtonContainer = styled.img`
   align-items: center;
   justify-content: center;
   margin-left: 10px;
-  @media (max-width: 500px){
+  
+  @media (max-width: 800px){
     height: 40px;
     width: 40px;
   }
@@ -129,9 +152,7 @@ function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
 
   return (
     <NavBarContainer>
-      <LogoWrapper>
-        <img src={logo} alt="Wavy logo"/>
-      </LogoWrapper>
+      <Logo src={logo} alt="Wavy logo"/>
         <ButtonContainer>
           <ToggleModalButton onClick={() => setShowUploads(!showUploads)}>
             {
