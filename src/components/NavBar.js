@@ -146,7 +146,7 @@ const ExportButtonContainer = styled.img`
 
 function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
   function handleOnChange(e) {
-    importTimeLine();
+    importTimeLine(e.target.files));
     e.target.value = null;
   }
 
