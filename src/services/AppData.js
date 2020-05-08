@@ -14,6 +14,7 @@ AppData.prototype.onUpdate = function() {
 AppData.prototype.init = async function() {
     const data = await readAppData();
     if (data) {
+        this.clear();
         this.rebase(data);
     }
 }
@@ -35,7 +36,7 @@ AppData.prototype.delete = function(uid, log = true) {
 AppData.prototype.rebase = function(newAppData) {
     this.basedOn = newAppData.lastModified;
     this.fileObjs = newAppData.fileObjs;
-    for (let op in this.changeLog) {
+    for (let op of this.changeLog) {
         this[op.func](op.data, false);
     }
     this.changeLog = [];
