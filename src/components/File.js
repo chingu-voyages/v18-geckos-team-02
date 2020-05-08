@@ -71,6 +71,18 @@ const Link = styled.a`
     height: 100%;
 `;
 
+
+const FileNotFound = styled.div`
+    max-width: 100%;
+    display: grid;
+    place-items: center center;
+    background: ${props => props.theme.red};
+    color: ${props => props.theme.offWhite};
+    width: 300px;
+    height: 150px;
+    text-align: center;
+`;
+
 export default function File({fileObj, showTime, time, isMain}) {
     const [file, setFile] = useState(placeholder);
     const enableEditOptions = isMain;
@@ -89,11 +101,14 @@ export default function File({fileObj, showTime, time, isMain}) {
             let observer = new IntersectionObserver(entries => {
                 if (entries[0].isIntersecting) {
                     getFile(fileObj.fileRef).then(blob => {
-                        let url = "TODO import file not found image here";
+                        let url = null
                         if (blob) {
                             url = URL.createObjectURL(blob);
                         }
                         setFile(url);
+                        if (url === null) {
+                            fileObj.flagMissingData();
+                        }
                         observer.unobserve(ref.current);
                     }); 
                 }
@@ -101,7 +116,7 @@ export default function File({fileObj, showTime, time, isMain}) {
             observer.observe(ref.current); 
             return () => observer.unobserve(refCurrent);
         }
-    }, [ref, fileObj]);
+    }, [ref, fileObj, fileObj.fileMissing]);
 
     const DownloadWrapper = props => {
         const condenseSize = size => size < 1000 ? size+'B' : size < Math.pow(10, 6) ? (size/1000).toFixed(2)+'KB' : size < Math.pow(10, 9) ? (size/Math.pow(10, 6)).toFixed(2)+'MB' : (size/Math.pow(10, 9)).toFixed(2)+'GB';
@@ -117,7 +132,7 @@ ${fileObj.tag?.length > 0 ? 'tags: '+fileObj.tags.join(' ')+'\n' : ''}${fileObj.
                 {props.children}
             </Link>
         }
-        return props.children
+        return <FileNotFound>File Not Found! Please upload file: {fileObj.name}</FileNotFound>
     }
    
     if (fileObj) {

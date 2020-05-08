@@ -45,3 +45,6 @@ FileObj.prototype.setActiveDate = function(name, dateTime) {
     this.activeTimeStamp = name;
     this.timeStamps[name] = this.formatDate(dateTime);
 }
+FileObj.prototype.flagMissingData = function(isMissing = true) {
+    this.fileMissing = isMissing;
+}
