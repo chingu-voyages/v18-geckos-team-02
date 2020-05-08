@@ -15,6 +15,10 @@ const Note = styled(Wrapper)`
     background: ${props => props.theme.offWhite};
     min-height: 100%;
     padding: 10%;
+    color: ${props => props.theme.darkGrey};
+    & h1 {
+        color: ${props => props.theme.darkGrey};
+    }
 `;
 const FileIcon = styled.div`
     max-width: 100%;
@@ -58,6 +62,13 @@ const Time = styled.time`
     color: ${props => props.theme.orange};
     text-decoration: underline;
     text-decoration-color: ${props => props.theme.blue};
+    padding-top: 32px;
+`;
+
+const Link = styled.a`
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
 `;
 
 export default function File({fileObj, showTime, time, isMain}) {
@@ -93,10 +104,18 @@ export default function File({fileObj, showTime, time, isMain}) {
     }, [ref, fileObj]);
 
     const DownloadWrapper = props => {
+        const condenseSize = size => size < 1000 ? size+'B' : size < Math.pow(10, 6) ? (size/1000).toFixed(2)+'KB' : size < Math.pow(10, 9) ? (size/Math.pow(10, 6)).toFixed(2)+'MB' : (size/Math.pow(10, 9)).toFixed(2)+'GB';
+const info = `
+${fileObj.name} 
+lastModifed: ${fileObj.unFormatDate(fileObj.timeStamps.modified)} 
+${fileObj.timeStamps.user ? 'userSetTime: '+fileObj.unFormatDate(fileObj.timeStamps.user)+'\n' : ''}type: ${fileObj.type}
+${fileObj.tag?.length > 0 ? 'tags: '+fileObj.tags.join(' ')+'\n' : ''}${fileObj.size ? 'size: '+condenseSize(fileObj.size)+'\n' : ''}
+    
+`;
         if (props.enabled) {
-            return <a href={file} download={fileObj.name}>
+            return <Link title={info} href={file} download={fileObj.name}>
                 {props.children}
-            </a>
+            </Link>
         }
         return props.children
     }
@@ -105,8 +124,8 @@ export default function File({fileObj, showTime, time, isMain}) {
         return (
             <>
             <FileContainer ref={ref} >
-                {enableEditOptions && <time dateTime={time}>{time}</time>}
-                {isMain &&
+                {showTime && <Time dateTime={time}>{time}</Time>}
+                {enableEditOptions &&
                 <OptionsContainer className="edit-options"> 
                     <Options onClick={removeFile}>X</Options> 
                 </OptionsContainer> 
