@@ -40,7 +40,8 @@ async function importData(file) {
 async function exportData() {
     try {
         const blob = await exportDB(localDB);
-        return blob
+        const file = await new Blob([blob], {type: 'application/wavy'});
+        return file
     }
     catch (e) {
         errorHandler(e);
