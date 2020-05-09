@@ -10,9 +10,11 @@ import {exportTimeLine, importTimeLine} from '../services/dataController';
 
 const NavBarContainer = styled.div`
     display: grid;
-    grid-template-columns: 1fr 200px 1fr;
-    justify-content: center;
-    width: 100vw;
+    grid-template-columns: 1fr auto 5fr auto 5fr auto 1fr;
+    grid-template-areas: '. logo . buttons . importexport .';
+    justify-content: space-between;
+    place-items: center center;
+    width: 100%;
     height: 70px;
     background: #1B71D5;
     opacity: 0.7;
@@ -24,14 +26,12 @@ const Logo = styled.img`
   padding-left: 30px;
   width: 230px;
   height: 50px;
-  align-self: center;
-
+  grid-area: logo;
   @media (max-width: 800px){
     width: 70px;
     height: 30px;
     align-self: center;
     padding-left: 5px;
-
   }
 `;
 
@@ -42,8 +42,8 @@ const ButtonContainer = styled.div`
     justify-content: center;
     align-items: center;
     justify-self: center;
-    border: 1px solid green;
     width: auto;
+    grid-area: buttons;
 `;
 
 const ToggleModalButton = styled.div`
@@ -93,7 +93,13 @@ const EditModeButton = styled.img`
     }
 `;
 
-export const ImportButtonInput = styled.input`
+const ImportExportTools = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  grid-area: importexport;
+`;
+
+const ImportButtonInput = styled.input`
   border: 0;
   clip: rect(0, 0, 0, 0);
   height: 1px;
@@ -104,7 +110,7 @@ export const ImportButtonInput = styled.input`
   width: 1px;
 `;
 
-export const ImportButtonLabel = styled.label`
+const ImportButtonLabel = styled.label`
   height: 60px;
   width: 60px;
   align-items: center;
@@ -180,22 +186,24 @@ function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
   return (
     <NavBarContainer>
       <Logo src={logo} alt="Wavy logo"/>
-        <ButtonContainer>
-          <ToggleModalButton onClick={() => setShowUploads(!showUploads)}>
-            {
-              !showUploads ?
-              <PlusImg src={plusSign} alt="toggle upload modal open button" /> : 
-              <MinusImg  src={minusSign} alt="toggle upload modal closed button" />  
-            } 
-          </ToggleModalButton>
-          <EditModeButton src={EditButton} onClick={() => setEditMode(!editMode)} />
-          <ImportButtonInput type="file" id="file" accept=".wavy" onChange={handleUpload} />
-          <ImportButtonLabel htmlFor="file">
-            <ImportButtonIcon src={ImportButton} alt="import a timeline file" />
-          </ImportButtonLabel> 
-          <ExportButtonContainer src={ExportButton} onClick={startDownload} alt="export a timline file" />
-          <HiddenDownloadLink ref={downloadLinkRef} />
-        </ButtonContainer>
+      <ButtonContainer>
+        <ToggleModalButton onClick={() => setShowUploads(!showUploads)}>
+          {
+            !showUploads ?
+            <PlusImg src={plusSign} alt="toggle upload modal open button" /> : 
+            <MinusImg  src={minusSign} alt="toggle upload modal closed button" />  
+          } 
+        </ToggleModalButton>
+        <EditModeButton src={EditButton} onClick={() => setEditMode(!editMode)} />
+      </ButtonContainer>
+      <ImportExportTools>
+        <ImportButtonInput type="file" id="file" accept=".wavy" onChange={handleUpload} />
+        <ImportButtonLabel htmlFor="file">
+          <ImportButtonIcon src={ImportButton} alt="import a timeline file" />
+        </ImportButtonLabel> 
+        <ExportButtonContainer src={ExportButton} onClick={startDownload} alt="export a timline file" />
+        <HiddenDownloadLink ref={downloadLinkRef} />
+      </ImportExportTools>
     </NavBarContainer>
   );
 }

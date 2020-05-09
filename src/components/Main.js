@@ -9,6 +9,7 @@ const Wrapper = styled.main`
   place-items: center center;
   margin: 2vw;
   margin-top: 0;
+  padding-bottom: 200px;
   & section>div {
     margin: 8px;
   }
