@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import {getFile, removeFiles} from '../services/dataController';
 import placeholder from '../assets/placeholder.svg';
+import trashIcon from '../assets/trashIcon.svg';
 
 const Wrapper = styled.div`
     max-width: 100%;
@@ -30,15 +31,14 @@ const FileIcon = styled.div`
     height: 150px;
 `;
 
-const Options = styled.div`
-    background: none;
-    position: absolute;
+const TrashButton = styled.button`
     background: none;
     outline: none;
-    border: 1px solid ${props => props.theme.greyBlue};
-    font-size: 1rem;
-    padding: 0.1rem 0.5rem;
-  
+    border: none;
+    & img {
+        width: 50px;
+        height: 50px;
+    }
     &:hover {
       color: ${props => props.theme.offWhite};
       background: ${props => props.theme.red};
@@ -46,10 +46,10 @@ const Options = styled.div`
 `;
 
 const OptionsContainer = styled.div`
-    display: flex;
-    position: relative;
-    flex-direction: row;
-    justify-content: flex-end;
+    width: 50px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 `;
 
 const FileContainer = styled.div`
@@ -57,7 +57,7 @@ const FileContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     max-width: 50vw;
-
+    position: relative;
     @media (max-width: 1000px){
         max-width: 70vw;
     }
@@ -150,7 +150,9 @@ ${fileObj.tag?.length > 0 ? 'tags: '+fileObj.tags.join(' ')+'\n' : ''}${fileObj.
                 {showTime && <Time dateTime={time}>{time}</Time>}
                 {enableEditOptions &&
                 <OptionsContainer className="edit-options"> 
-                    <Options onClick={removeFile}>&times;</Options> 
+                    <TrashButton onClick={removeFile}>
+                        <img src={trashIcon} alt='x' />
+                    </TrashButton> 
                 </OptionsContainer> 
                 }
                 {file === null ? <FileNotFound>File Not Found! Please upload file: {fileObj.name}</FileNotFound> :

@@ -4,6 +4,7 @@ import DateAndTagsEditor from './DateAndTagsEditor';
 import { uploadFuncs } from '../services/dataController';
 import AddNoteModal from './AddNoteModal';
 import completionTick from '../assets/completionTick.svg';
+import trashIcon from '../assets/trashIcon.svg';
 
 const { add, submit, subscribe, deleteUpload, unsubscribe } = uploadFuncs;
 
@@ -68,13 +69,12 @@ const FileName = styled.p`
   flex-basis: 50%;
 `;
 
-const DeleteButton = styled.button`
-  background: none;
-  outline: none;
-  border: 1px solid ${props => props.theme.greyBlue};
-  font-size: 2rem;
-  padding: 0.1rem 0.5rem;
-
+const DeleteButton = styled.div`
+  border-radius: 5px;
+  & img {
+    width: 30px;
+    height: 30px;
+  }
   &:hover {
     color: ${props => props.theme.offWhite};
     background: ${props => props.theme.red};
@@ -90,10 +90,10 @@ const GlobalWrapper = styled.div`
 const Button = styled.button`
   padding: 0.8rem;
   border: none; 
-  width: ${props => props.name === "cancel" ? "30%" : "70%"};
+  outline: none;
+  width: 70%;
   color: ${props => props.theme.offWhite};
-  background: ${props => props.name === "cancel" ? props.theme.red : props.theme.blue};
-  cursor: ${props => props.disabled === true ? "not-allowed": "pointer"};
+  background: ${props => props.theme.blue};
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 `;
 
@@ -192,14 +192,12 @@ function UploadModal({close}) {
           <FileList>
             {uploads.map(upload =>
               <FileItem key={upload.uid}>
-              <FileName>{getShortName(upload.file.name).toLowerCase()}</FileName>
+                <FileName>{getShortName(upload.file.name).toLowerCase()}</FileName>
                 <DateAndTagsEditor {...{ uploads: [upload] }}/>
-                <DeleteButton
-                  onClick={ () => deleteUpload(upload.uid) }
-                  aria-label="Delete upload">
-                  &times;
-              </DeleteButton>
-            </FileItem>)}
+                <DeleteButton onClick={ () => deleteUpload(upload.uid) } aria-label="Delete upload">
+                  <img src={trashIcon} alt='x' />
+                </DeleteButton>
+              </FileItem>)}
           </FileList>
           {uploads.length > 1 && <GlobalWrapper><DateAndTagsEditor  {...{ uploads }} isGlobal></DateAndTagsEditor></GlobalWrapper>}
         </AddedFiles>
