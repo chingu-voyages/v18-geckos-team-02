@@ -1,8 +1,7 @@
 import AppData from './AppData';
 import FileObj from './FileObj';
 import errorHandler from './errorHandler';
-import { writeFile, readFile, writeAppData, importData, exportData as exportTimeLine, wipeAllData } from './localStorage';
-import Subscriber from './Subscriber';
+import { writeFile, readFile, writeAppData, importData, exportData as exportTimeLine } from './localStorage';
 import Subscription from './Subscription';
 
 const appData = new AppData(handleFileObjsChange);
@@ -81,30 +80,33 @@ function getFileObjs(from = '0', to = '0') {
 }
 
 async function addFiles(uploadsArr) {
-    let fileObj;
-    for (let upload of uploadsArr) {
-        const ref = makeFileRef(upload.file);
-        const {name, text = '', type} = upload.file;
-        const checkedType = checkFileType(type, name);
-        if (!upload.hasOwnProperty('timeStamps')) {
-            upload.timeStamps = {};
-        } 
-        upload.timeStamps.modified = upload.file.lastModified || Date.now();
-        fileObj = new FileObj({...upload, name, text, fileRef: ref, type: checkedType, size: upload.file.size});
-        const activeDate = fileObj.getActiveDate();
-        const fObjsWithSameFile = Object.values(appData.fileObjs).filter(fObj => fObj.fileRef === ref);
-        if (fObjsWithSameFile.filter(fObj => fObj.getActiveDate() === activeDate).length === 0) {
-            appData.fileObjs[fileObj.uid] = fileObj;
+    if (uploadsArr.length > 0) {
+        let fileObj;
+        for (let upload of uploadsArr) {
+            const ref = makeFileRef(upload.file);
+            const {name, text = '', type} = upload.file;
+            const checkedType = checkFileType(type, name);
+            if (!upload.hasOwnProperty('timeStamps')) {
+                upload.timeStamps = {};
+            } 
+            upload.timeStamps.modified = upload.file.lastModified || Date.now();
+            fileObj = new FileObj({...upload, name, text, fileRef: ref, type: checkedType, size: upload.file.size});
+            const activeDate = fileObj.getActiveDate();
+            const fObjsWithSameFile = Object.values(appData.fileObjs).filter(fObj => fObj.fileRef === ref);
+            if (fObjsWithSameFile.filter(fObj => fObj.getActiveDate() === activeDate).length === 0) {
+                appData.fileObjs[fileObj.uid] = fileObj;
+            }
+            if (fObjsWithSameFile.filter(fObj => !fObj.fileMissing).length < 1) {
+                fObjsWithSameFile.forEach(fObj => fObj.fileMissing && fObj.flagMissingData(false));
+                await writeFile(ref, upload.file);
+            }
         }
-        if (fObjsWithSameFile.filter(fObj => !fObj.fileMissing).length < 1) {
-            fObjsWithSameFile.forEach(fObj => fObj.fileMissing && fObj.flagMissingData(false));
-            await writeFile(ref, upload.file);
-        }
+        await writeAppData(appData);
+        setActiveNode(fileObj);
+        setNodesList();
+        return true
     }
-    await writeAppData(appData);
-    setActiveNode(fileObj);
-    setNodesList();
-    return true
+    return false
 }
 
 async function getFile(fileRef) {

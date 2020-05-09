@@ -3,18 +3,17 @@ import Main from './components/Main';
 import Timeline from './components/Timeline';
 import NavBar from './components/NavBar';
 import UploadModal from './components/UploadModal';
-import styled, {ThemeProvider} from 'styled-components';
+import {ThemeProvider} from 'styled-components';
 import GlobalStyle, {theme} from './theme/globalStyles';
 
 function App() {
-  const [appTheme, setAppTheme] = useState(theme);
   const [editMode, setEditMode] = useState(false);
   const [showUploads, setShowUploads] = useState(false);
 
   return (
     <>
       <GlobalStyle />
-      <ThemeProvider theme={appTheme}>
+      <ThemeProvider theme={theme}>
         {showUploads && <UploadModal close={() => setShowUploads(false)} />}
         <Main {...{editMode, showUploads, setShowUploads}} />
         <nav>

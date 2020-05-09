@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import EditorIcon from '../assets/dateAndTagsIcon.svg';
 import { uploadFuncs } from '../services/dataController';
@@ -179,7 +179,7 @@ function DateAndTagsEditor({ uploads, isGlobal = false }) {
               </Label> 
               <LineBreak />
           <TagLists>
-            {!global && tags.map(tag => <Tag key={tag}>{tag}<DeleteBtn ariaLabel="Delete tag" onClick = {() => removeTag(tag)}>&times;</DeleteBtn></Tag>)}
+            {tags.map(tag => <Tag key={tag}>{tag}<DeleteBtn ariaLabel="Delete tag" onClick = {() => removeTag(tag)}>&times;</DeleteBtn></Tag>)}
             </TagLists>
         </EditorForm>
       }
