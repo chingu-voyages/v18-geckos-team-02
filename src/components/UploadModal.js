@@ -188,7 +188,6 @@ function UploadModal({close}) {
         <AddedFiles>
           <ModalTitle>{uploads.length < 1 ? "Upload some file(s)" : "Uploads"}</ModalTitle>
           <FileList>
-            {uploads[0] && `${uploads[0].file.lastModified} ${uploads[0].file.type}`}
             {uploads.map(upload =>
               <FileItem key={upload.uid}>
                 <FileName>{getShortName(upload.file.name).toLowerCase()}</FileName>
