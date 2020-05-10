@@ -82,7 +82,7 @@ function DateAndTagsEditor({ uploads, isGlobal = false }) {
   const [values, setValues] = useState({
     activeTimeStamp: uploads.activeTimeStamp || "modified",
     user: (uploads.timeStamps && uploads.timeStamps.user) || formatForyyyyMMdd(Date.now()),
-    modified: (uploads[0].file && uploads[0].file.lastModified) || (uploads.timeStamps && uploads.timeStamps.modified) || Date.now(),
+    modified: uploads[0].file.lastModified || (uploads.timeStamps && uploads.timeStamps.modified) || Date.now(),
     time: formatForHHMM((uploads.timeStamps && uploads.timeStamps.user) || Date.now()) || '00:00',
     tags: uploads.tags || []
   });

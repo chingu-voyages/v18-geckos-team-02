@@ -167,8 +167,6 @@ const Img = styled.img`
   padding: none;
 `;
 
-
-
 const getShortName = fileName =>  fileName.length <= 23 ? fileName : fileName.substr(0, 20) + "...";
 
 function UploadModal({close}) {
@@ -180,8 +178,8 @@ function UploadModal({close}) {
   }, []);
 
   function handleOnChange(e) {
-    add(e.target.files);
-    e.target.value = null;
+    const files = e.target.files;
+    add(files);
   }
 
   const modal = (<>
@@ -190,6 +188,7 @@ function UploadModal({close}) {
         <AddedFiles>
           <ModalTitle>{uploads.length < 1 ? "Upload some file(s)" : "Uploads"}</ModalTitle>
           <FileList>
+            {uploads[0] && `${uploads[0].file.lastModified} ${uploads[0].file.type}`}
             {uploads.map(upload =>
               <FileItem key={upload.uid}>
                 <FileName>{getShortName(upload.file.name).toLowerCase()}</FileName>
@@ -215,8 +214,6 @@ function UploadModal({close}) {
       </UploadModalWrapper>
     </ModalWindow>
   </>);
-
-  
 
   return noteModalOpen ? <AddNoteModal close={() => setNoteModalOpen(false)}/> : modal;
 }

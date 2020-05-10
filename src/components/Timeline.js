@@ -157,6 +157,7 @@ const Bar = styled(Gap)`
 `;
 const ExpandButton = styled.div`
 position:fixed;
+cursor: pointer;
 bottom: 94px;
 right: 40px;
 width: 50px;

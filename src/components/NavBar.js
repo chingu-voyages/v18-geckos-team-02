@@ -52,7 +52,7 @@ const ToggleModalButton = styled.div`
     width: 60px;
     align-items: center;
     justify-content: center;
-
+    cursor: pointer;
     @media (max-width: 800px){
       height: 40px;
       width: 40px;
@@ -62,7 +62,6 @@ const ToggleModalButton = styled.div`
 const PlusImg = styled.img`
     height: 60px;
     width: 60px;
-
     @media (max-width: 800px){
       height: 40px;
       width: 40px;
@@ -86,7 +85,7 @@ const EditModeButton = styled.img`
     align-items: center;
     justify-content: center;
     margin-left: 5px;
-
+    cursor: pointer;
     @media (max-width: 800px){
       height: 40px;
       width: 40px;
@@ -129,7 +128,7 @@ const ImportButtonIcon = styled.img`
   width: 60px;
   align-items: center;
   justify-content: center;
-
+  cursor: pointer;
   @media (max-width: 800px){
     height: 40px;
     width: 40px;
@@ -143,7 +142,7 @@ const ExportButtonContainer = styled.img`
   align-items: center;
   justify-content: center;
   margin-left: 10px;
-  
+  cursor: pointer;
   @media (max-width: 800px){
     height: 40px;
     width: 40px;
@@ -194,7 +193,7 @@ function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
             <MinusImg  src={minusSign} alt="toggle upload modal closed button" />  
           } 
         </ToggleModalButton>
-        <EditModeButton src={EditButton} onClick={() => setEditMode(!editMode)} />
+        <EditModeButton alt="Edit" src={EditButton} onClick={() => setEditMode(!editMode)} />
       </ButtonContainer>
       <ImportExportTools>
         <ImportButtonInput type="file" id="file" accept=".wavy" onChange={handleUpload} />
