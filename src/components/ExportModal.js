@@ -25,16 +25,43 @@ const StatusSection = styled.div`
 `;
 
 const TitleSection = styled.div`
+    display: flex;
+    flex-direction: column;
     width: inherit;
     height: 100px;
     display: flex;
     align-items: center;
     justify-content: center;
+    display: flex;
+    color: ${props => props.theme.orange};
+`;
+
+const Input = styled.input`
+    background: ${props => props.theme.lightBlue};
+    width: 60%;
+    height: 30px;
+    margin-top: 10px;
+    border: 1px solid ${props => props.theme.darkBlue}; 
+    outline: none;
+
+    ::placeholder {
+        color: ${props => props.theme.orange};
+        opacity: 1; 
+      }
+      
+      :-ms-input-placeholder  {
+        color: ${props => props.theme.orange};
+      }
+      
+      ::-ms-input-placeholder  {
+        color: ${props => props.theme.orange};
+      }
+
 `;
 
 const ButtonSection = styled.div`
     width: inherit;
-    height: 50px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,16 +69,17 @@ const ButtonSection = styled.div`
 
 const Button = styled.button`
     width: 60%;
-    height: 30px;
+    height: 40px;
     background: ${props => props.theme.blue};
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    border: none; 
+    border: none;
     outline: none;
 `;
 
 const Tick = styled.img`
-    width: 25px;
-    height: 25px
+    width: 30px;
+    height: 30px;
+
 `;
 
 function ExportModal () {
@@ -83,7 +111,9 @@ function ExportModal () {
     return (
             <ExportModalWindow>
                 <StatusSection>Loading.....</StatusSection>
-                <TitleSection>Title </TitleSection>
+                <TitleSection>Give your creation a title.... 
+                <Input type="text" placeholder=" Title..."></Input>
+                </TitleSection>
                 <ButtonSection>
                     <Button onClick={startDownload}  alt ="export timeline button" >
                         <Tick src={completionTick} />
