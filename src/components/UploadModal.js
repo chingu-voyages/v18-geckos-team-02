@@ -167,8 +167,6 @@ const Img = styled.img`
   padding: none;
 `;
 
-
-
 const getShortName = fileName =>  fileName.length <= 23 ? fileName : fileName.substr(0, 20) + "...";
 
 function UploadModal({close}) {
@@ -180,8 +178,8 @@ function UploadModal({close}) {
   }, []);
 
   function handleOnChange(e) {
-    add(e.target.files);
-    e.target.value = null;
+    const files = e.target.files;
+    add(files);
   }
 
   const modal = (<>
@@ -215,8 +213,6 @@ function UploadModal({close}) {
       </UploadModalWrapper>
     </ModalWindow>
   </>);
-
-  
 
   return noteModalOpen ? <AddNoteModal close={() => setNoteModalOpen(false)}/> : modal;
 }
