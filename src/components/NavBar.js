@@ -149,34 +149,11 @@ const ExportButtonContainer = styled.img`
   }
 `;
 
-const HiddenDownloadLink = styled.a`
-  display: none;
-`;
+// const HiddenDownloadLink = styled.a`
+//   display: none;
+// `;
 
 function NavBar({showUploads, setShowUploads, editMode, setEditMode, showExports, setShowExports}) {
-  const [downloadStatus, setDownloadStatus] = useState(null);
-  const downloadLinkRef = useRef();
-  
-  async function startDownload(e) {
-    if (!downloadStatus && downloadStatus !== 'inprogress') {
-      setDownloadStatus('inprogress');
-      try {
-        const file = await exportTimeLine();
-        if (file) {
-          setDownloadStatus(null);
-          const url = await URL.createObjectURL(file);
-          downloadLinkRef.current.href = url;
-          downloadLinkRef.current.download = Date.now().toString()+'.wavy';
-          downloadLinkRef.current.click();
-        }
-      }
-      catch (e) {
-        setDownloadStatus(null);
-        console.error(e);
-      }
-    }
-    return true
-  }
 
   function handleUpload(e) {
     importTimeLine(e.target.files[0]);
@@ -200,9 +177,9 @@ function NavBar({showUploads, setShowUploads, editMode, setEditMode, showExports
         <ImportButtonLabel htmlFor="file">
           <ImportButtonIcon src={ImportButton} alt="import a timeline file" />
         </ImportButtonLabel> 
-        <ExportButtonContainer src={ExportButton} onClick={() => setShowExports(!showExports) } alt="export a timline file" />
+        <ExportButtonContainer src={ExportButton} onClick={() => setShowExports(!showExports) } alt="export a timeline file" />
         
-        <HiddenDownloadLink ref={downloadLinkRef} />
+        {/* <HiddenDownloadLink ref={downloadLinkRef} /> */}
       </ImportExportTools>
     </NavBarContainer>
   );

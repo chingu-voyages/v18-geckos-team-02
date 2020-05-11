@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { exportTimeLine } from '../services/dataController';
 import completionTick from '../assets/completionTick.svg';
@@ -56,13 +56,37 @@ const Tick = styled.img`
 
 function ExportModal () {
 
+    const [downloadStatus, setDownloadStatus] = useState(null);
+    const downloadLinkRef = useRef();
+    
+    async function startDownload(e) {
+      if (!downloadStatus && downloadStatus !== 'inprogress') {
+        setDownloadStatus('inprogress');
+        try {
+          const file = await exportTimeLine();
+          if (file) {
+            setDownloadStatus(null);
+            const url = await URL.createObjectURL(file);
+            downloadLinkRef.current.href = url;
+            downloadLinkRef.current.download = Date.now().toString()+'.wavy';
+            downloadLinkRef.current.click();
+          }
+        }
+        catch (e) {
+          setDownloadStatus(null);
+          console.error(e);
+        }
+      }
+      return true
+    }
+
     return (
             <ExportModalWindow>
                 <StatusSection>Loading.....</StatusSection>
                 <TitleSection>Title </TitleSection>
                 <ButtonSection>
-                    <Button>
-                        <Tick src={completionTick} alt ="export timeline button" />
+                    <Button onClick={startDownload}  alt ="export timeline button" >
+                        <Tick src={completionTick} />
                     </Button>
                 </ButtonSection>
             </ExportModalWindow>
