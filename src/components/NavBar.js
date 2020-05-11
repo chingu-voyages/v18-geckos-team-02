@@ -153,7 +153,7 @@ const HiddenDownloadLink = styled.a`
   display: none;
 `;
 
-function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
+function NavBar({showUploads, setShowUploads, editMode, setEditMode, showExports, setShowExports}) {
   const [downloadStatus, setDownloadStatus] = useState(null);
   const downloadLinkRef = useRef();
   
@@ -200,7 +200,8 @@ function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
         <ImportButtonLabel htmlFor="file">
           <ImportButtonIcon src={ImportButton} alt="import a timeline file" />
         </ImportButtonLabel> 
-        <ExportButtonContainer src={ExportButton} onClick={startDownload} alt="export a timline file" />
+        <ExportButtonContainer src={ExportButton} onClick={() => setShowExports(!showExports) } alt="export a timline file" />
+        
         <HiddenDownloadLink ref={downloadLinkRef} />
       </ImportExportTools>
     </NavBarContainer>
