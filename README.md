@@ -2,7 +2,7 @@
 A file-sorting app that takes dates from metadata to automatically produce a visual timeline.
 
 ## Overview
-**Wavy** is a break away from the dated and boring file storage system. The app uses a timestamp algorithm to store and retrieve files, delivering a fast and efficient way to sort through records. A User can upload or drag-in file(s) on their timeline, and the app organizes the files into a visually appealing series of events. Wavy has a 'share' feature that enables sharing of files amongst friends.
+**Wavy** is a break away from the dated and boring file storage system. The app uses a timestamp algorithm to organise files, delivering a fast and efficient way to sort through records. A User can upload files or notes their timeline, and the app organizes the files into a visually appealing series of events which can then be exported.
 
 [Checkout the demo](https://chingu-voyages.github.io/v18-geckos-team-02/)
 
