@@ -131,8 +131,8 @@ export default function File({fileObj, showTime, time, isMain}) {
         const condenseSize = size => size < 1000 ? size+'B' : size < Math.pow(10, 6) ? (size/1000).toFixed(2)+'KB' : size < Math.pow(10, 9) ? (size/Math.pow(10, 6)).toFixed(2)+'MB' : (size/Math.pow(10, 9)).toFixed(2)+'GB';
 const info = `
 ${fileObj.name} 
-lastModifed: ${fileObj.unFormatDate(fileObj.timeStamps.modified)} 
-${fileObj.timeStamps.user ? 'userSetTime: '+fileObj.unFormatDate(fileObj.timeStamps.user)+'\n' : ''}type: ${fileObj.type}
+lastModifed: ${fileObj.timeStamps.modified} 
+${fileObj.timeStamps.user ? 'userSetTime: '+fileObj.timeStamps.user+'\n' : ''}type: ${fileObj.type}
 ${fileObj.tag?.length > 0 ? 'tags: '+fileObj.tags.join(' ')+'\n' : ''}${fileObj.size ? 'size: '+condenseSize(fileObj.size)+'\n' : ''}
     
 `;

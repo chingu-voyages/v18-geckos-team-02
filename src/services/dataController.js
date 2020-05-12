@@ -35,7 +35,7 @@ function setNodesList() {
     const fileObjs = Object.values(appData.fileObjs);
     const nodes = {};
     for (let fileObj of fileObjs) {
-        const path = getPath(fileObj.getActiveDate().substr(0, 8));
+        const path = getPath(fileObj.getActiveDate().substr(0, 10).replace(/-/g, ''));
         let head = nodes;
         for (let key of path) {
             if (!head.hasOwnProperty(key)) {
