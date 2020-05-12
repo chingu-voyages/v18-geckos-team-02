@@ -114,6 +114,14 @@ async function addFiles(uploadsArr) {
     return false
 }
 
+async function editFiles(fileObjs) {
+    if (fileObjs.length > 0) {
+        for (let fileObj of fileObjs) {
+            appData.update(fileObj);
+        }
+    }
+}
+
 async function getFile(fileRef) {
     try {
         let file = await readFile(fileRef);

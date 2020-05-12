@@ -97,7 +97,8 @@ function DateAndTagsEditor({ uploads, isGlobal = false }) {
         if (cleanedValue !== "") {
           const newTags = [...new Set([...tags, cleanedValue])];
           setTags(newTags);
-          update(uids, { tags: newTags });
+          uploads.forEach(upload => upload.tags = newTags);
+          
         }
         value = '';
       }
@@ -107,23 +108,33 @@ function DateAndTagsEditor({ uploads, isGlobal = false }) {
       setValues({ ...values, user: value, activeTimeStamp: 'user'});
       const userDatePlusTime = formatForyyyyMMdd(value)+' '+formatForHHMM(values['time']);
         if (userDatePlusTime) {
-        update(uids, {activeTimeStamp: 'user', timeStamps: { user: userDatePlusTime }});
+          uploads.forEach(upload => {
+            upload.activeTimeStamp = 'user';
+            upload.timeStamps.user = userDatePlusTime;
+          });
       }
     }
     else if (name === 'time') {
       setValues({ ...values, time: value });
       const userDatePlusTime = formatForyyyyMMdd(values['user'])+' '+formatForHHMM(value);
       if (userDatePlusTime) {
-        update(uids, {timeStamps: { user: userDatePlusTime }});
+        uploads.forEach(upload => {
+          upload.activeTimeStamp = 'user';
+          upload.timeStamps.user = userDatePlusTime;
+        });
       }
     }
     else if (name === 'activeTimeStamp') {
       setValues({ ...values, activeTimeStamp: value });
       update(uids, {activeTimeStamp: value});
       if (value === 'user') {
-        update(uids, {timeStamps: { user: values.user }});
+        uploads.forEach(upload => {
+          upload.activeTimeStamp = 'user';
+          upload.timeStamps.user = values.user;
+        });
       } 
     } 
+    update(uploads);
   }
 
   return (
