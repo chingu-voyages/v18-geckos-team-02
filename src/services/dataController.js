@@ -15,7 +15,7 @@ function setActiveNode(fileObj) {
     if (fileObj && fileObj.__proto__.hasOwnProperty('getActiveDate')) {
         const fileObjDate = fileObj.getActiveDate();
         if (fileObjDate) {
-            activeNode = fileObjDate.substr(0, 8);
+            activeNode = fileObjDate.substr(0, 10);
             setActiveFileObjs();
         }
     }
@@ -56,12 +56,13 @@ function setNodesList() {
 let activeFileObjs = [];
 const fileObjsSubcription = new Subscription();
 function setActiveFileObjs() {
+    if (Object.keys(appData.fileObjs).length > 0) {
     if (!activeNode) {
         setToLatestNode();
     }
     else {
-        let from = activeNode+'000000';
-        let to = activeNode+'235959';
+            let from = activeNode+' 00:00:00';
+            let to = activeNode+' 23:59:59';
         activeFileObjs = getFileObjs(from, to);
         if (activeFileObjs.length > 0) {
             fileObjsSubcription.update(activeFileObjs);
@@ -70,6 +71,10 @@ function setActiveFileObjs() {
             fileObjsSubcription.update([]);
             setToLatestNode();
         }
+    }
+}
+    else {
+        fileObjsSubcription.update([]);
     }
 }
 function getFileObjs(from = '0', to = '0') {
