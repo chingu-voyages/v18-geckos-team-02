@@ -80,11 +80,11 @@ function DateAndTagsEditor({ uploads, isGlobal = false }) {
   const uids = uploads.map(upload => upload.uid);
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
-    activeTimeStamp: uploads.activeTimeStamp || "modified",
-    user: (uploads.timeStamps && uploads.timeStamps.user) || formatForyyyyMMdd(Date.now()),
-    modified: uploads[0].file.lastModified || (uploads.timeStamps && uploads.timeStamps.modified) || Date.now(),
-    time: formatForHHMM((uploads.timeStamps && uploads.timeStamps.user) || Date.now()) || '00:00',
-    tags: uploads.tags || []
+    activeTimeStamp: uploads[0].activeTimeStamp,
+    user: uploads[0].timeStamps.user || uploads[0].timeStamps.modified,
+    modified: uploads[0].timeStamps.modified,
+    time: formatForHHMM(uploads[0].timeStamps.user || uploads[0].timeStamps.modified),
+    tags: uploads[0].tags
   });
   const [tags, setTags] = useState([...new Set(uploads.map(upload => upload.tag).filter(tag => tag))]);
   const removeTag = tag => setTags( [...tags.slice(0, tags.indexOf(tag)), ...tags.slice(tags.indexOf(tag)+1)] );
