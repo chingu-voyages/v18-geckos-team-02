@@ -8,39 +8,44 @@ const ExportModalWindow = styled.div`
     flex-direction: column;
     justify-items: center;
     width: 200px;
-    height: 200px;
+    height: 160px;
     background: ${props => props.theme.lightGrey};
     position: fixed;
     bottom: 180px;
     float: right;
     right: 30px;
-    // border: 1px solid red;
 `;
 
-const StatusSection = styled.div`
+const TitleArea = styled.div`
     width: inherit;
     height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
-    // border: 1px solid red;
+    color: ${props => props.theme.orange};
+    text-decoration: underline;
+    text-decoration-color: ${props => props.theme.blue};
+    font-size: 18px;
+    font-weight: 800;
 `;
 
-const TitleSection = styled.div`
+const ActionArea = styled.div`
     display: flex;
     flex-direction: column;
     width: inherit;
-    height: 80px;
-    display: flex;
+    height: 140px;
     align-items: center;
-    // justify-content: center;
-    display: flex;
+    padding-top: 20px;
     color: ${props => props.theme.orange};
-    // border: 1px solid red;
-    margin-bottom: 10px;
-    padding-top: 5px;
+`;
 
+const InputSection = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
 `;
 
 const Input = styled.input`
@@ -50,6 +55,7 @@ const Input = styled.input`
     margin-top: 10px;
     border: 1px solid ${props => props.theme.darkBlue}; 
     outline: none;
+    margin-right: 5px;
 
     ::placeholder {
         color: ${props => props.theme.orange};
@@ -63,30 +69,27 @@ const Input = styled.input`
       ::-ms-input-placeholder  {
         color: ${props => props.theme.orange};
       }
-
-`;
-
-const ButtonSection = styled.div`
-    width: inherit;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    // border: 1px solid red;
 `;
 
 const Button = styled.button`
-    width: 60%;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     background: ${props => props.theme.blue};
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     border: none;
     outline: none;
+    position: relative;
+    top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
 `;
 
 const Tick = styled.img`
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
+
 `;
 
 const HiddenDownloadLink = styled.a`
@@ -121,16 +124,16 @@ function ExportModal () {
 
     return (
             <ExportModalWindow>
-                <StatusSection>... of files ready</StatusSection>
-                <TitleSection>Give your creation a title.... 
-                  <Input type="text" placeholder=" Title..."></Input>
-                </TitleSection>
-                <ButtonSection>
+                <TitleArea>Export your Timeline</TitleArea>
+                <ActionArea>Give your creation a title.... 
+                  <InputSection>
+                    <Input type="text" placeholder=" Title..."></Input>
                     <Button onClick={startDownload}  alt ="export timeline button" >
-                        <Tick src={completionTick} />
+                          <Tick src={completionTick} />
                     </Button>
-                </ButtonSection>
-                <HiddenDownloadLink ref={downloadLinkRef} />
+                  </InputSection>
+                  <HiddenDownloadLink ref={downloadLinkRef} />
+                </ActionArea>
             </ExportModalWindow>
     );
 };
