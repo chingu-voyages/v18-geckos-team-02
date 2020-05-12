@@ -40,7 +40,7 @@ const ActionArea = styled.div`
     color: ${props => props.theme.orange};
 `;
 
-const InputSection = styled.div`
+const InputSection = styled.form`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -71,7 +71,7 @@ const Input = styled.input`
       }
 `;
 
-const Button = styled.button`
+const Button = styled.input`
     width: 30px;
     height: 30px;
     background: ${props => props.theme.blue};
@@ -100,6 +100,8 @@ function ExportModal () {
 
     const [downloadStatus, setDownloadStatus] = useState(null);
     const downloadLinkRef = useRef();
+
+    const [title, setTitle] = useState('');
     
     async function startDownload(e) {
       if (!downloadStatus && downloadStatus !== 'inprogress') {
@@ -110,7 +112,11 @@ function ExportModal () {
             setDownloadStatus(null);
             const url = await URL.createObjectURL(file);
             downloadLinkRef.current.href = url;
-            downloadLinkRef.current.download = Date.now().toString()+'.wavy';
+            if (title) {
+              downloadLinkRef.current.download = title+'.wavy' 
+            } else {
+              downloadLinkRef.current.download = Date.now().toString()+'.wavy';
+            }
             downloadLinkRef.current.click();
           }
         }
@@ -122,17 +128,27 @@ function ExportModal () {
       return true
     }
 
+    function handleSubmit(e) {
+      startDownload();
+    }
+
+
     return (
             <ExportModalWindow>
                 <TitleArea>Export your Timeline</TitleArea>
                 <ActionArea>Give your creation a title.... 
-                  <InputSection>
-                    <Input type="text" placeholder=" Title..."></Input>
-                    <Button onClick={startDownload}  alt ="export timeline button" >
-                          <Tick src={completionTick} />
-                    </Button>
+                  <InputSection onSubmit={handleSubmit}>
+
+                    <Input 
+                      type="text" 
+                      placeholder=" Title..." 
+                      onChange={(e) => setTitle(e.target.value) }
+                      >
+                    </Input>
+                    <Button type="submit" value={"X"} alt ="export timeline button"></Button>
+                    <HiddenDownloadLink ref={downloadLinkRef} />
                   </InputSection>
-                  <HiddenDownloadLink ref={downloadLinkRef} />
+
                 </ActionArea>
             </ExportModalWindow>
     );
