@@ -11,29 +11,36 @@ const ExportModalWindow = styled.div`
     height: 200px;
     background: ${props => props.theme.lightGrey};
     position: fixed;
-    bottom: 200px;
+    bottom: 180px;
     float: right;
     right: 30px;
+    // border: 1px solid red;
 `;
 
 const StatusSection = styled.div`
     width: inherit;
-    height: 50px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 10px;
+    // border: 1px solid red;
 `;
 
 const TitleSection = styled.div`
     display: flex;
     flex-direction: column;
     width: inherit;
-    height: 100px;
+    height: 80px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    // justify-content: center;
     display: flex;
     color: ${props => props.theme.orange};
+    // border: 1px solid red;
+    margin-bottom: 10px;
+    padding-top: 5px;
+
 `;
 
 const Input = styled.input`
@@ -61,10 +68,11 @@ const Input = styled.input`
 
 const ButtonSection = styled.div`
     width: inherit;
-    height: 40px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
+    // border: 1px solid red;
 `;
 
 const Button = styled.button`
@@ -79,7 +87,10 @@ const Button = styled.button`
 const Tick = styled.img`
     width: 30px;
     height: 30px;
+`;
 
+const HiddenDownloadLink = styled.a`
+  display: none;
 `;
 
 function ExportModal () {
@@ -110,15 +121,16 @@ function ExportModal () {
 
     return (
             <ExportModalWindow>
-                <StatusSection>Loading.....</StatusSection>
+                <StatusSection>... of files ready</StatusSection>
                 <TitleSection>Give your creation a title.... 
-                <Input type="text" placeholder=" Title..."></Input>
+                  <Input type="text" placeholder=" Title..."></Input>
                 </TitleSection>
                 <ButtonSection>
                     <Button onClick={startDownload}  alt ="export timeline button" >
                         <Tick src={completionTick} />
                     </Button>
                 </ButtonSection>
+                <HiddenDownloadLink ref={downloadLinkRef} />
             </ExportModalWindow>
     );
 };

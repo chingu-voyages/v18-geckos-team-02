@@ -149,9 +149,7 @@ const ExportButtonContainer = styled.img`
   }
 `;
 
-// const HiddenDownloadLink = styled.a`
-//   display: none;
-// `;
+
 
 function NavBar({showUploads, setShowUploads, editMode, setEditMode, showExports, setShowExports}) {
 
@@ -177,9 +175,7 @@ function NavBar({showUploads, setShowUploads, editMode, setEditMode, showExports
         <ImportButtonLabel htmlFor="file">
           <ImportButtonIcon src={ImportButton} alt="import a timeline file" />
         </ImportButtonLabel> 
-        <ExportButtonContainer src={ExportButton} onClick={() => setShowExports(!showExports) } alt="export a timeline file" />
-        
-        {/* <HiddenDownloadLink ref={downloadLinkRef} /> */}
+        <ExportButtonContainer src={ExportButton} onClick={() => setShowExports(!showExports) } alt="open export options list" />
       </ImportExportTools>
     </NavBarContainer>
   );

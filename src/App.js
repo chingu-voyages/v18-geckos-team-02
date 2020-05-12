@@ -19,7 +19,7 @@ function App() {
         {showUploads && <UploadModal close={() => setShowUploads(false)} />}
         <Main {...{editMode, showUploads, setShowUploads}} />
         <nav>
-       {showExports && <ExportModal />}
+       {showExports && !showUploads && <ExportModal />}
           <Timeline {...{editMode}} />
           <NavBar {...{showUploads, setShowUploads, editMode, setEditMode, showExports, setShowExports}} />
         </nav>
