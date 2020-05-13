@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import styled  from 'styled-components';
 import plusSign from '../assets/plusSign.svg';
 import logo from './../../src/assets/wavy-logo.svg';
@@ -6,7 +6,7 @@ import minusSign from '../assets/minusSign2.svg';
 import EditButton from  '../assets/trashTumbleIcon.svg';
 import ImportButton from '../assets/importButton.svg';
 import ExportButton from '../assets/exportButton.svg';
-import {exportTimeLine, importTimeLine} from '../services/dataController';
+import { importTimeLine } from '../services/dataController';
 
 const NavBarContainer = styled.div`
     display: grid;
@@ -149,34 +149,9 @@ const ExportButtonContainer = styled.img`
   }
 `;
 
-const HiddenDownloadLink = styled.a`
-  display: none;
-`;
 
-function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
-  const [downloadStatus, setDownloadStatus] = useState(null);
-  const downloadLinkRef = useRef();
-  
-  async function startDownload(e) {
-    if (!downloadStatus && downloadStatus !== 'inprogress') {
-      setDownloadStatus('inprogress');
-      try {
-        const file = await exportTimeLine();
-        if (file) {
-          setDownloadStatus(null);
-          const url = await URL.createObjectURL(file);
-          downloadLinkRef.current.href = url;
-          downloadLinkRef.current.download = Date.now().toString()+'.wavy';
-          downloadLinkRef.current.click();
-        }
-      }
-      catch (e) {
-        setDownloadStatus(null);
-        console.error(e);
-      }
-    }
-    return true
-  }
+
+function NavBar({showUploads, setShowUploads, editMode, setEditMode, showExports, setShowExports}) {
 
   function handleUpload(e) {
     importTimeLine(e.target.files[0]);
@@ -200,8 +175,7 @@ function NavBar({showUploads, setShowUploads, editMode, setEditMode}) {
         <ImportButtonLabel htmlFor="file">
           <ImportButtonIcon src={ImportButton} alt="import a timeline file" />
         </ImportButtonLabel> 
-        <ExportButtonContainer src={ExportButton} onClick={startDownload} alt="export a timline file" />
-        <HiddenDownloadLink ref={downloadLinkRef} />
+        <ExportButtonContainer src={ExportButton} onClick={() => setShowExports(!showExports) } alt="open export options list" />
       </ImportExportTools>
     </NavBarContainer>
   );
