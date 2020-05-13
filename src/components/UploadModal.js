@@ -104,7 +104,7 @@ const ButtonGroup = styled.div`
   justify-content: center;
 `;
 
-export const ToolsGroups = styled.div`
+const ToolsGroups = styled.div`
     display: flex;
     flex-direction: row;
     width: 70%;
@@ -133,7 +133,7 @@ const AddNoteButton = styled.div`
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
  `;
 
-export const FileUploadInput = styled.input`
+const FileUploadInput = styled.input`
   border: 0;
   clip: rect(0, 0, 0, 0);
   height: 1px;
@@ -144,7 +144,7 @@ export const FileUploadInput = styled.input`
   width: 1px;
 `;
 
-export const FileUploadLabel = styled.label`
+const FileUploadLabel = styled.label`
   width: 120px;
   height: 60px;
   display: flex;
@@ -190,7 +190,7 @@ function UploadModal({close}) {
           <FileList>
             {uploads.map(upload =>
               <FileItem key={upload.uid}>
-                <FileName>{getShortName(upload.file.name).toLowerCase()}</FileName>
+                <FileName>{getShortName(upload.name)}</FileName>
                 <DateAndTagsEditor {...{ uploads: [upload] }}/>
                 <DeleteButton onClick={ () => deleteUpload(upload.uid) } aria-label="Delete upload">
                   <img src={trashIcon} alt='x' />

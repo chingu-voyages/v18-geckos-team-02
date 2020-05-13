@@ -66,7 +66,7 @@ function Main({editMode, showUploads, setShowUploads})  {
   function getActiveNodeDate() {
     const obj = activeFileObjs[0];
     if(obj) {
-      return new Date(obj.unFormatDate(obj.getActiveDate()).substr(0, 10)).toDateString()
+      return new Date(obj.getActiveDate().substr(0, 10)).toDateString()
     }
   } 
 

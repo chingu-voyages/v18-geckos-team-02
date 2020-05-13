@@ -3,7 +3,7 @@ import errorHandler from './errorHandler';
 import FileObj from './FileObj';
 import {exportDB, importInto} from "dexie-export-import";
 
-const localDB = new Dexie('user_dbac');
+const localDB = new Dexie('user_dbv2');
 localDB.version(1).stores({
     appData: 'ref',
     files: 'ref',
@@ -51,7 +51,7 @@ async function exportData() {
 
 async function writeFile(ref, file) {
     try {
-        const data = await fileToArrayBuffer(file);
+        const data = await file.data;
         await localDB.files.add({ref, data: {blob: data, type: file.type}});
         return true
     }
@@ -106,18 +106,6 @@ async function writeAppData(appData) {
     catch (e) {
         errorHandler(e);
     }
-}
-
-function fileToArrayBuffer(file) {
-    const blob = new Blob([file]);
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.addEventListener('loadend', (e) => {
-            resolve(reader.result);
-        });
-        reader.addEventListener('error', reject);
-        reader.readAsArrayBuffer(blob);
-    });
 }
 
 export {writeFile, readFile, readAppData, writeAppData, wipeAllData, exportData, importData}

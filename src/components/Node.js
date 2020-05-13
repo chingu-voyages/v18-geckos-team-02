@@ -17,7 +17,7 @@ export default function Node({ fileObjs, isMain = false }) {
         output = fileObjs.map(fileObj => {
             let showTime = isMain;
             if (isMain) {
-                var time = fileObj.getActiveDate().substr(8).match(/.{2}/g).join(':');
+                var time = fileObj.getActiveDate().substr(11);
                 showTime = time !== lastTime;
                 lastTime = time;
             }
