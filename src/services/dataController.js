@@ -15,7 +15,7 @@ function setActiveNode(fileObj) {
     if (fileObj && fileObj.__proto__.hasOwnProperty('getActiveDate')) {
         const fileObjDate = fileObj.getActiveDate();
         if (fileObjDate) {
-            activeNode = fileObjDate.substr(0, 8);
+            activeNode = fileObjDate.substr(0, 10);
             setActiveFileObjs();
         }
     }
@@ -35,7 +35,7 @@ function setNodesList() {
     const fileObjs = Object.values(appData.fileObjs);
     const nodes = {};
     for (let fileObj of fileObjs) {
-        const path = getPath(fileObj.getActiveDate().substr(0, 8));
+        const path = getPath(fileObj.getActiveDate().substr(0, 10).replace(/-/g, ''));
         let head = nodes;
         for (let key of path) {
             if (!head.hasOwnProperty(key)) {
@@ -56,20 +56,25 @@ function setNodesList() {
 let activeFileObjs = [];
 const fileObjsSubcription = new Subscription();
 function setActiveFileObjs() {
-    if (!activeNode) {
-        setToLatestNode();
-    }
-    else {
-        let from = activeNode+'000000';
-        let to = activeNode+'235959';
-        activeFileObjs = getFileObjs(from, to);
-        if (activeFileObjs.length > 0) {
-            fileObjsSubcription.update(activeFileObjs);
-        }
-        else {
-            fileObjsSubcription.update([]);
+    if (Object.keys(appData.fileObjs).length > 0) {
+        if (!activeNode) {
             setToLatestNode();
         }
+        else {
+            let from = activeNode+' 00:00:00';
+            let to = activeNode+' 23:59:59';
+            activeFileObjs = getFileObjs(from, to);
+            if (activeFileObjs.length > 0) {
+                fileObjsSubcription.update(activeFileObjs);
+            }
+            else {
+                fileObjsSubcription.update([]);
+                setToLatestNode();
+            }
+        }
+    }
+    else {
+        fileObjsSubcription.update([]);
     }
 }
 function getFileObjs(from = '0', to = '0') {
@@ -82,6 +87,8 @@ function getFileObjs(from = '0', to = '0') {
 async function addFiles(uploadsArr) {
     if (uploadsArr.length > 0) {
         let fileObj;
+        const uploadsList = [];
+        const stored = [];
         for (let upload of uploadsArr) {
             const ref = makeFileRef(upload.file);
             const {name, text = '', type} = upload.file;
@@ -91,22 +98,30 @@ async function addFiles(uploadsArr) {
             } 
             upload.timeStamps.modified = upload.file.lastModified || Date.now();
             fileObj = new FileObj({...upload, name, text, fileRef: ref, type: checkedType, size: upload.file.size});
+            fileObj.orig = upload;
+            uploadsList.push(fileObj);
             const activeDate = fileObj.getActiveDate();
             const fObjsWithSameFile = Object.values(appData.fileObjs).filter(fObj => fObj.fileRef === ref);
-            if (fObjsWithSameFile.filter(fObj => fObj.getActiveDate() === activeDate).length === 0) {
-                appData.fileObjs[fileObj.uid] = fileObj;
-            }
+            appData.fileObjs[fileObj.uid] = fileObj;
             if (fObjsWithSameFile.filter(fObj => !fObj.fileMissing).length < 1) {
                 fObjsWithSameFile.forEach(fObj => fObj.fileMissing && fObj.flagMissingData(false));
-                await writeFile(ref, upload.file);
+                stored.push(writeFile(ref, upload.file));
             }
         }
         await writeAppData(appData);
-        setActiveNode(fileObj);
+        Promise.all(stored).then(() => setActiveNode(fileObj));
         setNodesList();
-        return true
+        return uploadsList
     }
     return false
+}
+
+async function editFiles(fileObjs) {
+    if (fileObjs.length > 0) {
+        for (let fileObj of fileObjs) {
+            appData.update(fileObj);
+        }
+    }
 }
 
 async function getFile(fileRef) {
@@ -153,6 +168,7 @@ function checkFileType(type, name) {
     return type
 }
 
+let newUploadCount = 0;
 let uploadsList = [];
 const uploadsListSubcription = new Subscription();
 const uploadFuncs = {
@@ -166,35 +182,56 @@ const uploadFuncs = {
         uploadsListSubcription.update(uploadsList);
     },
     submit: function submitUploadsList() {
-        addFiles(uploadsList);
         uploadFuncs.set([]);
     },
-    cancel: () => uploadFuncs.set([]),
+    cancel: function() {
+        removeFiles(uploadsList);
+        uploadFuncs.set([]);
+    },
     deleteUpload: function deleteUpload(uid) {
+        removeFiles(uploadsList.filter(upload => upload.uid === uid));
         const appendedUploads = uploadsList.filter(upload => upload.uid !== uid);
         uploadFuncs.set(appendedUploads);
     },
-    update: function updateDatesOrTags(uids, uploadMeta) {
+    update: function updateDatesOrTags(uploadsArr) {
         const newUploadsList = uploadsList.slice(0);
-        for (let uid of uids) {
-            const index = newUploadsList.findIndex(upload => upload.uid === uid);
-            Object.assign(newUploadsList[index], {...uploadMeta, tags: uploadMeta.tags || []});
+        for (let newUpload of uploadsArr) {
+            const index = newUploadsList.findIndex(oldUpload => oldUpload.uid === newUpload.uid);
+            newUploadsList[index] = newUpload;
         }
+        editFiles(newUploadsList);
         uploadFuncs.set([...newUploadsList]);
     },
-    add: function addUploadsToList(newUploads) {
-        const newUploadsArr = Object.values(newUploads).map(upload => formatNewUpload(upload));
-        uploadFuncs.set([...uploadsList, ...newUploadsArr]);
+    add: async function addUploadsToList(newUploads) {
+        const newUploadsArr = [];
+        for (let upload of Object.values(newUploads)) {
+            const data = fileToArrayBuffer(upload);
+            const {name, lastModified, type} = upload;
+            const obj = {
+                uid: Date.now()+`${++newUploadCount}`,
+                file: {
+                    name,
+                    lastModified,
+                    type,
+                    data
+                }
+            }
+            newUploadsArr.push(obj);
+        }
+        const fileObjs = await addFiles(newUploadsArr);
+        Array.isArray(fileObjs) && uploadFuncs.set([...uploadsList, ...fileObjs]);
     }
 }
 
-let newUploadCount = 0;
-function formatNewUpload(upload) {
-    const dateNow = Date.now();
-    return ({
-        uid: dateNow+`${++newUploadCount}`,
-        file: upload,
-    })
+function fileToArrayBuffer(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.addEventListener('loadend', (e) => {
+            resolve(reader.result);
+        });
+        reader.addEventListener('error', reject);
+        reader.readAsArrayBuffer(file);
+    });
 }
 
 function updateFiles(filesArr) {

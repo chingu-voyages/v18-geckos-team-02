@@ -24,9 +24,11 @@ AppData.prototype.add = function(fileObj, log = true) {
     this.onUpdate();
 }
 AppData.prototype.update = function(fileObj, log = true) {
-    log && this.changeLog.push({ func: 'update', data: fileObj });
-    Object.assign(this.fileObjs[fileObj.uid], fileObj);
-    this.onUpdate();
+    if (this.fileObjs.hasOwnProperty(fileObj.uid)) {
+        log && this.changeLog.push({ func: 'update', data: fileObj });
+        Object.assign(this.fileObjs[fileObj.uid], fileObj);
+        this.onUpdate();
+    }
 }
 AppData.prototype.delete = function(uid, log = true) {
     log && this.changeLog.push({ func: 'delete', data: uid });

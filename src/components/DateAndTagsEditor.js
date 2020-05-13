@@ -80,11 +80,11 @@ function DateAndTagsEditor({ uploads, isGlobal = false }) {
   const uids = uploads.map(upload => upload.uid);
   const [isOpen, setIsOpen] = useState(false);
   const [values, setValues] = useState({
-    activeTimeStamp: uploads.activeTimeStamp || "modified",
-    user: (uploads.timeStamps && uploads.timeStamps.user) || formatForyyyyMMdd(Date.now()),
-    modified: uploads[0].file.lastModified || (uploads.timeStamps && uploads.timeStamps.modified) || Date.now(),
-    time: formatForHHMM((uploads.timeStamps && uploads.timeStamps.user) || Date.now()) || '00:00',
-    tags: uploads.tags || []
+    activeTimeStamp: uploads[0].activeTimeStamp,
+    user: uploads[0].timeStamps.user || uploads[0].timeStamps.modified,
+    modified: uploads[0].timeStamps.modified,
+    time: formatForHHMM(uploads[0].timeStamps.user || uploads[0].timeStamps.modified),
+    tags: uploads[0].tags
   });
   const [tags, setTags] = useState([...new Set(uploads.map(upload => upload.tag).filter(tag => tag))]);
   const removeTag = tag => setTags( [...tags.slice(0, tags.indexOf(tag)), ...tags.slice(tags.indexOf(tag)+1)] );
@@ -97,7 +97,8 @@ function DateAndTagsEditor({ uploads, isGlobal = false }) {
         if (cleanedValue !== "") {
           const newTags = [...new Set([...tags, cleanedValue])];
           setTags(newTags);
-          update(uids, { tags: newTags });
+          uploads.forEach(upload => upload.tags = newTags);
+          
         }
         value = '';
       }
@@ -107,23 +108,33 @@ function DateAndTagsEditor({ uploads, isGlobal = false }) {
       setValues({ ...values, user: value, activeTimeStamp: 'user'});
       const userDatePlusTime = formatForyyyyMMdd(value)+' '+formatForHHMM(values['time']);
         if (userDatePlusTime) {
-        update(uids, {activeTimeStamp: 'user', timeStamps: { user: userDatePlusTime }});
+          uploads.forEach(upload => {
+            upload.activeTimeStamp = 'user';
+            upload.timeStamps.user = userDatePlusTime;
+          });
       }
     }
     else if (name === 'time') {
       setValues({ ...values, time: value });
       const userDatePlusTime = formatForyyyyMMdd(values['user'])+' '+formatForHHMM(value);
       if (userDatePlusTime) {
-        update(uids, {timeStamps: { user: userDatePlusTime }});
+        uploads.forEach(upload => {
+          upload.activeTimeStamp = 'user';
+          upload.timeStamps.user = userDatePlusTime;
+        });
       }
     }
     else if (name === 'activeTimeStamp') {
       setValues({ ...values, activeTimeStamp: value });
       update(uids, {activeTimeStamp: value});
       if (value === 'user') {
-        update(uids, {timeStamps: { user: values.user }});
+        uploads.forEach(upload => {
+          upload.activeTimeStamp = 'user';
+          upload.timeStamps.user = values.user;
+        });
       } 
     } 
+    update(uploads);
   }
 
   return (

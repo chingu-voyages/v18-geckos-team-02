@@ -56,12 +56,8 @@ const AddNoteModal = ({ close }) => {
   const [notesTitle, setNotesTitle] = useState("");
   const [notesBody, setNotesBody] = useState("");
   
-  const submit = () => {
-    const note = {
-      name: notesTitle,
-      text: notesBody,
-      type: 'note'
-    };
+  const submit = async () => {
+    const note = await new File([notesBody], notesTitle, {type: 'text/plain'});
     add([note]);
     close();
   }

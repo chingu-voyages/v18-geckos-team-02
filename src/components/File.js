@@ -109,13 +109,18 @@ export default function File({fileObj, showTime, time, isMain}) {
         if (ref.current) {
             let observer = new IntersectionObserver(entries => {
                 if (entries[0].isIntersecting) {
-                    getFile(fileObj.fileRef).then(blob => {
-                        let url = null
+                    getFile(fileObj.fileRef).then(async blob => {
+                        let data = null;
                         if (blob) {
-                            url = URL.createObjectURL(blob);
+                            if (fileObj.type === 'text/plain') {
+                                data = await blob.text();
+                            }
+                            else {
+                                data = URL.createObjectURL(blob);
+                            }
                         }
-                        setFile(url);
-                        if (url === null) {
+                        setFile(data);
+                        if (data === null) {
                             fileObj.flagMissingData();
                         }
                         observer.unobserve(ref.current);
@@ -131,9 +136,9 @@ export default function File({fileObj, showTime, time, isMain}) {
         const condenseSize = size => size < 1000 ? size+'B' : size < Math.pow(10, 6) ? (size/1000).toFixed(2)+'KB' : size < Math.pow(10, 9) ? (size/Math.pow(10, 6)).toFixed(2)+'MB' : (size/Math.pow(10, 9)).toFixed(2)+'GB';
 const info = `
 ${fileObj.name} 
-lastModifed: ${fileObj.unFormatDate(fileObj.timeStamps.modified)} 
-${fileObj.timeStamps.user ? 'userSetTime: '+fileObj.unFormatDate(fileObj.timeStamps.user)+'\n' : ''}type: ${fileObj.type}
-${fileObj.tag?.length > 0 ? 'tags: '+fileObj.tags.join(' ')+'\n' : ''}${fileObj.size ? 'size: '+condenseSize(fileObj.size)+'\n' : ''}
+lastModifed: ${fileObj.timeStamps.modified} 
+${fileObj.timeStamps.user ? 'userSetTime: '+fileObj.timeStamps.user+'\n' : ''}type: ${fileObj.type}
+${fileObj.tags?.length > 0 ? 'tags: '+fileObj.tags.join(', ')+'\n' : ''}${fileObj.size ? 'size: '+condenseSize(fileObj.size)+'\n' : ''}
     
 `;
         if (props.enabled) {
@@ -159,7 +164,7 @@ ${fileObj.tag?.length > 0 ? 'tags: '+fileObj.tags.join(' ')+'\n' : ''}${fileObj.
                 <DownloadWrapper enabled={enableDownload}>
                     {fileObj.type.includes('image') ? 
                         <Img src={file} alt="" /> : 
-                        fileObj.type === 'note' ? <Note className="note"><h1>{fileObj.name}</h1><p>{fileObj.text}</p></Note> :
+                        fileObj.type === 'text/plain' ? <Note className="note"><h1>{fileObj.name}</h1><p>{file}</p></Note> :
                         <FileIcon {...charsToColour(fileObj.type)}>{fileObj.name}</FileIcon>
                     }
                 </DownloadWrapper>}
