@@ -15,7 +15,7 @@ const Img = styled.img`
 const Note = styled(Wrapper)`
     background: ${props => props.theme.offWhite};
     min-height: 100%;
-    padding: 10%;
+    padding: 5%;
     color: ${props => props.theme.darkGrey};
     & h1 {
         color: ${props => props.theme.darkGrey};
@@ -27,7 +27,7 @@ const FileIcon = styled.div`
     place-items: center center;
     background: ${props => props.background};
     color: ${props => props.theme.darkGrey};
-    width: 300px;
+    width: 90vw;
     height: 150px;
 `;
 
