@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import styled  from 'styled-components';
 import plusSign from '../assets/plusSign.svg';
 import logo from './../../src/assets/wavy-logo.svg';
@@ -6,7 +6,7 @@ import minusSign from '../assets/minusSign2.svg';
 import EditButton from  '../assets/trashTumbleIcon.svg';
 import ImportButton from '../assets/importButton.svg';
 import ExportButton from '../assets/exportButton.svg';
-import {exportTimeLine, importTimeLine} from '../services/dataController';
+import { importTimeLine } from '../services/dataController';
 
 const NavBarContainer = styled.div`
     display: grid;
