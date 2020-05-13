@@ -71,7 +71,18 @@ const Input = styled.input`
       }
 `;
 
-const Button = styled.input`
+const InputSubmitButton = styled.input`
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  white-space: nowrap;
+  width: 1px;
+`;
+
+const ButtonLabel = styled.label`
     width: 30px;
     height: 30px;
     background: ${props => props.theme.blue};
@@ -89,7 +100,6 @@ const Button = styled.input`
 const Tick = styled.img`
     width: 20px;
     height: 20px;
-
 `;
 
 const HiddenDownloadLink = styled.a`
@@ -129,7 +139,8 @@ function ExportModal () {
     }
 
     function handleSubmit(e) {
-      startDownload();
+      e.preventDefault();
+      startDownload(e);
     }
 
 
@@ -138,17 +149,18 @@ function ExportModal () {
                 <TitleArea>Export your Timeline</TitleArea>
                 <ActionArea>Give your creation a title.... 
                   <InputSection onSubmit={handleSubmit}>
-
                     <Input 
                       type="text" 
                       placeholder=" Title..." 
                       onChange={(e) => setTitle(e.target.value) }
                       >
                     </Input>
-                    <Button type="submit" value={"X"} alt ="export timeline button"></Button>
                     <HiddenDownloadLink ref={downloadLinkRef} />
+                    <InputSubmitButton type="submit" id="submit"/>
+                    <ButtonLabel htmlFor="submit">
+                      <Tick src={completionTick} alt ="export timeline button"/>
+                    </ButtonLabel>
                   </InputSection>
-
                 </ActionArea>
             </ExportModalWindow>
     );
