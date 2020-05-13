@@ -15,6 +15,9 @@ const ExportModalWindow = styled.div`
     bottom: 180px;
     float: right;
     right: 30px;
+    @media(max-width: 800px){
+      right: 10px;
+    }
 `;
 
 const TitleArea = styled.div`
@@ -29,6 +32,7 @@ const TitleArea = styled.div`
     text-decoration-color: ${props => props.theme.blue};
     font-size: 18px;
     font-weight: 800;
+    padding-top: 5px;
     // border: solid red 1px;
 `;
 
@@ -40,16 +44,13 @@ const ActionArea = styled.div`
     align-items: center;
     padding-top: 20px;
     color: ${props => props.theme.orange};
-    // border: solid red 1px;
 `;
+
 const TitleInputArea = styled.div`
-    // display: flex;
-    // flex-direction: column;
+    padding-left: 5px;
     width: inherit;
     height: inherit;
-    // align-items: center;
-    // padding-top: 20px;
-    // color: ${props => props.theme.orange};
+    align-items: center;
 `;
 
 const InputSection = styled.form`
@@ -61,26 +62,26 @@ const InputSection = styled.form`
 `;
 
 const Input = styled.input`
-    background: ${props => props.theme.lightBlue};
-    width: 60%;
-    height: 30px;
-    margin-top: 10px;
-    border: 1px solid ${props => props.theme.darkBlue}; 
-    outline: none;
-    margin-right: 5px;
+  background: ${props => props.theme.lightBlue};
+  width: 60%;
+  height: 30px;
+  margin-top: 10px;
+  border: 1px solid ${props => props.theme.darkBlue}; 
+  outline: none;
+  margin-right: 5px;
 
-    ::placeholder {
-        color: ${props => props.theme.orange};
-        opacity: 1; 
-      }
-      
-      :-ms-input-placeholder  {
-        color: ${props => props.theme.orange};
-      }
-      
-      ::-ms-input-placeholder  {
-        color: ${props => props.theme.orange};
-      }
+  ::placeholder {
+      color: ${props => props.theme.orange};
+      opacity: 1; 
+    }
+    
+    :-ms-input-placeholder  {
+      color: ${props => props.theme.orange};
+    }
+    
+    ::-ms-input-placeholder  {
+      color: ${props => props.theme.orange};
+    }
 `;
 
 const InputSubmitButton = styled.input`
@@ -95,23 +96,23 @@ const InputSubmitButton = styled.input`
 `;
 
 const ButtonLabel = styled.label`
-    width: 30px;
-    height: 30px;
-    background: ${props => props.theme.blue};
-    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-    border: none;
-    outline: none;
-    position: relative;
-    top: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-left: 5px;
+  width: 30px;
+  height: 30px;
+  background: ${props => props.theme.blue};
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  border: none;
+  outline: none;
+  position: relative;
+  top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
 `;
 
 const Tick = styled.img`
-    width: 20px;
-    height: 20px;
+  width: 20px;
+  height: 20px;
 `;
 
 const HiddenDownloadLink = styled.a`
@@ -119,7 +120,6 @@ const HiddenDownloadLink = styled.a`
 `;
 
 const SpinnerSection = styled.div`
-  // border: solid green 1px;
   width: inherit;
   height: inherit;
   position: relative;
@@ -133,15 +133,20 @@ const Logo = styled.img`
   width: 160px;
   height: 40px;
   animation: rotation 1.5s infinite linear;
-@keyframes rotation {
-  from {
-    transform: rotateY(0deg);
+  @keyframes rotation {
+    from {
+      transform: rotateY(0deg);
+    }
+    to {
+      transform: rotateY(359deg);
+    }
   }
-  to {
-    transform: rotateY(359deg);
-  }
-}
+`;
 
+const ExportCompleteMesssage = styled.div`
+  color: ${props => props.theme.orange};
+  display: flex;
+  padding-top: 20px;
 `;
 
 function ExportModal () {
@@ -166,6 +171,7 @@ function ExportModal () {
               downloadLinkRef.current.download = Date.now().toString()+'.wavy';
             }
             downloadLinkRef.current.click();
+            setDownloadStatus('complete');
           }
         }
         catch (e) {
@@ -188,7 +194,7 @@ function ExportModal () {
                 <ActionArea>
                 {!downloadStatus && downloadStatus !== 'inprogress' ?
                 <TitleInputArea>
-                  <div>Give your creation a title....</div> 
+                  <div>Give your creation a title...</div> 
                   <InputSection onSubmit={handleSubmit}>
                     <Input 
                       type="text" 
@@ -205,7 +211,9 @@ function ExportModal () {
                 </TitleInputArea>
                    : downloadStatus === 'inprogress' ?
                     <SpinnerSection><Logo src={logo}/></SpinnerSection> 
-                   : <div>Download Ready</div>
+                   : downloadStatus === 'complete' ? 
+                   <ExportCompleteMesssage>Download Ready!</ExportCompleteMesssage> 
+                   : '' 
                   }
                 </ActionArea>
               
