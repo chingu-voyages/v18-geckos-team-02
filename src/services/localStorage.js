@@ -3,7 +3,7 @@ import errorHandler from './errorHandler';
 import FileObj from './FileObj';
 import {exportDB, importInto} from "dexie-export-import";
 
-const localDB = new Dexie('user_dbac');
+const localDB = new Dexie('user_dbv2');
 localDB.version(1).stores({
     appData: 'ref',
     files: 'ref',
