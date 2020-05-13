@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { exportTimeLine } from '../services/dataController';
 import completionTick from '../assets/completionTick.svg';
+import logo from './../../src/assets/wavy-logo.svg';
 
 const ExportModalWindow = styled.div`
     display: flex;
@@ -28,16 +29,27 @@ const TitleArea = styled.div`
     text-decoration-color: ${props => props.theme.blue};
     font-size: 18px;
     font-weight: 800;
+    // border: solid red 1px;
 `;
 
 const ActionArea = styled.div`
     display: flex;
     flex-direction: column;
     width: inherit;
-    height: 140px;
+    height: 130px;
     align-items: center;
     padding-top: 20px;
     color: ${props => props.theme.orange};
+    // border: solid red 1px;
+`;
+const TitleInputArea = styled.div`
+    // display: flex;
+    // flex-direction: column;
+    width: inherit;
+    height: inherit;
+    // align-items: center;
+    // padding-top: 20px;
+    // color: ${props => props.theme.orange};
 `;
 
 const InputSection = styled.form`
@@ -106,6 +118,32 @@ const HiddenDownloadLink = styled.a`
   display: none;
 `;
 
+const SpinnerSection = styled.div`
+  // border: solid green 1px;
+  width: inherit;
+  height: inherit;
+  position: relative;
+  bottom: 10px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+`;
+
+const Logo = styled.img`
+  width: 160px;
+  height: 40px;
+  animation: rotation 1.5s infinite linear;
+@keyframes rotation {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(359deg);
+  }
+}
+
+`;
+
 function ExportModal () {
 
     const [downloadStatus, setDownloadStatus] = useState(null);
@@ -123,7 +161,7 @@ function ExportModal () {
             const url = await URL.createObjectURL(file);
             downloadLinkRef.current.href = url;
             if (title) {
-              downloadLinkRef.current.download = title+'.wavy' 
+              downloadLinkRef.current.download = title+'.wavy';
             } else {
               downloadLinkRef.current.download = Date.now().toString()+'.wavy';
             }
@@ -147,7 +185,10 @@ function ExportModal () {
     return (
             <ExportModalWindow>
                 <TitleArea>Export your Timeline</TitleArea>
-                <ActionArea>Give your creation a title.... 
+                <ActionArea>
+                {!downloadStatus && downloadStatus !== 'inprogress' ?
+                <TitleInputArea>
+                  <div>Give your creation a title....</div> 
                   <InputSection onSubmit={handleSubmit}>
                     <Input 
                       type="text" 
@@ -161,7 +202,13 @@ function ExportModal () {
                       <Tick src={completionTick} alt ="export timeline button"/>
                     </ButtonLabel>
                   </InputSection>
+                </TitleInputArea>
+                   : downloadStatus === 'inprogress' ?
+                    <SpinnerSection><Logo src={logo}/></SpinnerSection> 
+                   : <div>Download Ready</div>
+                  }
                 </ActionArea>
+              
             </ExportModalWindow>
     );
 };
