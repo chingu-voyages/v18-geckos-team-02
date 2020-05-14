@@ -3,45 +3,55 @@ import errorHandler from './errorHandler';
 import FileObj from './FileObj';
 import {exportDB, importInto} from "dexie-export-import";
 
-const localDB = new Dexie('user_dbv2');
+const localDB = new Dexie('user_dbv4');
 localDB.version(1).stores({
     appData: 'ref',
     files: 'ref',
+    lastImport: 'ref'
 });
 
-async function wipeAllData() {
-    await localDB.files.clear();
-    await localDB.appData.clear();
-    await localDB.files.delete('appData');
-    await localDB.appData.delete('files');
-    return true
-}
-
-async function importData(file) {
+async function importData(file, importName) {
     try {
-        const backup = await exportData();
-        try {
-            await wipeAllData();
-            await importInto(localDB, file);
-            return true
-        }
-        catch (e) {
-            await wipeAllData();
-            importData(backup);
-            errorHandler(e);
-            return false 
-        }
-    } catch (e) {
+        let name = importName || '';
+        await importInto(localDB, file, {
+            acceptMissingTables: true,
+            acceptVersionDiff: true,
+            acceptNameDiff: true,
+            acceptChangedPrimaryKey: true,
+            clearTablesBeforeImport: true
+        });
+        await localDB.lastImport.put({ref: 0, name});
+        return true
+    }
+    catch (e) {
         errorHandler(e);
-        throw Error('Unable to make a backup before import!')
+        return false 
     }
 }
 
-async function exportData() {
+async function exportData(name) {
     try {
-        const blob = await exportDB(localDB);
-        const file = await new Blob([blob], {type: 'application/wavy'});
-        return file
+        const data = await exportDB(localDB);
+        const dataText = await data.text();
+        const wrapper = `<!DOCTYPE html>
+        <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <link rel="icon" href="https://chingu-voyages.github.io/v18-geckos-team-02/favicon.ico" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Proza+Libre:wght@400;500;600;700&display=swap" rel="stylesheet" defer>
+            <title>Wavy</title>
+          </head>
+          <body>
+            <h1>Wavy</h1>
+            <p>Please wait to be redirected</p>
+            <p>If nothing is happening please follow this <a href=https://chingu-voyages.github.io/v18-geckos-team-02/import?${name}">link</a></p>
+            <script>window.location = "https://chingu-voyages.github.io/v18-geckos-team-02/import?${name}";</script>
+          </body>
+          <!--start---${dataText}---end-->
+        </html>`
+        const blob = await new Blob([wrapper], {type: 'text/html'});
+        return blob
     }
     catch (e) {
         errorHandler(e);
@@ -107,5 +117,9 @@ async function writeAppData(appData) {
         errorHandler(e);
     }
 }
+async function lastImported() {
+    const data = await localDB.lastImport.get(0);
+    return data.name
+}
 
-export {writeFile, readFile, readAppData, writeAppData, wipeAllData, exportData, importData}
+export {writeFile, readFile, readAppData, writeAppData, exportData, importData, lastImported}

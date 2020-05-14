@@ -160,15 +160,15 @@ function ExportModal () {
       if (!downloadStatus && downloadStatus !== 'inprogress') {
         setDownloadStatus('inprogress');
         try {
-          const file = await exportTimeLine();
+          const file = await exportTimeLine(title);
           if (file) {
             setDownloadStatus(null);
             const url = await URL.createObjectURL(file);
             downloadLinkRef.current.href = url;
             if (title) {
-              downloadLinkRef.current.download = title+'.wavy';
+              downloadLinkRef.current.download = title;
             } else {
-              downloadLinkRef.current.download = Date.now().toString()+'.wavy';
+              downloadLinkRef.current.download = Date.now().toString();
             }
             downloadLinkRef.current.click();
             setDownloadStatus('complete');

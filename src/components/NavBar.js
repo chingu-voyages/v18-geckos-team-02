@@ -171,7 +171,7 @@ function NavBar({showUploads, setShowUploads, editMode, setEditMode, showExports
         <EditModeButton alt="Edit" src={EditButton} onClick={() => setEditMode(!editMode)} />
       </ButtonContainer>
       <ImportExportTools>
-        <ImportButtonInput type="file" id="file" accept=".wavy" onChange={handleUpload} />
+        <ImportButtonInput type="file" id="file" accept=".html" onChange={handleUpload} />
         <ImportButtonLabel htmlFor="file">
           <ImportButtonIcon src={ImportButton} alt="import a timeline file" />
         </ImportButtonLabel> 
