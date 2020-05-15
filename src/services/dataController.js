@@ -205,13 +205,14 @@ const uploadFuncs = {
         const newUploadsArr = [];
         for (let upload of Object.values(newUploads)) {
             const data = fileToArrayBuffer(upload);
-            const {name, lastModified, type} = upload;
+            const {name, lastModified, type, size} = upload;
             const obj = {
                 uid: Date.now()+`${++newUploadCount}`,
                 file: {
                     name,
                     lastModified,
                     type,
+                    size,
                     data
                 }
             }
