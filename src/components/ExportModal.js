@@ -149,7 +149,7 @@ const ExportCompleteMesssage = styled.div`
   padding-top: 20px;
 `;
 
-function ExportModal () {
+function ExportModal ({setShowExports}) {
 
     const [downloadStatus, setDownloadStatus] = useState(null);
     const downloadLinkRef = useRef();
@@ -172,6 +172,7 @@ function ExportModal () {
             }
             downloadLinkRef.current.click();
             setDownloadStatus('complete');
+            setShowExports(false);
           }
         }
         catch (e) {
@@ -211,8 +212,6 @@ function ExportModal () {
                 </TitleInputArea>
                    : downloadStatus === 'inprogress' ?
                     <SpinnerSection><Logo src={logo}/></SpinnerSection> 
-                   : downloadStatus === 'complete' ? 
-                   <ExportCompleteMesssage>Download Ready!</ExportCompleteMesssage> 
                    : '' 
                   }
                 </ActionArea>
