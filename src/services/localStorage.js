@@ -11,9 +11,10 @@ localDB.version(1).stores({
 });
 
 async function importData(file, importName) {
+    const blob = await new Blob([file]);
     try {
         let name = importName || '';
-        await importInto(localDB, file, {
+        await importInto(localDB, blob, {
             acceptMissingTables: true,
             acceptVersionDiff: true,
             acceptNameDiff: true,
