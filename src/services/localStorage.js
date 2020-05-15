@@ -18,7 +18,7 @@ async function importData(file, importName) {
             acceptVersionDiff: true,
             acceptNameDiff: true,
             acceptChangedPrimaryKey: true,
-            clearTablesBeforeImport: true
+            overwriteValues: true
         });
         await localDB.lastImport.put({ref: 0, name});
         return true
