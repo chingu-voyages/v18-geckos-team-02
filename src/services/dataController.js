@@ -1,7 +1,7 @@
 import AppData from './AppData';
 import FileObj from './FileObj';
 import errorHandler from './errorHandler';
-import { writeFile, readFile, writeAppData, importData, exportData as exportTimeLine } from './localStorage';
+import { writeFile, readFile, writeAppData, importData, exportData as exportTimeLine, lastImported } from './localStorage';
 import Subscription from './Subscription';
 
 const appData = new AppData(handleFileObjsChange);
@@ -100,7 +100,6 @@ async function addFiles(uploadsArr) {
             fileObj = new FileObj({...upload, name, text, fileRef: ref, type: checkedType, size: upload.file.size});
             fileObj.orig = upload;
             uploadsList.push(fileObj);
-            const activeDate = fileObj.getActiveDate();
             const fObjsWithSameFile = Object.values(appData.fileObjs).filter(fObj => fObj.fileRef === ref);
             appData.fileObjs[fileObj.uid] = fileObj;
             if (fObjsWithSameFile.filter(fObj => !fObj.fileMissing).length < 1) {
@@ -245,10 +244,10 @@ function updateFiles(filesArr) {
     })
 }
 
-async function importTimeLine(file) {
-    await importData(file);
+async function importTimeLine(file, name) {
+    await importData(file, name);
     appData.init();
     return true
 }
 
-export {addFiles, getFile, removeFiles, nodesListSubcription, fileObjsSubcription, setActiveNode, activeNode, uploadFuncs, updateFiles, exportTimeLine, importTimeLine}
+export {addFiles, getFile, removeFiles, nodesListSubcription, fileObjsSubcription, setActiveNode, activeNode, uploadFuncs, updateFiles, exportTimeLine, importTimeLine, lastImported}

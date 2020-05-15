@@ -105,9 +105,10 @@ export default function File({fileObj, showTime, time, isMain}) {
     const ref = useRef(null);
 
     useEffect(() => {
-        const refCurrent = ref.current;
+        let refCurrent = ref.current;
         if (ref.current) {
             let observer = new IntersectionObserver(entries => {
+                refCurrent = ref.current;
                 if (entries[0].isIntersecting) {
                     getFile(fileObj.fileRef).then(async blob => {
                         let data = null;
@@ -119,16 +120,19 @@ export default function File({fileObj, showTime, time, isMain}) {
                                 data = URL.createObjectURL(blob);
                             }
                         }
-                        setFile(data);
+                        ref.current && setFile(data);
                         if (data === null) {
                             fileObj.flagMissingData();
                         }
-                        observer.unobserve(ref.current);
+                        observer.unobserve(refCurrent);
                     }); 
                 }
             });
-            observer.observe(ref.current); 
-            return () => observer.unobserve(refCurrent);
+            observer.observe(refCurrent); 
+            return () => {
+                refCurrent && observer.unobserve(refCurrent);
+                setFile(null);
+            } 
         }
     }, [ref, fileObj, fileObj.fileMissing]);
 

@@ -3,6 +3,8 @@ import Node from './Node';
 import styled from 'styled-components';
 import { fileObjsSubcription } from '../services/dataController';
 import plusSign from '../assets/plusSign.svg';
+import ImportButton from '../assets/importButton.svg';
+import { importTimeLine, lastImported } from '../services/dataController';
 
 const Wrapper = styled.main`
   display: grid;
@@ -40,13 +42,12 @@ const PlusImg = styled.img`
     height: 120px;
     width: 120px;
     @media (max-width: 500px){
-      height: 40px;
-      width: 40px;
+      height: 80px;
+      width: 80px;
     }
 `;
 
 const StartHelp = styled.div`
-  height: 80vh;
   width: 80%;
   margin-left: 10%;
   display: flex;
@@ -56,12 +57,65 @@ const StartHelp = styled.div`
   box-sizing: border-box;
 `;
 
+const ImportButtonInput = styled.input`
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute !important;
+  white-space: nowrap;
+  width: 1px;
+`;
+
+const ImportButtonLabel = styled.label`
+  height: 80px;
+  width: 80px;
+  align-items: center;
+  justify-content: center;
+  margin: 8px;
+  @media (max-width: 800px){
+    height: 60px;
+    width: 60px;
+  }
+`;
+
+const ImportButtonIcon = styled.img`
+  display: flex;
+  height: 80px;
+  width: 80px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  @media (max-width: 800px){
+    height: 60px;
+    width: 60px;
+  }
+`;
+
 function Main({editMode, showUploads, setShowUploads})  {
   const [activeFileObjs, setActiveFileObjs] = useState(null);
+  const [importing, setImporting] = useState(false);
   useEffect(() => {
     fileObjsSubcription.subscribe(setActiveFileObjs);
     return () => fileObjsSubcription.unsubscribe(setActiveFileObjs);
   }, []);
+
+  useEffect(() => {
+    const path = window.location.pathname;
+    if (path.includes('/import')) {
+      const name = window.location.search.substr(1);
+      lastImported().then(fileName =>{
+        if (fileName && name !== fileName) {
+          setImporting(name);
+        }
+        else {
+          setImporting(false);
+        }
+      });
+    }
+  })
 
   function getActiveNodeDate() {
     const obj = activeFileObjs[0];
@@ -70,6 +124,10 @@ function Main({editMode, showUploads, setShowUploads})  {
     }
   } 
 
+  function handleUpload(e) {
+    importTimeLine(e.target.files[0], importing).then(() => setImporting(false));
+  }
+
   let output = (<>
     <Header>
       <StartHelp>
@@ -77,9 +135,28 @@ function Main({editMode, showUploads, setShowUploads})  {
       <PlusImg onClick={() => setShowUploads(true)} src={plusSign} alt="toggle upload modal open button" />
       <h2>Add some files to begin.</h2>
       </StartHelp>
+      <StartHelp>
+      <ImportButtonInput type="file" id="file" accept=".html" onChange={handleUpload} />
+        <ImportButtonLabel htmlFor="file">
+          <ImportButtonIcon src={ImportButton} alt="import a timeline file" />
+      </ImportButtonLabel> 
+      <h3>Or import a .wavy file</h3>
+      </StartHelp>
     </Header>
   </>);
-  if (activeFileObjs && activeFileObjs.length > 0) {
+  if (importing) {
+    output = (<>
+      <Header>
+          <h1>Import a Timeline</h1>
+      </Header>
+      <ImportButtonInput type="file" id="file" accept=".html" onChange={handleUpload} />
+            <ImportButtonLabel htmlFor="file">
+            <ImportButtonIcon src={ImportButton} alt="import a timeline file" />
+      </ImportButtonLabel> 
+      <h2>Please upload your {importing}.html file</h2>
+    </>);
+  }
+  else if (activeFileObjs && activeFileObjs.length > 0) {
     output = <>
     <Header>
       <time>{getActiveNodeDate()}</time>
