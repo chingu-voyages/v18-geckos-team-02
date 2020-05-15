@@ -119,7 +119,12 @@ async function writeAppData(appData) {
 }
 async function lastImported() {
     const data = await localDB.lastImport.get(0);
-    return data.name
+    if (data) {
+        return data.name
+    }
+    else {
+        return ''
+    }
 }
 
 export {writeFile, readFile, readAppData, writeAppData, exportData, importData, lastImported}
