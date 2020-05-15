@@ -107,7 +107,7 @@ function Main({editMode, showUploads, setShowUploads})  {
     if (path.includes('/import')) {
       const name = window.location.search.substr(1);
       lastImported().then(fileName =>{
-        if (fileName && name !== fileName) {
+        if (name !== fileName) {
           setImporting(name);
         }
         else {
