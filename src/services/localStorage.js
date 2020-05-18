@@ -1,9 +1,9 @@
 import Dexie from 'dexie';
 import errorHandler from './errorHandler';
 import FileObj from './FileObj';
-import {exportDB, importInto} from "dexie-export-import";
+import {exportDB, importDB} from "dexie-export-import";
 
-const localDB = new Dexie('user_dbv4');
+let localDB = new Dexie('user_dbv4');
 localDB.version(1).stores({
     appData: 'ref',
     files: 'ref',
@@ -11,9 +11,14 @@ localDB.version(1).stores({
 });
 
 async function importData(file, importName) {
+    const data = await new Blob([file]);
+    let dataText = await data.text();
+    dataText = dataText.substr(dataText.indexOf('<!--start---')+12, dataText.length - 25);
+    console.log(dataText)
+    const blob = await new Blob([dataText]);
     try {
         let name = importName || '';
-        await importInto(localDB, file, {
+        localDB = await importDB(blob, {
             acceptMissingTables: true,
             acceptVersionDiff: true,
             acceptNameDiff: true,
@@ -126,5 +131,9 @@ async function lastImported() {
         return ''
     }
 }
+async function deleteFile(ref) {
+    await localDB.files.delete(ref);
+    return
+}
 
-export {writeFile, readFile, readAppData, writeAppData, exportData, importData, lastImported}
+export {writeFile, readFile, readAppData, writeAppData, exportData, importData, lastImported, deleteFile}

@@ -1,4 +1,4 @@
-import { readAppData, writeAppData } from './localStorage';
+import { readAppData, writeAppData, deleteFile } from './localStorage';
 export default function AppData(handleFileObjsChange) {
     this.fileObjsUpdate = handleFileObjsChange;
     this.lastModified = null;
@@ -32,7 +32,11 @@ AppData.prototype.update = function(fileObj, log = true) {
 }
 AppData.prototype.delete = function(uid, log = true) {
     log && this.changeLog.push({ func: 'delete', data: uid });
+    const fileRef = this.fileObjs[uid].fileRef;
     delete this.fileObjs[uid];
+    if (!Object.values(this.fileObjs).find(fileObj => fileObj.fileRef === fileRef)) {
+        deleteFile(fileRef);
+    }
     this.onUpdate();
 }
 AppData.prototype.rebase = function(newAppData) {

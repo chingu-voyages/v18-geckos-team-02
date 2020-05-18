@@ -246,7 +246,8 @@ function updateFiles(filesArr) {
 }
 
 async function importTimeLine(file, name) {
-    await importData(file, name);
+    const arrayBuf = await fileToArrayBuffer(file);
+    await importData(arrayBuf, name);
     appData.init();
     return true
 }
